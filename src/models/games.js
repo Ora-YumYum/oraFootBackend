@@ -46,7 +46,7 @@ const gamesSchema = new Schema({
 
     fouls: [
         {
-            type: Object,z
+            type: Object,
             
         },
     ],

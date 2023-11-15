@@ -12,15 +12,51 @@ const Doctor = require("../models/users/doctor");
 const staduims = require("../models/users/staduims");
 const players = require("../models/users/players");
 
-exports.onSignup = async (req, res,) => {
 
-  const { email, password, firstName, lastName, gender, username, user_type, } = req.body;
+
+let controller = {}
+
+
+function getPath(user_type) {
+  let path = "";
+
+  switch (user_type) {
+    case 0:
+      path = "team";
+      break;
+    case 1:
+
+      path = "refeers";
+    case 2:
+
+      path = "photographer";
+    case 3:
+
+      path = "doctor";
+    case 4:
+
+      path = "staduim";
+    case 5:
+
+      path = "player";
+    default:
+      break;
+  }
+
+  return path;
+}
+
+controller.onSignup = async (req, res,) => {
+
+  const { email, password, firstName, lastName, gender, username, user_type, phone_number, } = req.body;
+  console.log(req.body);
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = User({
       username, email, password: hashedPassword, first_name: firstName,
       last_name: lastName, gender: gender, username: username,
+      phone_number: phone_number,
       user_type: user_type
     });
 
@@ -54,49 +90,91 @@ exports.onSignup = async (req, res,) => {
         break;
     }
 
+
     await user.save();
     const token = jwt.sign(
       { user_id: user._id.toString(), email: user.email, },
-      APP_KEY,
+      process.env.SECRET_KEY,
       { expiresIn: "90d" }
     );
-    res.json({ message: 'Registration successful', token: token });
+    res.json({ success: true, msg: 'Registration successful', token: token, });
   } catch (error) {
-    next(error);
+    return AppError.onError(res, "error" + error);
+
   }
 };
 
 exports.onForgotPassword = (req, res, next) => {
 
-  
- };
 
-exports.onLogin = async (req, res,) => {
+};
+
+controller.onLogin = async (req, res,) => {
 
   const { phone_number, password } = req.body;
 
+  if (!phone_number || !password) {
+    return res.status(400).json({ message: 'invalid phone number or password' });
+  }
+
   try {
-    const user = await User.findOne({ phone_number });
-    if (!user) {
+    const userFound = await User.findOne({ phone_number });
+    if (!userFound) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const passwordMatch = await user.comparePassword(password);
+    var passwordMatch = bcrypt.compareSync(
+      password,
+      userFound.password,
+    );
+
     if (!passwordMatch) {
       return res.status(401).json({ message: 'Incorrect password' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
 
+    let path = getPath(userFound.user_type);
+
+
+    const user = await User.findOne({ phone_number }).populate(path.toString());
+
+    user.password = "";
+    const token = jwt.sign({ user_id: user._id.toString(), email: user.email, }, process.env.SECRET_KEY, {
     });
-    res.json({ token });
+
+    res.json({ "token": token, "user": user });
   } catch (error) {
     console.log(error);
-    next(error);
+    return AppError.onError(res, "error" + error);
   }
 };
 
-exports.getCart = (req, res, next) => {
+
+controller.getProfile = async (req, res,) => {
+  const userId = req.body.userId;
+
+  if (!userId) {
+    return res.status(401).json({ message: 'invalid userId' });
+  }
+
+  try {
+    let path = getPath(userFound.user_type);
+
+    const user = await User.findOne({ phone_number }).populate(path.toString());
+
+    user.password = "";
+
+    res.json({ "success": true, "msg": "ok", "data": user });
+
+    if (!user) {
+      return res.status(404).json({ message: 'no user was found wit this id' });
+    }
+  } catch (error) {
+    return AppError.onError(res, "error" + error);
+  }
+};
+
+controller.getCart = (req, res, next) => {
   const userId = req.userId;
 
   User.findById(userId)
@@ -112,7 +190,7 @@ exports.getCart = (req, res, next) => {
     });
 };
 
-exports.addToCart = (req, res, next) => {
+controller.addToCart = (req, res, next) => {
   const userId = req.userId;
   const foodId = req.params.id;
 
@@ -139,7 +217,7 @@ exports.addToCart = (req, res, next) => {
     });
 };
 
-exports.editCart = (req, res, next) => {
+controller.editCart = (req, res, next) => {
   const userId = req.userId;
   const foodId = req.params.id;
   const qty = req.params.qty;
@@ -165,7 +243,7 @@ exports.editCart = (req, res, next) => {
     });
 };
 
-exports.getOrder = (req, res, next) => {
+controller.getOrder = (req, res, next) => {
   const userId = req.userId;
 
   User.findById(userId)
@@ -181,7 +259,7 @@ exports.getOrder = (req, res, next) => {
     });
 };
 
-exports.getSelectedOrder = (req, res, next) => {
+controller.getSelectedOrder = (req, res, next) => {
   const orderId = req.params.id;
 
   Order.findById(orderId)
@@ -197,7 +275,7 @@ exports.getSelectedOrder = (req, res, next) => {
     });
 };
 
-exports.addOrder = (req, res, next) => {
+controller.addOrder = (req, res, next) => {
   const userId = req.userId;
   const orderId = `${Math.floor(Math.random() * 89999 + 1000)}`;
   let currentUser;
@@ -240,7 +318,7 @@ exports.addOrder = (req, res, next) => {
     });
 };
 
-exports.viewProfile = (req, res, next) => {
+controller.viewProfile = (req, res, next) => {
   const userId = req.userId;
 
   User.findById(userId)
@@ -256,7 +334,7 @@ exports.viewProfile = (req, res, next) => {
     });
 };
 
-exports.editAddress = (req, res, next) => {
+controller.editAddress = (req, res, next) => {
   const userId = req.userId;
   const address = req.body.address;
   const lat = req.body.lat;
@@ -282,3 +360,6 @@ exports.editAddress = (req, res, next) => {
       next(err);
     });
 };
+
+
+module.exports = controller;

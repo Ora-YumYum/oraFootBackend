@@ -1,31 +1,55 @@
 const path = require("path");
+
 const express = require("express");
+
 const mongoose = require("mongoose");
+
 const bodyParser = require("body-parser");
-const helmet = require("helmet"); // secure headers
-const compression = require("compression"); // compress assets
-const morgan = require("morgan"); // logging
-const { MONGODB_URI } = require("./src/config/AppConst");
+
+const helmet = require("helmet");
+
+const compression = require("compression");
+
+const morgan = require("morgan");
+
 const formidable = require("express-formidable")
 
 const routes = require("./src/routes/index")
 
+require('dotenv').config()
+
 const fileUpload = require('express-fileupload')
 
 const app = express()
-app.use(fileUpload())
-app.use(formidable())
-app.use(bodyParser.json());
 
-//support parsing of application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload())
+
+
+
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
+
+app.use(bodyParser.json())
+
+
 
 app.use('/api', routes);
 
 
+app.post("/", (req, res) => {
+
+  try {
+    console.log(req.body.email);
+    return res.send({
+      "success": true,
+      "message": ""
+    });
+  } catch (error) {
+    return res.send({ "error": error })
+  }
+})
 
 mongoose
-  .connect(MONGODB_URI, {
+  .connect(process.env.DB_URL, {
     useNewUrlParser: true,
   })
   .then(() => { })
@@ -34,12 +58,10 @@ mongoose
   });
 
 
-app.use((error, req, res, next) => {
-  const status = error.statusCode || 500;
-  const data = error.data;
-  res.status(status).json({ data: data });
-});
+const PORT = process.env.PORT;
 
-const PORT = process.env.PORT || 8000;
+
 app.listen(PORT);
-console.log("listening on port 8000");
+
+
+console.log("listening on port " + PORT);

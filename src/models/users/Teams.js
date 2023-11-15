@@ -11,12 +11,12 @@ const Teamschema = new Schema({
 
   profile_img: {
     type: String,
-    required: true,
+    required: false,
   },
 
   cover_img: {
     type: String,
-    required: true,
+    required: false,
   },
 
 

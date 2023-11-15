@@ -6,40 +6,46 @@ const AppError = require("./errorController");
 
 var controller = {}
 
-controller.createChallange = (req, res,) => {
-    const { title, desc, location, match_type, numbers_of_players, price, payment_method,
-        isPrivateGame, showStandBy, enableCalls, chooseGender
-    } = req.body;
+controller.createChallange = async (req, res,) => {
 
-    const challange = new Challanges({
-        title: title,
-        desc: desc,
-        location: location,
-        match_type: match_type,
-        numbers_of_players: numbers_of_players,
-        price: price,
-        payment_method: payment_method,
-        isPrivateGame: isPrivateGame,
-        showStandBy: showStandBy,
-        enableCalls: enableCalls,
-        chooseGender: chooseGender
-    });
+    
 
-    challange
-        .save()
-        .then((challange) => {
-            return res.json(challange);
-        })
-        .catch((err) => {
-            return AppError.onError(res, "restaurant add error" + err);
+    try {
+        const { title, desc, location, match_type, numbers_of_players, price, payment_method,
+            isPrivateGame, showStandBy, enableCalls, chooseGender
+        } = req.body;
+
+        const challange = new Challanges({
+            title: title,
+            desc: desc,
+            location: location,
+            match_type: match_type,
+            numbers_of_players: numbers_of_players,
+            price: price,
+            payment_method: payment_method,
+            isPrivateGame: isPrivateGame,
+            showStandBy: showStandBy,
+            enableCalls: enableCalls,
+            chooseGender: chooseGender
         });
+
+        let response = await challange.save();
+
+        return res.json({
+            "success": true,
+            "msg": "ok",
+            "data": response,
+        });
+    } catch (error) {
+        return AppError.onError(res, "restaurant add error" + error);
+    }
 };
 
-controller.viewAllChallanges = async (req, res, next) => {
+controller.viewAllChallanges = async (req, res,) => {
     try {
         let challanges = await Challanges.find()
         res.status(200).json({
-            success: true,
+            "success": true,
             "challanges": challanges
         });
     } catch (error) {
@@ -53,7 +59,7 @@ controller.deleteChallanges = async (req, res) => {
     try {
         await Challanges.deleteOne({ _id: id })
         res.status(200).json({
-            success: true,
+            "success": true,
             "msg": "type was deleted successfully"
         });
     } catch (error) {

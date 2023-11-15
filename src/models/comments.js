@@ -26,7 +26,7 @@ const CommentsSchema = new Schema({
     published_by:
     {
         type: Schema.Types.ObjectId,
-        ref: "Restaurant",
+        ref: "Users",
         required: true,
     },
 

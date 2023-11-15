@@ -4,6 +4,7 @@ const Feeds = require("../models/feeds");
 
 const Comments = require("../models/comments");
 
+const AppError = require("./errorController");
 
 
 var controller = {}
@@ -53,14 +54,14 @@ controller.getComments = async (req, res) => {
         const comments = await Feeds.findOne({ _id: feed_id }).populate("comments");
 
         return res.status(200).json({
-            success: true,
-            comments: comments.comments,
+            "success": true,
+            "comments": comments.comments,
         });
 
     } catch (error) {
         return res.status(500).json({
-            success: false,
-            error: error,
+            "success": false,
+            "error": error,
         });
     }
 }
@@ -83,8 +84,8 @@ controller.replyComments = async (req, res) => {
         await comments.save();
 
         return res.status(200).json({
-            success: true,
-            msg: "",
+            "success": true,
+            "msg": "ok",
 
         });
 

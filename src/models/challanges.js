@@ -36,7 +36,6 @@ const challangesSchema = new Schema({
     },
 
 
-
     match_type: {
         type: String,
         required: true,
@@ -47,7 +46,6 @@ const challangesSchema = new Schema({
         type: Number,
         required: false,
     },
-
 
 
     price: {
@@ -67,13 +65,13 @@ const challangesSchema = new Schema({
     },
 
 
-    showStandBy: {
+    notifyPhotographer: {
         type: Boolean,
         default: false,
     },
 
 
-    enableCalls: {
+    notifyRefree: {
         type: Boolean,
         default: false,
     },
@@ -85,17 +83,12 @@ const challangesSchema = new Schema({
     },
 
 
-    chooseGender: {
-        type: Number,
-        default: false,
-    },
-
 
     ageGroup: {
         type: {},
     },
 
-    
+
     /*team: {
         type: Schema.Types.ObjectId,
         ref: "Teams",

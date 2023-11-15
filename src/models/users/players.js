@@ -40,10 +40,6 @@ const Playerschema = new Schema({
     },
 
 
-    profile_img: {
-        type: String,
-        required: true,
-    },
 
     followers: [
         {
@@ -75,7 +71,6 @@ const Playerschema = new Schema({
     goals: [
         {
             type: Object,
-            
         },
     ],
 
@@ -85,12 +80,16 @@ const Playerschema = new Schema({
             ref: "Games",
         },
     ],
+
+
     leagues: [
         {
             type: Schema.Types.ObjectId,
             ref: "Leagues",
         },
     ],
+
+    
     challanges: [
         {
             type: Schema.Types.ObjectId,

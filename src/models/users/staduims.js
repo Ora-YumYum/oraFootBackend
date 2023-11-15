@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const Teamschema = new Schema({
+const StaduimsSchema = new Schema({
 
     staduim_id: {
         type: String,
@@ -37,6 +37,11 @@ const Teamschema = new Schema({
         type: String,
         required: true,
     },
+    photos: [
+        {
+            type : String,
+        }
+    ],
     games: [
         {
             type: Schema.Types.ObjectId,
@@ -52,4 +57,4 @@ const Teamschema = new Schema({
 
 });
 
-module.exports = mongoose.model("Teams", Teamschema);
+module.exports = mongoose.model("Staduims", StaduimsSchema);
