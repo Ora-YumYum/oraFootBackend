@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { APP_KEY } = require("../config/AppConst");
 
 module.exports = (req, res, next) => {
   const authorization = req.get("Authorization");
@@ -9,22 +8,33 @@ module.exports = (req, res, next) => {
     throw err;
   }
 
+
   const token = authorization.split(" ")[1];
   let decodedToken;
 
-  try {
-    decodedToken = jwt.verify(token, APP_KEY);
-  } catch (err) {
-    err.statusCode = 500;
-    throw err;
-  }
+  if (token != undefined || token != null || token == "Token") {
+    try {
+      decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+    } catch (err) {
+      err.statusCode = 500;
+      throw err;
+    }
 
-  if (!decodedToken) {
+    if (!decodedToken) {
+      const err = new Error("unable  to authenticated");
+      err.statusCode = 401;
+      throw err;
+    }
+
+    req.userId = decodedToken.user_id;
+    next();
+  } else {
     const err = new Error("unable  to authenticated");
     err.statusCode = 401;
-    throw err;
+    return res.status(401).send({
+      "success": false,
+      "msg": "unable  to authenticate",
+    });
   }
 
-  req.userId = decodedToken.userId;
-  next();
 };

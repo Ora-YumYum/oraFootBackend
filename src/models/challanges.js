@@ -82,7 +82,21 @@ const challangesSchema = new Schema({
         default: false,
     },
 
+    postedByAdmin: {
+        type: Boolean,
+        default: false,
 
+    },
+    isActive: {
+        type: Boolean,
+        default: false,
+
+    },
+
+    postedBy: {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+    },
 
     ageGroup: {
         type: {},

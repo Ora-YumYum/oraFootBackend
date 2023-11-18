@@ -41,7 +41,7 @@ exports.imageComproser = (request,uploadFolder) => {
                             }
                         )
     
-                        result.send("File has been compressed and saved.")
+                        console.log("File has been compressed and saved.")
                         return image.name;
                     })
     
@@ -51,10 +51,10 @@ exports.imageComproser = (request,uploadFolder) => {
                     })
                 })
             } else {
-                result.send("Please select an image")
+                console.log("Please select an image")
             }
         } else {
-            result.send("Please select an image")
+            console.log("Please select an image")
         }
     } catch (error) {
         console.log(error)

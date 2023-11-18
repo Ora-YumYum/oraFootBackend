@@ -7,12 +7,15 @@ const Refeerschema = new Schema({
 
     profile_img: {
         type: String,
-        required: true,
+        required: false,
     },
+
     application_status: {
         type: Number,
-        required: true,
+        required: false,
+        default : 2,
     },
+
     games: [
         {
             type: Schema.Types.ObjectId,

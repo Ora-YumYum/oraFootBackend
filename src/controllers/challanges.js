@@ -2,18 +2,23 @@
 
 const Challanges = require("../models/challanges");
 const AppError = require("./errorController");
+const Staduims = require("../models/users/staduims");
 
 
 var controller = {}
 
 controller.createChallange = async (req, res,) => {
 
-    
+    const user_id = req.userId;
 
     try {
-        const { title, desc, location, match_type, numbers_of_players, price, payment_method,
-            isPrivateGame, showStandBy, enableCalls, chooseGender
+        const { title, desc, location,
+            match_type, numbers_of_players,
+            price, payment_method,
+            isPrivateGame, showStandBy,
+            enableCalls, chooseGender
         } = req.body;
+
 
         const challange = new Challanges({
             title: title,
@@ -29,6 +34,9 @@ controller.createChallange = async (req, res,) => {
             chooseGender: chooseGender
         });
 
+        
+        challange.postedBy = user_id;
+
         let response = await challange.save();
 
         return res.json({
@@ -40,6 +48,25 @@ controller.createChallange = async (req, res,) => {
         return AppError.onError(res, "restaurant add error" + error);
     }
 };
+
+
+controller.getStaduims = async (req, res,) => {
+
+    let commune = req.body.commune;
+
+    if (commune != undefined || commune != "" || commune != null) {
+        try {
+            let staduims = await Staduims.find({ address: commune})
+            res.status(200).json({
+                "success": true,
+                "staduims": staduims
+            });
+        } catch (error) {
+            return AppError.onError(error, "restaurant add error" + error);
+        }
+    }
+};
+
 
 controller.viewAllChallanges = async (req, res,) => {
     try {

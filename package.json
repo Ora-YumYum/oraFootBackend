@@ -27,6 +27,7 @@
     "gifsicle": "^7.0.1",
     "handlebars": "^4.7.8",
     "helmet": "^7.0.0",
+    "imagemin-pngquant": "^5.0.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.1",
     "morgan": "^1.10.0",

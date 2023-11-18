@@ -2,8 +2,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const AppError = require("./errorController");
 const { APP_KEY } = require("../config/AppConst");
-const { validationResult } = require("express-validator");
 
+const { validationResult } = require("express-validator");
+const { imageComproser } = require("../config/image-compr")
 const User = require("../models/users/users");
 const Teams = require("../models/users/Teams");
 const Refeers = require("../models/users/refeers");
@@ -11,8 +12,13 @@ const Photographers = require("../models/users/photographers");
 const Doctor = require("../models/users/doctor");
 const staduims = require("../models/users/staduims");
 const players = require("../models/users/players");
+const { UPLOAD_DIR } = require("../../settings");
 
+const compression = require("compression");
 
+const compressImages = require("compress-images")
+
+const fileSystem = require('file-system');
 
 let controller = {}
 
@@ -48,11 +54,28 @@ function getPath(user_type) {
 
 controller.onSignup = async (req, res,) => {
 
-  const { email, password, firstName, lastName, gender, username, user_type, phone_number, } = req.body;
+  const { email, password, firstName, lastName,
+    gender, username,
+    phone_number, } = req.body;
   console.log(req.body);
+
+  let user_type = Number.parseInt(req.body.user_type)
+
+  console.log(user_type)
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+
+
+    const userExits = await User.findOne({ "phone_number": phone_number });
+
+    if (userExits) {
+      res.status(200).send({
+        success: false, msg:
+          'user already exits with this phone number',
+      });
+    }
+
     const user = User({
       username, email, password: hashedPassword, first_name: firstName,
       last_name: lastName, gender: gender, username: username,
@@ -67,21 +90,64 @@ controller.onSignup = async (req, res,) => {
         user.team = team;
         break;
       case 1:
-        const refeere = Refeers(req.body.refeere)
-        await refeere.save();
-        user.refeere = refeere;
+        const refeere = Refeers({ profile_img: "" })
+
+        console.log(req.files);
+        if (req.files != undefined) {
+          try {
+            let userPic = req.files.image;
+
+            let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+            let uploadPath = UPLOAD_DIR + "/users/";
+
+            const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+            refeere.profile_img = pic_name;
+            uploadImage(filePath, uploadPath, userPic.data);
+            await refeere.save();
+            user.refeere = refeere;
+          } catch (error) {
+            console.log(error);
+          }
+
+        }
+
+        break;
       case 2:
         const photographer = Photographers(req.body.photographer);
-        await photographer.save();
+
+        if (req.files != undefined) {
+          try {
+            let userPic = req.files.image;
+
+            let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+            let uploadPath = UPLOAD_DIR + "/users/";
+
+            const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+            refeere.profile_img = pic_name;
+            uploadImage(filePath, uploadPath, userPic.data);
+            await photographer.save();
+            user.photographer = photographer;
+          } catch (error) {
+            console.log(error);
+          }
+
+        }
         user.photographer = photographer;
+        break;
       case 3:
         const doctor = Doctor(req.body.doctor)
         await doctor.save();
         user.doctor = doctor;
+        break;
       case 4:
         const staduim = staduims(req.body.staduim);
         await staduim.save();
         user.staduim = staduim;
+        break;
       case 5:
         const player = players(req.body.player);
         await player.save();
@@ -92,22 +158,53 @@ controller.onSignup = async (req, res,) => {
 
 
     await user.save();
-    const token = jwt.sign(
+    let token = jwt.sign(
       { user_id: user._id.toString(), email: user.email, },
       process.env.SECRET_KEY,
       { expiresIn: "90d" }
     );
     res.json({ success: true, msg: 'Registration successful', token: token, });
   } catch (error) {
+    console.log(error);
     return AppError.onError(res, "error" + error);
 
   }
 };
 
-exports.onForgotPassword = (req, res, next) => {
+function uploadImage(filePath, uploadPath, pic) {
+  const compression = 60;
+  fs.writeFile(filePath, pic, async function (error) {
+    if (error) throw error
 
+    compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+      { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+      { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+      { svg: { engine: "svgo", command: "--multipass" } },
+      { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+      async function (error, completed, statistic) {
+        console.log("-------------")
+        console.log(error)
+        console.log(completed)
+        console.log(statistic)
+        console.log("-------------")
 
-};
+        try {
+          fs.unlink(filePath, function (error) {
+            if (error) {
+              console.log(error);
+            } else {
+
+            }
+          })
+        } catch (error) {
+          return res.status(500).send({ success: false, message: "server error", results: null });
+
+        }
+      }
+    )
+  })
+}
+
 
 controller.onLogin = async (req, res,) => {
 

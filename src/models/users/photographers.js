@@ -13,7 +13,8 @@ const Photographerschema = new Schema({
 
     application_status: {
         type: Number,
-        required: true,
+        default : 2,
+        required: false,
     },
     games: [
         {
