@@ -34,7 +34,7 @@ controller.createChallange = async (req, res,) => {
             chooseGender: chooseGender
         });
 
-        
+
         challange.postedBy = user_id;
 
         let response = await challange.save();
@@ -56,7 +56,7 @@ controller.getStaduims = async (req, res,) => {
 
     if (commune != undefined || commune != "" || commune != null) {
         try {
-            let staduims = await Staduims.find({ address: commune})
+            let staduims = await Staduims.find({ address: commune })
             res.status(200).json({
                 "success": true,
                 "staduims": staduims
