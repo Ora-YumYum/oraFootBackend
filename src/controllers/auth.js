@@ -56,13 +56,12 @@ controller.onSignup = async (req, res,) => {
 
   const { email, password, firstName, lastName,
     phone_number, username, } = req.body;
-  console.log(req.body);
 
   let user_type = Number.parseInt(req.body.user_type)
   let gender = Number.parseInt(req.body.gender)
   let wilaya = Number.parseInt(req.body.wilaya)
 
-  console.log(user_type)
+
 
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -71,132 +70,154 @@ controller.onSignup = async (req, res,) => {
     const userExits = await User.findOne({ "phone_number": phone_number });
 
     if (userExits) {
-      res.status(200).send({
+      return res.status(200).send({
         success: false, msg:
           'user already exits with this phone number',
       });
+    } else {
+      const user = User({
+        email: email, password: hashedPassword, first_name: firstName,
+        last_name: lastName, gender: gender, username: username,
+        phone_number: phone_number,
+        user_type: user_type,
+        wilaya: wilaya,
+      });
+
+      switch (user_type) {
+        case 0:
+
+          if (req.files != undefined) {
+            let team_data = JSON.parse(req.body.team);
+            let team_wilaya = Number.parseInt(team_data.wilaya);
+            try {
+              let userPic = req.files.image;
+
+              let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+              let uploadPath = UPLOAD_DIR + "/users/";
+
+              const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+              uploadImage(filePath, uploadPath, userPic.data);
+              const team = Teams({
+                profile_img: pic_name,
+                wilaya: team_wilaya,
+                team_name: team_data.team_name,
+                about: team_data.about,
+                main_color: team_data.main_color,
+                secondary_color: team_data.secondary_color,
+              })
+              await team.save();
+              user.team = team;
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          break;
+        case 1:
+          const refeere = Refeers({ profile_img: "" })
+
+          console.log(req.files);
+          if (req.files != undefined) {
+            try {
+              let userPic = req.files.image;
+
+              let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+              let uploadPath = UPLOAD_DIR + "/users/";
+
+              const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+              refeere.profile_img = pic_name;
+              uploadImage(filePath, uploadPath, userPic.data);
+              await refeere.save();
+              user.refeere = refeere;
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          break;
+        case 2:
+          const photographer = Photographers(req.body.photographer);
+
+          if (req.files != undefined) {
+            try {
+              let userPic = req.files.image;
+
+              let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+              let uploadPath = UPLOAD_DIR + "/users/";
+
+              const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+              refeere.profile_img = pic_name;
+              uploadImage(filePath, uploadPath, userPic.data);
+              await photographer.save();
+              user.photographer = photographer;
+            } catch (error) {
+              console.log(error);
+            }
+
+          }
+          user.photographer = photographer;
+          break;
+        case 3:
+          const doctor = Doctor(req.body.doctor)
+          await doctor.save();
+          user.doctor = doctor;
+          break;
+        case 4:
+          let staduim_data = JSON.parse(req.body.staduim);
+          let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
+          let price_per_month = Number.parseFloat(staduim_data.price_per_month)
+          let price_per_year = Number.parseFloat(staduim_data.price_per_year)
+          let wilaya = Number.parseInt(staduim_data.wilaya);
+          const staduim = staduims({
+            price_per_year: price_per_year,
+            price_per_month: price_per_month,
+            price_per_hour: price_per_hour,
+            staduim_name: staduim_data.staduim_name,
+            wilaya: wilaya
+          });
+          await staduim.save();
+          user.staduim = staduim;
+          break;
+        case 5:
+          const player = players(req.body.player);
+          if (req.files != undefined) {
+            try {
+              let userPic = req.files.image;
+
+              let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+              let uploadPath = UPLOAD_DIR + "/users/";
+
+              const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+              player.profile_img = pic_name;
+              uploadImage(filePath, uploadPath, userPic.data);
+              await player.save();
+              user.player = player;
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        default:
+          break;
+      }
+      await user.save();
+      let token = jwt.sign(
+        { user_id: user._id.toString(), email: user.email, },
+        process.env.SECRET_KEY,
+        { expiresIn: "90d" }
+      );
+      res.json({ success: true, msg: 'Registration successful', token: token, });
     }
-
-    const user = User({
-      email: email, password: hashedPassword, first_name: firstName,
-      last_name: lastName, gender: gender, username: username,
-      phone_number: phone_number,
-      user_type: user_type,
-      wilaya: wilaya,
-    });
-
-    switch (user_type) {
-      case 0:
-        const team = Teams(req.body.team)
-        await team.save();
-        user.team = team;
-        break;
-      case 1:
-        const refeere = Refeers({ profile_img: "" })
-
-        console.log(req.files);
-        if (req.files != undefined) {
-          try {
-            let userPic = req.files.image;
-
-            let pic_name = (new Date().getTime()) + "-" + userPic.name;
-
-            let uploadPath = UPLOAD_DIR + "/users/";
-
-            const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
-
-            refeere.profile_img = pic_name;
-            uploadImage(filePath, uploadPath, userPic.data);
-            await refeere.save();
-            user.refeere = refeere;
-          } catch (error) {
-            console.log(error);
-          }
-        }
-
-        break;
-      case 2:
-        const photographer = Photographers(req.body.photographer);
-
-        if (req.files != undefined) {
-          try {
-            let userPic = req.files.image;
-
-            let pic_name = (new Date().getTime()) + "-" + userPic.name;
-
-            let uploadPath = UPLOAD_DIR + "/users/";
-
-            const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
-
-            refeere.profile_img = pic_name;
-            uploadImage(filePath, uploadPath, userPic.data);
-            await photographer.save();
-            user.photographer = photographer;
-          } catch (error) {
-            console.log(error);
-          }
-
-        }
-        user.photographer = photographer;
-        break;
-      case 3:
-        const doctor = Doctor(req.body.doctor)
-        await doctor.save();
-        user.doctor = doctor;
-        break;
-      case 4:
-        let staduim_data = JSON.parse(req.body.staduim);
-        let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
-        let price_per_month = Number.parseFloat(staduim_data.price_per_month)
-        let price_per_year = Number.parseFloat(staduim_data.price_per_year)
-        let wilaya = Number.parseInt(staduim_data.wilaya);
-        const staduim = staduims({
-          price_per_year:price_per_year,
-          price_per_month:price_per_month,
-          price_per_hour:price_per_hour,
-          staduim_name : staduim_data.staduim_name,
-          wilaya : wilaya
-        });
-        await staduim.save();
-        user.staduim = staduim;
-        break;
-      case 5:
-        const player = players(req.body.player);
-        if (req.files != undefined) {
-          try {
-            let userPic = req.files.image;
-
-            let pic_name = (new Date().getTime()) + "-" + userPic.name;
-
-            let uploadPath = UPLOAD_DIR + "/users/";
-
-            const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
-
-            player.profile_img = pic_name;
-            uploadImage(filePath, uploadPath, userPic.data);
-            await player.save();
-            user.player = player;
-          } catch (error) {
-            console.log(error);
-          }
-        }
-
-      default:
-        break;
-    }
-
-
-    await user.save();
-    let token = jwt.sign(
-      { user_id: user._id.toString(), email: user.email, },
-      process.env.SECRET_KEY,
-      { expiresIn: "90d" }
-    );
-    res.json({ success: true, msg: 'Registration successful', token: token, });
   } catch (error) {
     console.log(error);
     return AppError.onError(res, "error" + error);
-
   }
 };
 
