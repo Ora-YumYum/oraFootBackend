@@ -286,7 +286,7 @@ controller.onLogin = async (req, res,) => {
     const user = await User.findOne({ phone_number }).populate(path.toString());
 
     user.password = "";
-    const token = jwt.sign({ user_id: user._id.toString(), email: user.email, }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ user_id: user._id.toString(), phone_number: user.phone_number, }, process.env.SECRET_KEY, {
     });
 
     res.json({ "token": token, "user": user });
