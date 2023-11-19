@@ -248,7 +248,7 @@ controller.onLogin = async (req, res,) => {
 
 
 controller.getProfile = async (req, res,) => {
-  const userId = req.body.userId;
+  const userId = req.userId;
 
   if (!userId) {
     return res.status(401).json({ message: 'invalid userId' });
@@ -271,192 +271,142 @@ controller.getProfile = async (req, res,) => {
   }
 };
 
-controller.getCart = (req, res, next) => {
-  const userId = req.userId;
 
-  User.findById(userId)
-    .populate("cart.food")
-    .then((user) => {
-      res.status(200).json(user.cart);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+
+controller.checkPhoneNumber = async (req, res) => {
+
+  const phone_number = req.body.phone_number;
+
+
+  try {
+    const exists = await User.findOne({ phone_number: phone_number, });
+
+    if (exists) {
+      console.log("user exists");
+      res.json({ success: true, message: "user exists", resutls: true }).status(200);
+    } else {
+      res.json({ success: true, message: "user don't exists", resutls: false }).status(200);
+    }
+  } catch (error) {
+    res.json({ success: false, message: "error" }).status(500);
+  }
+}
+
+
+controller.checkPassword = async (req, res) => {
+  const { password } = req.body;
+  const id = req.user.user_id;
+
+  try {
+    const user = await User.findOne({
+      _id: id,
     });
-};
+    if (!user) {
+      return res.status(200).send({
+        success: false, message:
+          'there"s no accounts with this Email', reutls: null
+      })
+    }
 
-controller.addToCart = (req, res, next) => {
-  const userId = req.userId;
-  const foodId = req.params.id;
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.password
+    )
+    if (isPasswordValid) {
+      return res.status(200).send({
+        success: true, message: 'ok', resutls: true
+      })
+    } else {
+      return res.json({ success: false, message: 'wrong password', resutls: false })
+    }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
 
-  console.log("Going through");
+  }
+}
 
-  let currentUser;
-  User.findById(userId)
-    .populate("cart.food")
-    .then((user) => {
-      currentUser = user;
-      return Food.findById(foodId);
-    })
-    .then((food) => {
-      return currentUser.addToCart(food);
-    })
-    .then((result) => {
-      res.status(200).json(result.cart);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+controller.updatePassowrd = async (req, res) => {
+  const { old_password, password } = req.body;
+  const id = req.useId;
+  try {
+    const user = await User.findOne({
+      _id: id,
     });
-};
-
-controller.editCart = (req, res, next) => {
-  const userId = req.userId;
-  const foodId = req.params.id;
-  const qty = req.params.qty;
-
-  let currentUser;
-  User.findById(userId)
-    .populate("cart.food")
-    .then((user) => {
-      currentUser = user;
-      return Food.findById(foodId);
-    })
-    .then((food) => {
-      return currentUser.editCart(food, qty);
-    })
-    .then((result) => {
-      res.status(200).json(result.cart);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
-controller.getOrder = (req, res, next) => {
-  const userId = req.userId;
-
-  User.findById(userId)
-    .populate("order")
-    .then((user) => {
-      res.status(200).json(user.order);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
-controller.getSelectedOrder = (req, res, next) => {
-  const orderId = req.params.id;
-
-  Order.findById(orderId)
-    .populate("items")
-    .then((order) => {
-      res.status(200).json(order);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
-controller.addOrder = (req, res, next) => {
-  const userId = req.userId;
-  const orderId = `${Math.floor(Math.random() * 89999 + 1000)}`;
-  let currentUser;
-  let total = 0;
-  User.findById(userId)
-    .populate("order")
-    .populate("cart.food")
-    .then((user) => {
-      currentUser = user;
-      let orderedItems = [];
-      user.cart.map((item) => {
-        let qty = item.qty;
-        let price = item.food.price;
-        total += qty * price;
-        orderedItems.push(item.food);
+    if (!user) {
+      return res.status(200).send({ success: false, message: 'there"s No Account with this Email', reutls: null })
+    }
+    const isPasswordValid = await bcrypt.compare(
+      old_password,
+      user.password
+    )
+    if (isPasswordValid) {
+      const newPassword = await bcrypt.hash(password, 10);
+      const updatePassw = await User.updateOne({
+        _id: id,
+      }, {
+        $set: {
+          "password": newPassword
+        }
       });
+      return res.status(200).send({
+        success: true, message: 'ok', reutls: "password was reset successfuly"
+      })
+    } else {
+      return res.json({ success: false, message: 'wrong password', user: false })
+    }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
 
-      let order = new Order({
-        orderID: orderId,
-        items: orderedItems,
-        totalAmount: total,
-        orderDate: new Date(),
-        paidThrough: "",
-        paymentResponse: "",
-        orderStatus: "waiting",
+  }
+}
+
+
+controller.resetPassowrd = async (req, res) => {
+  const { phone_number, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      phone_number: phone_number,
+    });
+    if (!user) {
+      return res.status(200).send({ success: false, message: 'there"s no account with this phone number', reutls: null })
+    }
+    const newPassword = await bcrypt.hash(password, 10);
+    await User.updateOne({
+      _id: user._id,
+    }, {
+      $set: {
+        "password": newPassword
+      }
+    });
+    return res.status(200).send({
+      success: true, message: 'ok', reutls: "password was reset successfuly"
+    })
+  } catch (error) {
+    return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
+
+  }
+}
+
+controller.findAccount = async (req, res) => {
+  const { phone_number } = req.body;
+
+  try {
+      const user = await User.findOne({
+          phone_number: phone_number,
       });
-      return order.save();
-    })
-    .then((order) => {
-      currentUser.order.push(order);
-      currentUser.cart = [];
-      return currentUser.save();
-    })
-    .then((result) => res.status(200).json(result.order))
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
+      if (!user) {
+          return res.status(200).send({ success: false, message: 'there"s no account with this phone number', reutls: false })
+      } else {
+          res.status(200).send({
+              success: true, message: 'ok', reutls: true,
+          })
       }
-      next(err);
-    });
-};
 
-controller.viewProfile = (req, res, next) => {
-  const userId = req.userId;
+  } catch (error) {
+      return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
 
-  User.findById(userId)
-    .select("-password")
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
-controller.editAddress = (req, res, next) => {
-  const userId = req.userId;
-  const address = req.body.address;
-  const lat = req.body.lat;
-  const lng = req.body.lng;
-  const phone = req.body.phone;
-
-  User.findById(userId)
-    .select("-password")
-    .then((user) => {
-      user.address = address;
-      user.phone = phone;
-      user.lat = lat;
-      user.lng = lng;
-      return user.save();
-    })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
+  }
+}
 
 module.exports = controller;

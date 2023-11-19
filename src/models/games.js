@@ -3,33 +3,32 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const gamesSchema = new Schema({
+
+
     gamesID: {
         type: String,
         required: true,
     },
 
-    first_time: {
+    first_team: {
         type: Schema.Types.ObjectId,
         ref: "Teams",
     },
 
-    second_time: {
+    second_team: {
         type: Schema.Types.ObjectId,
         ref: "Teams",
     },
-
-
-    items: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Food",
-        },
-    ],
 
 
     games_status: {
         type: Number,
         required: true,
+    },
+
+    game_youtube_video_url: {
+        type: String,
+        required: false,
     },
 
 
@@ -47,7 +46,7 @@ const gamesSchema = new Schema({
     fouls: [
         {
             type: Object,
-            
+
         },
     ],
 

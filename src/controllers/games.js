@@ -8,126 +8,36 @@ const controller = {}
 
 
 
-controller.updateGoals = async (req, res) => {
+controller.viewGames = async (req, res,) => {
+    try {
+        let games = await Games.find()
+        res.status(200).json({
+            "success": true,
+            "games": games
+        });
+    } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
 
-    const { id, player_id, date } = req.body;
+
+controller.getGameById = async (req, res,) => {
+    const id = req.body.game_id;
+    
+    
 
     try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "goals": {
-                    "player": player_id,
-                    'date': date,
-                }
-            }
-        });
-        await Players.updateOne({
-            "$push": {
-                "goals": {
-                    "game": id,
-                    'date': date,
-                }
-            }
-        });
+        let game = await Games.findOne({ _id: id });
         res.status(200).json({
-            success: true,
-            "msg": "type was updated successfully"
+            "success": true,
+            "game": game,
         });
-
     } catch (error) {
-        console.log(error);
-        res.status(500).jsons({
-            "success": false,
-            "msg": "something happpend please try again later",
-        });
+        return AppError.onError(error, "restaurant add error" + error);
     }
-}
+};
 
 
-controller.updateFouls = async (req, res) => {
-
-    const { id, player_id, date } = req.body;
-
-    try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "fouls": {
-                    "player": player_id,
-                    'date': date
-                }
-            }
-        });
-        res.status(200).json({
-            success: true,
-            "msg": "type was updated successfully"
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).jsons({
-            "success": false,
-            "msg": "something happpend please try again later",
-        });
-    }
-}
-
-
-controller.updateCards = async (req, res) => {
-
-    const { id, player_id, date, card } = req.body;
-
-    try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "cards": {
-                    "player": player_id,
-                    "date": date,
-                    "card": card,
-                }
-            }
-        });
-        res.status(200).json({
-            success: true,
-            "msg": "type was updated successfully"
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).jsons({
-            "success": false,
-            "msg": "something happpend please try again later",
-        });
-    }
-}
-
-
-controller.uploadPhotos = async (req, res) => {
-
-    const { id, player_id, date, card } = req.body;
-
-    try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "cards": {
-                    "player": player_id,
-                    "date": date,
-                    "card": card,
-                }
-            }
-        });
-        res.status(200).json({
-            success: true,
-            "msg": "type was updated successfully"
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).jsons({
-            "success": false,
-            "msg": "something happpend please try again later",
-        });
-    }
-}
 
 module.exports = controller;
 

@@ -28,7 +28,7 @@ router.post("/add_challange", [
             next();
         }
 
-    }, middleware , challangesController.createChallange);
+    }, middleware, challangesController.createChallange);
 
 router.get("/", challangesController.viewAllChallanges);
 
@@ -36,6 +36,7 @@ router.get("/get_staduims", challangesController.getStaduims);
 
 router.delete("delete_challange", challangesController.deleteChallanges);
 
+router.put("change_status", challangesController.changeStatus);
 
 
 module.exports = router;

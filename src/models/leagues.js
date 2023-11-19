@@ -36,9 +36,8 @@ const GamesSchema = new Schema({
   },
 
 
-
   match_type: {
-    type: String,
+    type: Number,
     required: true,
   },
 
@@ -66,25 +65,6 @@ const GamesSchema = new Schema({
     default: false,
   },
 
-
-  showStandBy: {
-    type: Boolean,
-    default: false,
-  },
-
-
-  enableCalls: {
-    type: Boolean,
-    default: false,
-  },
-
-
-  pinnedGame: {
-    type: Boolean,
-    default: false,
-  },
-
-
   chooseGender: {
     type: Number,
     default: false,
@@ -93,6 +73,22 @@ const GamesSchema = new Schema({
 
   ageGroup: {
     type: {},
+  },
+
+  league_pre_video: {
+    type: String,
+  },
+
+
+  applications: [
+    {
+      type: Object,
+    },
+  ],
+
+  league_status: {
+    type: Number,
+    default: 2,
   },
 
 

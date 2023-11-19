@@ -102,7 +102,6 @@ const challangesSchema = new Schema({
         type: {},
     },
 
-
     /*team: {
         type: Schema.Types.ObjectId,
         ref: "Teams",

@@ -96,4 +96,36 @@ controller.deleteChallanges = async (req, res) => {
 };
 
 
+controller.changeStatus = async (req, res) => {
+    const id = req.body._id;
+    const value = req.body.balue;
+
+    if (value == "boolean") {
+        try {
+            await Challanges.updateOne({ _id: id }, {
+                $set: {
+                    "isPrivateGame": value
+                }
+            })
+            res.status(200).json({
+                "success": true,
+                "msg": "status updated successfully"
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                "msg": error,
+                "success": false,
+            });
+        }
+    } else {
+        res.status(400).json({
+            "msg": "invalid value",
+            "success": false,
+        });
+    }
+
+};
+
+
 module.exports = controller;

@@ -41,16 +41,30 @@ controller.createLeagues = async (req, res,) => {
         return AppError.onError(res, "restaurant add error" + error);
     }
 
-  
+
 };
 
 
-controller.viewAllChallanges = async (req, res,) => {
+controller.getMyLeagues = async (req, res,) => {
     try {
-        let challanges = await Leagues.find()
+        let Leagues = await Leagues.find()
         res.status(200).json({
             "success": true,
-            "challanges": challanges
+            "msg": "0k",
+            "Leagues": Leagues
+        });
+    } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
+
+controller.getAvailableLeagues = async (req, res,) => {
+    try {
+        let Leagues = await Leagues.find({ league_status: 1 })
+        res.status(200).json({
+            "success": true,
+            "msg": "0k",
+            "Leagues": Leagues
         });
     } catch (error) {
         return AppError.onError(error, "restaurant add error" + error);
