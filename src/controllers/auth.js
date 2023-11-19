@@ -145,15 +145,16 @@ controller.onSignup = async (req, res,) => {
         user.doctor = doctor;
         break;
       case 4:
-        let price_per_hour = Number.parseFloat(req.body.staduim.price_per_hour)
-        let price_per_month = Number.parseFloat(req.body.staduim.price_per_month)
-        let price_per_year = Number.parseFloat(req.body.staduim.price_per_year)
+        let staduim_data = JSON.parse(req.body.staduim);
+        let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
+        let price_per_month = Number.parseFloat(staduim_data.price_per_month)
+        let price_per_year = Number.parseFloat(staduim_data.price_per_year)
         const staduim = staduims({
           price_per_year:price_per_year,
           price_per_month:price_per_month,
           price_per_hour:price_per_hour,
-          staduim_name : req.body.staduim.staduim_name,
-          address : req.body.staduim.address
+          staduim_name : staduim_data.staduim_name,
+          address : staduim_data.address
         });
         await staduim.save();
         user.staduim = staduim;
