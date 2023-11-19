@@ -55,7 +55,7 @@ function getPath(user_type) {
 controller.onSignup = async (req, res,) => {
 
   const { email, password, firstName, lastName,
-    phone_number, } = req.body;
+    phone_number, username,} = req.body;
   console.log(req.body);
 
   let user_type = Number.parseInt(req.body.user_type)
