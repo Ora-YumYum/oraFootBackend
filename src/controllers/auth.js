@@ -77,7 +77,7 @@ controller.onSignup = async (req, res,) => {
     }
 
     const user = User({
-      username, email, password: hashedPassword, first_name: firstName,
+       email : email, password: hashedPassword, first_name: firstName,
       last_name: lastName, gender: gender, username: username,
       phone_number: phone_number,
       user_type: user_type
