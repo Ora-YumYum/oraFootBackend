@@ -149,12 +149,13 @@ controller.onSignup = async (req, res,) => {
         let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
         let price_per_month = Number.parseFloat(staduim_data.price_per_month)
         let price_per_year = Number.parseFloat(staduim_data.price_per_year)
+        let wilaya = Number.parseInt(staduim_data.wilaya);
         const staduim = staduims({
           price_per_year:price_per_year,
           price_per_month:price_per_month,
           price_per_hour:price_per_hour,
           staduim_name : staduim_data.staduim_name,
-          wilaya : staduim_data.wilaya
+          wilaya : wilaya
         });
         await staduim.save();
         user.staduim = staduim;
