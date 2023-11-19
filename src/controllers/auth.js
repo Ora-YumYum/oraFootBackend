@@ -55,11 +55,12 @@ function getPath(user_type) {
 controller.onSignup = async (req, res,) => {
 
   const { email, password, firstName, lastName,
-    phone_number, username,} = req.body;
+    phone_number, username, } = req.body;
   console.log(req.body);
 
   let user_type = Number.parseInt(req.body.user_type)
   let gender = Number.parseInt(req.body.gender)
+  let wilaya = Number.parseInt(req.body.wilaya)
 
   console.log(user_type)
 
@@ -77,10 +78,11 @@ controller.onSignup = async (req, res,) => {
     }
 
     const user = User({
-       email : email, password: hashedPassword, first_name: firstName,
+      email: email, password: hashedPassword, first_name: firstName,
       last_name: lastName, gender: gender, username: username,
       phone_number: phone_number,
-      user_type: user_type
+      user_type: user_type,
+      wilaya: wilaya,
     });
 
     switch (user_type) {
@@ -143,7 +145,16 @@ controller.onSignup = async (req, res,) => {
         user.doctor = doctor;
         break;
       case 4:
-        const staduim = staduims(req.body.staduim);
+        let price_per_hour = Number.parseFloat(req.body.staduim.price_per_hour)
+        let price_per_month = Number.parseFloat(req.body.staduim.price_per_month)
+        let price_per_year = Number.parseFloat(req.body.staduim.price_per_year)
+        const staduim = staduims({
+          price_per_year:price_per_year,
+          price_per_month:price_per_month,
+          price_per_hour:price_per_hour,
+          staduim_name : req.body.staduim.staduim_name,
+          address : req.body.staduim.address
+        });
         await staduim.save();
         user.staduim = staduim;
         break;
@@ -167,7 +178,7 @@ controller.onSignup = async (req, res,) => {
             console.log(error);
           }
         }
-       
+
       default:
         break;
     }

@@ -16,6 +16,12 @@ const Photographerschema = new Schema({
         default : 2,
         required: false,
     },
+
+    wilaya: {
+        type: Number,
+        required: false,
+    },
+    
     games: [
         {
             type: Schema.Types.ObjectId,

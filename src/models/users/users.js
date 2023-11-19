@@ -34,6 +34,11 @@ const userSchema = new Schema({
     type: String,
   },
 
+  wilaya: {
+    type: Number,
+    
+  },
+
 
   phone_number: {
     type: String,

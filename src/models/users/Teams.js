@@ -27,7 +27,12 @@ const Teamschema = new Schema({
 
   address: {
     type: String,
-    required: true,
+    required: false,
+  },
+
+  wilaya: {
+    type: Number,
+    required: false,
   },
 
 

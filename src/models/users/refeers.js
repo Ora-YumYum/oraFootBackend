@@ -16,6 +16,11 @@ const Refeerschema = new Schema({
         default : 2,
     },
 
+    wilaya: {
+        type: Number,
+        required: false,
+    },
+
     games: [
         {
             type: Schema.Types.ObjectId,

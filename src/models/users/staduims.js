@@ -16,7 +16,12 @@ const StaduimsSchema = new Schema({
 
     address: {
         type: String,
-        required: true,
+        required: false,
+    },
+
+    wilaya: {
+        type: Number,
+        required: false,
     },
 
     price_per_hour: {
@@ -38,7 +43,7 @@ const StaduimsSchema = new Schema({
         type: String,
         required: false,
     },
-    
+
     photos: [
         {
             type : String,

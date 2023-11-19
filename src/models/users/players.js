@@ -21,6 +21,11 @@ const Playerschema = new Schema({
         required: false,
     },
 
+    wilaya: {
+        type: Number,
+        required: false,
+    },
+
 
     main_position: {
         type: Number,
