@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const AppError = require("./errorController");
 const { APP_KEY } = require("../config/AppConst");
 
@@ -64,7 +64,7 @@ controller.onSignup = async (req, res,) => {
   console.log(user_type)
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
 
     const userExits = await User.findOne({ "phone_number": phone_number });
@@ -220,7 +220,7 @@ controller.onLogin = async (req, res,) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    var passwordMatch = bcrypt.compareSync(
+    var passwordMatch = bcryptjs.compareSync(
       password,
       userFound.password,
     );
@@ -308,7 +308,7 @@ controller.checkPassword = async (req, res) => {
       })
     }
 
-    const isPasswordValid = await bcrypt.compare(
+    const isPasswordValid = await bcryptjs.compare(
       password,
       user.password
     )
@@ -335,12 +335,12 @@ controller.updatePassowrd = async (req, res) => {
     if (!user) {
       return res.status(200).send({ success: false, message: 'there"s No Account with this Email', reutls: null })
     }
-    const isPasswordValid = await bcrypt.compare(
+    const isPasswordValid = await bcryptjs.compare(
       old_password,
       user.password
     )
     if (isPasswordValid) {
-      const newPassword = await bcrypt.hash(password, 10);
+      const newPassword = await bcryptjs.hash(password, 10);
       const updatePassw = await User.updateOne({
         _id: id,
       }, {
@@ -371,7 +371,7 @@ controller.resetPassowrd = async (req, res) => {
     if (!user) {
       return res.status(200).send({ success: false, message: 'there"s no account with this phone number', reutls: null })
     }
-    const newPassword = await bcrypt.hash(password, 10);
+    const newPassword = await bcryptjs.hash(password, 10);
     await User.updateOne({
       _id: user._id,
     }, {
