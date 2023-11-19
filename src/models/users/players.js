@@ -12,31 +12,31 @@ const Playerschema = new Schema({
 
     cover_img: {
         type: String,
-        required: true,
+        required: false,
     },
 
 
     bio: {
         type: String,
-        required: true,
+        required: false,
     },
 
 
     main_position: {
         type: Number,
-        required: true,
+        required: false,
     },
 
 
     secondary_position: {
         type: Number,
-        required: true,
+        required: false,
     },
 
 
     application_status: {
         type: Number,
-        required: true,
+        default : 2,
     },
 
 

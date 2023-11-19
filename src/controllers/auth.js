@@ -55,11 +55,11 @@ function getPath(user_type) {
 controller.onSignup = async (req, res,) => {
 
   const { email, password, firstName, lastName,
-    gender, username,
     phone_number, } = req.body;
   console.log(req.body);
 
   let user_type = Number.parseInt(req.body.user_type)
+  let gender = Number.parseInt(req.body.gender)
 
   console.log(user_type)
 
@@ -110,7 +110,6 @@ controller.onSignup = async (req, res,) => {
           } catch (error) {
             console.log(error);
           }
-
         }
 
         break;
@@ -150,8 +149,25 @@ controller.onSignup = async (req, res,) => {
         break;
       case 5:
         const player = players(req.body.player);
-        await player.save();
-        user.player = player;
+        if (req.files != undefined) {
+          try {
+            let userPic = req.files.image;
+
+            let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+            let uploadPath = UPLOAD_DIR + "/users/";
+
+            const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+            player.profile_img = pic_name;
+            uploadImage(filePath, uploadPath, userPic.data);
+            await player.save();
+            user.player = player;
+          } catch (error) {
+            console.log(error);
+          }
+        }
+       
       default:
         break;
     }
@@ -392,19 +408,19 @@ controller.findAccount = async (req, res) => {
   const { phone_number } = req.body;
 
   try {
-      const user = await User.findOne({
-          phone_number: phone_number,
-      });
-      if (!user) {
-          return res.status(200).send({ success: false, message: 'there"s no account with this phone number', reutls: false })
-      } else {
-          res.status(200).send({
-              success: true, message: 'ok', reutls: true,
-          })
-      }
+    const user = await User.findOne({
+      phone_number: phone_number,
+    });
+    if (!user) {
+      return res.status(200).send({ success: false, message: 'there"s no account with this phone number', reutls: false })
+    } else {
+      res.status(200).send({
+        success: true, message: 'ok', reutls: true,
+      })
+    }
 
   } catch (error) {
-      return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
+    return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
 
   }
 }
