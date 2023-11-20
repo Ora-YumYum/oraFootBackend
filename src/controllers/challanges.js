@@ -6,6 +6,11 @@ const Users = require("../models/users/users");
 const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 
+const { imageComproser } = require("../config/image-compr")
+
+const { UPLOAD_DIR } = require("../../settings");
+const Refeers = require("../models/users/refeers");
+const Photographers = require("../models/users/photographers");
 
 var controller = {}
 
@@ -14,18 +19,17 @@ controller.createChallange = async (req, res,) => {
     const user_id = req.userId;
 
     try {
-        const { title, desc, location,
+        const { title, desc, staduim,
             match_type, numbers_of_players,
             price, payment_method,
             isPrivateGame, notifyRefree,
             notifyPhotographer, chooseGender
         } = req.body;
 
-
         const challange = new Challanges({
             title: title,
             desc: desc,
-            location: location,
+            staduim: staduim,
             match_type: match_type,
             numbers_of_players: numbers_of_players,
             price: price,
@@ -36,14 +40,40 @@ controller.createChallange = async (req, res,) => {
             chooseGender: chooseGender
         });
 
+        console.log(req.files);
+        if (req.files != undefined) {
+            try {
+                let userPic = req.files.image;
+
+                let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+                let uploadPath = UPLOAD_DIR + "/users/";
+
+                const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+                challange.cover_img = pic_name;
+                uploadImage(filePath, uploadPath, userPic.data);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
         challange.postedBy = user_id;
 
-        let reponse = await Users.updateOne({ _id: user_id }, {
+        const reponse = await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
             }
         })
+
+        const staduimResponse = await Staduims.updateOne({ _id: staduim }, {
+            "$push": {
+                "challanges": challange
+            }
+        })
+
+        
 
         let response = await challange.save();
 
@@ -58,9 +88,41 @@ controller.createChallange = async (req, res,) => {
 };
 
 
+function uploadImage(filePath, uploadPath, pic) {
+    const compression = 60;
+    fs.writeFile(filePath, pic, async function (error) {
+        if (error) throw error
+
+        compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+            { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+            { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+            { svg: { engine: "svgo", command: "--multipass" } },
+            { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+            async function (error, completed, statistic) {
+                console.log("-------------")
+                console.log(error)
+                console.log(completed)
+                console.log(statistic)
+                console.log("-------------")
+
+                try {
+                    fs.unlink(filePath, function (error) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+
+                        }
+                    })
+                } catch (error) {
+                    return res.status(500).send({ success: false, message: "server error", results: null });
+
+                }
+            }
+        )
+    })
+}
+
 controller.getStaduimsByWilaya = async (req, res,) => {
-
-
 
     if (req.query.wilaya != undefined || req.query.wilaya != "" || req.query.wilaya != null) {
         let wilaya = Number.parseInt(wilaya);

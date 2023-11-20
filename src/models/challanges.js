@@ -25,9 +25,9 @@ const challangesSchema = new Schema({
     },
 
 
-    location: {
-        type: String,
-        required: true,
+    staduim: {
+        type: Schema.Types.ObjectId,
+        ref: "Staduims",
     },
 
     start_date: {
