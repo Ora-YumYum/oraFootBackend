@@ -4,6 +4,7 @@
 
 const Games = require("../models/games");
 const Players = require("../models/users/players");
+const Users = require("../models/users/users");
 
 
 const controller = {}
@@ -128,6 +129,37 @@ controller.uploadPhotos = async (req, res) => {
             "success": false,
             "message": "something happpend please try again later",
         });
+    }
+}
+
+
+controller.getMyChallenges = async (req, res) => {
+    const id = req.userID;
+    if (id != undefined && id != "" || id != null) {
+        try {
+
+            const challenges = await Users.findOne({ _id: id }).populate({ path: "challanges" });
+
+            if (!challenges) {
+                res.status(200).send({
+                    "success": true, "message": "ok", results: {
+                        "challenges": challenges,
+                    },
+                });
+            } else {
+                res.status(200).send({
+                    "success": false, "message": "Invalid id", results: {
+                        "challenges": null,
+                    },
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ success: false, message: "Server Error", results: null });
+        }
+    } else {
+        res.status(400).send({ success: false, message: "please enter an id " });
     }
 }
 

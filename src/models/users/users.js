@@ -29,7 +29,6 @@ const userSchema = new Schema({
     type: String,
   },
 
-
   address: {
     type: String,
   },

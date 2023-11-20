@@ -32,7 +32,7 @@ router.post("/add_challange", [
 
 router.get("/", challangesController.viewAllChallanges);
 
-router.get("/get_staduims", challangesController.getStaduims);
+router.get("/get_staduims", challangesController.getStaduimsByWilaya);
 
 router.delete("delete_challange", challangesController.deleteChallanges);
 

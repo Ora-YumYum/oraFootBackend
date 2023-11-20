@@ -1,16 +1,18 @@
 
 
 
-const Players = require("../models/users/players")
+
+
+const Teams = require("../models/users/Teams")
 
 var controller = {};
 
-controller.SearchForPlayers = async (req, res) => {
+controller.SearchForTeams = async (req, res) => {
 
     const query = req.query.query;
 
     try {
-        let response = await Players.aggregate([
+        let response = await Teams.aggregate([
             {
                 "$search": {
                     "index": "default",
@@ -41,17 +43,5 @@ controller.SearchForPlayers = async (req, res) => {
         })
     }
 }
-
-controller.viewAllPlayers = async (req, res,) => {
-    try {
-        let players = await Players.find()
-        res.status(200).json({
-            "success": true,
-            "players": players
-        });
-    } catch (error) {
-        return AppError.onError(error, "restaurant add error" + error);
-    }
-};
 
 module.exports = controller;
