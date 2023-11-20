@@ -16,13 +16,13 @@ controller.getStaduims = async (req, res,) => {
     if (commune != undefined || commune != "" || commune != null) {
 
         try {
-            let staduims = await Staduims.find({ address: commune})
+            let staduims = await Staduims.find({ address: commune })
             res.status(200).json({
                 "success": true,
                 "staduims": staduims
             });
         } catch (error) {
-            
+
             return AppError.onError(error, "restaurant add error" + error);
         }
     }
@@ -34,7 +34,7 @@ controller.viewAllStaduims = async (req, res,) => {
         let staduims = await Staduims.find()
         res.status(200).json({
             "success": true,
-            "msg" : "ok",
+            "message": "ok",
             "staduims": staduims
         });
     } catch (error) {
@@ -49,7 +49,7 @@ controller.deleteStaduim = async (req, res) => {
         await Staduims.deleteOne({ _id: id })
         res.status(200).json({
             "success": true,
-            "msg": "type was deleted successfully"
+            "message": "type was deleted successfully"
         });
     } catch (error) {
         console.log(error);

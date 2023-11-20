@@ -71,7 +71,7 @@ controller.onSignup = async (req, res,) => {
 
     if (userExits) {
       return res.status(200).send({
-        success: false, msg:
+        success: false, message:
           'user already exits with this phone number',
       });
     } else {
@@ -213,7 +213,7 @@ controller.onSignup = async (req, res,) => {
         process.env.SECRET_KEY,
         { expiresIn: "90d" }
       );
-      res.json({ success: true, msg: 'Registration successful', token: token, });
+      res.json({ success: true, message: 'Registration successful', token: token, });
     }
   } catch (error) {
     console.log(error);
@@ -267,7 +267,7 @@ controller.onLogin = async (req, res,) => {
   try {
     const userFound = await User.findOne({ phone_number });
     if (!userFound) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ success : false, message: 'User not found' });
     }
 
     var passwordMatch = bcryptjs.compareSync(
@@ -289,7 +289,7 @@ controller.onLogin = async (req, res,) => {
     const token = jwt.sign({ user_id: user._id.toString(), phone_number: user.phone_number, }, process.env.SECRET_KEY, {
     });
 
-    res.json({ "token": token, "user": user });
+    res.json({ "success" : true , message : "ok", "token": token, "user": user });
   } catch (error) {
     console.log(error);
     return AppError.onError(res, "error" + error);
@@ -311,7 +311,7 @@ controller.getProfile = async (req, res,) => {
 
     user.password = "";
 
-    res.json({ "success": true, "msg": "ok", "data": user });
+    res.json({ "success": true, "message": "ok", "data": user });
 
     if (!user) {
       return res.status(404).json({ message: 'no user was found wit this id' });

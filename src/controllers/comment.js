@@ -34,7 +34,7 @@ controller.postComment = async (req, res) => {
         } else {
             res.status(200).json({
                 success: false,
-                msg: "video with this id does not exists"
+                message: "video with this id does not exists"
             });
         }
     } catch (error) {
@@ -85,7 +85,7 @@ controller.replyComments = async (req, res) => {
 
         return res.status(200).json({
             "success": true,
-            "msg": "ok",
+            "message": "ok",
 
         });
 

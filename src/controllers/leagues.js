@@ -34,7 +34,7 @@ controller.createLeagues = async (req, res,) => {
 
         return res.json({
             "success": true,
-            "msg": "ok",
+            "message": "ok",
             "data": response,
         });
     } catch (error) {
@@ -50,7 +50,7 @@ controller.getMyLeagues = async (req, res,) => {
         let Leagues = await Leagues.find()
         res.status(200).json({
             "success": true,
-            "msg": "0k",
+            "message": "0k",
             "Leagues": Leagues
         });
     } catch (error) {
@@ -63,7 +63,7 @@ controller.getAvailableLeagues = async (req, res,) => {
         let Leagues = await Leagues.find({ league_status: 1 })
         res.status(200).json({
             "success": true,
-            "msg": "0k",
+            "message": "0k",
             "Leagues": Leagues
         });
     } catch (error) {

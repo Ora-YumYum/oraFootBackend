@@ -33,7 +33,7 @@ module.exports = (req, res, next) => {
     err.statusCode = 401;
     return res.status(401).send({
       "success": false,
-      "msg": "unable  to authenticate",
+      "message": "unable  to authenticate",
     });
   }
 

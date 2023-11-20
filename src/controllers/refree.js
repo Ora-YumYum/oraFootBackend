@@ -33,14 +33,14 @@ controller.updateGoals = async (req, res) => {
         });
         res.status(200).json({
             success: true,
-            "msg": "type was updated successfully"
+            "message": "type was updated successfully"
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).jsons({
             "success": false,
-            "msg": "something happpend please try again later",
+            "message": "something happpend please try again later",
         });
     }
 }
@@ -61,14 +61,14 @@ controller.updateFouls = async (req, res) => {
         });
         res.status(200).json({
             success: true,
-            "msg": "type was updated successfully"
+            "message": "type was updated successfully"
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).jsons({
             "success": false,
-            "msg": "something happpend please try again later",
+            "message": "something happpend please try again later",
         });
     }
 }
@@ -90,14 +90,14 @@ controller.updateCards = async (req, res) => {
         });
         res.status(200).json({
             success: true,
-            "msg": "type was updated successfully"
+            "message": "type was updated successfully"
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).jsons({
             "success": false,
-            "msg": "something happpend please try again later",
+            "message": "something happpend please try again later",
         });
     }
 }
@@ -119,14 +119,14 @@ controller.uploadPhotos = async (req, res) => {
         });
         res.status(200).json({
             success: true,
-            "msg": "type was updated successfully"
+            "message": "type was updated successfully"
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).jsons({
             "success": false,
-            "msg": "something happpend please try again later",
+            "message": "something happpend please try again later",
         });
     }
 }

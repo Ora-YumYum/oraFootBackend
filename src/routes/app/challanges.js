@@ -18,7 +18,7 @@ router.post("/add_challange", [
     body("price").notEmpty(),
 ]
     , (req, res, next) => {
-        const error = validationResult(req).formatWith(({ msg }) => msg);
+        const error = validationResult(req).formatWith(({ message }) => message);
 
         const hasError = !error.isEmpty();
 

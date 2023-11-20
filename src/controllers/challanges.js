@@ -41,7 +41,7 @@ controller.createChallange = async (req, res,) => {
 
         return res.json({
             "success": true,
-            "msg": "ok",
+            "message": "ok",
             "data": response,
         });
     } catch (error) {
@@ -87,7 +87,7 @@ controller.deleteChallanges = async (req, res) => {
         await Challanges.deleteOne({ _id: id })
         res.status(200).json({
             "success": true,
-            "msg": "type was deleted successfully"
+            "message": "type was deleted successfully"
         });
     } catch (error) {
         console.log(error);
@@ -109,18 +109,18 @@ controller.changeStatus = async (req, res) => {
             })
             res.status(200).json({
                 "success": true,
-                "msg": "status updated successfully"
+                "message": "status updated successfully"
             });
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                "msg": error,
+                "message": error,
                 "success": false,
             });
         }
     } else {
         res.status(400).json({
-            "msg": "invalid value",
+            "message": "invalid value",
             "success": false,
         });
     }
