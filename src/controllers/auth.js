@@ -267,7 +267,7 @@ controller.onLogin = async (req, res,) => {
   try {
     const userFound = await User.findOne({ phone_number });
     if (!userFound) {
-      return res.status(404).json({ success : false, message: 'User not found' });
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
 
     var passwordMatch = bcryptjs.compareSync(
@@ -289,7 +289,7 @@ controller.onLogin = async (req, res,) => {
     const token = jwt.sign({ user_id: user._id.toString(), phone_number: user.phone_number, }, process.env.SECRET_KEY, {
     });
 
-    res.json({ "success" : true , message : "ok", "token": token, "user": user });
+    res.json({ "success": true, message: "ok", "token": token, "user": user });
   } catch (error) {
     console.log(error);
     return AppError.onError(res, "error" + error);
@@ -453,6 +453,28 @@ controller.findAccount = async (req, res) => {
       })
     }
 
+  } catch (error) {
+    return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
+
+  }
+}
+
+
+controller.updateToken = async (req, res) => {
+  const { token, } = req.body;
+  const userId = req.userId;
+
+  try {
+    await User.updateOne({
+      _id: userId,
+    }, {
+      $set: {
+        "fcm_token": token
+      }
+    });
+    return res.status(200).send({
+      success: true, message: 'ok', reutls: "token was updated successfully"
+    })
   } catch (error) {
     return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
 

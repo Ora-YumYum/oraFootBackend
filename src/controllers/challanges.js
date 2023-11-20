@@ -1,6 +1,8 @@
 
 
 const Challanges = require("../models/challanges");
+const Users = require("../models/users/users");
+
 const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 
@@ -15,8 +17,8 @@ controller.createChallange = async (req, res,) => {
         const { title, desc, location,
             match_type, numbers_of_players,
             price, payment_method,
-            isPrivateGame, showStandBy,
-            enableCalls, chooseGender
+            isPrivateGame, notifyRefree,
+            notifyPhotographer, chooseGender
         } = req.body;
 
 
@@ -29,13 +31,19 @@ controller.createChallange = async (req, res,) => {
             price: price,
             payment_method: payment_method,
             isPrivateGame: isPrivateGame,
-            showStandBy: showStandBy,
-            enableCalls: enableCalls,
+            notifyRefree: notifyRefree,
+            notifyPhotographer: notifyPhotographer,
             chooseGender: chooseGender
         });
 
 
         challange.postedBy = user_id;
+
+        let reponse = await Users.updateOne({ _id: user_id }, {
+            "$push": {
+                "challanges": challange
+            }
+        })
 
         let response = await challange.save();
 
@@ -50,13 +58,14 @@ controller.createChallange = async (req, res,) => {
 };
 
 
-controller.getStaduims = async (req, res,) => {
+controller.getStaduimsByWilaya = async (req, res,) => {
 
-    let commune = req.body.commune;
 
-    if (commune != undefined || commune != "" || commune != null) {
+
+    if (req.query.wilaya != undefined || req.query.wilaya != "" || req.query.wilaya != null) {
+        let wilaya = Number.parseInt(wilaya);
         try {
-            let staduims = await Staduims.find({ address: commune })
+            let staduims = await Staduims.find({ wilaya: wilaya })
             res.status(200).json({
                 "success": true,
                 "staduims": staduims

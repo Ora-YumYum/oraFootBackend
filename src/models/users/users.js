@@ -36,7 +36,7 @@ const userSchema = new Schema({
 
   wilaya: {
     type: Number,
-    
+
   },
 
 
@@ -56,6 +56,12 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
+
+  fcm_token: {
+    type: String,
+    required: false,
+  },
+
   challanges: [
     {
       type: Schema.Types.ObjectId,
