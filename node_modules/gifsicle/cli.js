@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import process from 'node:process';
-import {execa} from 'execa';
-import gifsicle from './index.js';
+'use strict';
+const execa = require('execa');
+const m = require('.');
 
-execa(gifsicle, process.argv.slice(2), {stdio: 'inherit'});
+execa(m, process.argv.slice(2), {stdio: 'inherit'});
