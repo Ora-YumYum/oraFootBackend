@@ -7,7 +7,7 @@ const Playerschema = new Schema({
 
     profile_img: {
         type: String,
-        required: true,
+        required: false,
     },
 
     cover_img: {
@@ -63,7 +63,7 @@ const Playerschema = new Schema({
 
     rating: {
         type: Number,
-        required: true,
+        required: false,
     },
 
     ratings: [
