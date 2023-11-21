@@ -186,8 +186,9 @@ controller.onSignup = async (req, res,) => {
           user.staduim = staduim;
           break;
         case 5:
-          const player = players(req.body.player);
+        
           if (req.files != undefined) {
+            const player = players(req.body.player);
             try {
               let userPic = req.files.image;
 
@@ -196,7 +197,6 @@ controller.onSignup = async (req, res,) => {
               let uploadPath = UPLOAD_DIR + "/users/";
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
-
               player.profile_img = pic_name;
               uploadImage(filePath, uploadPath, userPic.data);
               await player.save();
