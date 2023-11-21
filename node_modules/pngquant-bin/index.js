@@ -1,3 +1,2 @@
-import lib from './lib/index.js';
-
-export default lib.path();
+'use strict';
+module.exports = require('./lib').path();
