@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 const AppError = require("./errorController");
 const { APP_KEY } = require("../config/AppConst");
+const fs = require('file-system');
 
 const { validationResult } = require("express-validator");
 const { imageComproser } = require("../config/image-compr")
