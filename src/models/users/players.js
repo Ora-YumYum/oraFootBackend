@@ -44,8 +44,11 @@ const Playerschema = new Schema({
         default : 2,
     },
 
-
-
+     
+    user_id :  {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+      },
     followers: [
         {
             type: Schema.Types.ObjectId,

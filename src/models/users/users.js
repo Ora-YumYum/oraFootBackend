@@ -9,16 +9,18 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+
+
   username: {
     type: String,
     required: true,
   },
 
+
   password: {
     type: String,
     required: true,
   },
-
 
   first_name: {
     type: String,
@@ -60,6 +62,8 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+
+  
 
   challanges: [
     {

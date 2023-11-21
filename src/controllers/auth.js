@@ -141,17 +141,17 @@ controller.onSignup = async (req, res,) => {
           break;
         case 2:
           const photographer = Photographers(req.body.photographer);
-          
+
           if (req.files != undefined) {
-          
+
             try {
               let userPic = req.files.image;
-            
+
               let pic_name = (new Date().getTime()) + "-" + userPic.name;
 
               let uploadPath = UPLOAD_DIR + "/users/";
 
-              
+
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               refeere.profile_img = pic_name;
@@ -199,6 +199,7 @@ controller.onSignup = async (req, res,) => {
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
               player.profile_img = pic_name;
+              player.user_id = user._id;
               uploadImage(filePath, uploadPath, userPic.data);
               await player.save();
               user.player = player;
