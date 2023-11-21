@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 
 const helmet = require("helmet");
 
+const cors = require('cors')
 
 const morgan = require("morgan");
 
@@ -23,6 +24,7 @@ const app = express()
 
 app.use(fileUpload())
 
+const { UPLOAD_DIR } = require("./settings");
 
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
@@ -59,6 +61,17 @@ mongoose
 
 const PORT = process.env.PORT;
 
+
+const corsOptions = {
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}
+
+app.use(cors(corsOptions))
+
+app.use(express.static(UPLOAD_DIR));
 
 app.listen(PORT);
 
