@@ -8,7 +8,6 @@ const bodyParser = require("body-parser");
 
 const helmet = require("helmet");
 
-const compression = require("compression");
 
 const morgan = require("morgan");
 

@@ -1,6 +1,5 @@
 
 
-const compression = require("compression"); 
 
 const compressImages = require("compress-images")
 
