@@ -54,8 +54,7 @@ function getPath(user_type) {
 
 controller.onSignup = async (req, res,) => {
 
-  const { email, password, firstName, lastName,
-    phone_number, username, } = req.body;
+  const { email, password, firstName, lastName, phone_number, username, } = req.body;
 
   let user_type = Number.parseInt(req.body.user_type)
   let gender = Number.parseInt(req.body.gender)
@@ -70,6 +69,8 @@ controller.onSignup = async (req, res,) => {
     const userExits = await User.findOne({ "phone_number": phone_number });
 
     if (userExits) {
+
+
       return res.status(200).send({
         success: false, message:
           'user already exits with this phone number',
@@ -81,6 +82,7 @@ controller.onSignup = async (req, res,) => {
         phone_number: phone_number,
         user_type: user_type,
         wilaya: wilaya,
+        fcm_token: "",
       });
 
       switch (user_type) {
@@ -118,7 +120,6 @@ controller.onSignup = async (req, res,) => {
         case 1:
           const refeere = Refeers({ profile_img: "" })
 
-          console.log(req.files);
           if (req.files != undefined) {
             try {
               let userPic = req.files.image;
@@ -200,6 +201,7 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
               player.profile_img = pic_name;
               player.user_id = user._id;
+              user.profile_img = pic_name;
               uploadImage(filePath, uploadPath, userPic.data);
               await player.save();
               user.player = player;
@@ -468,8 +470,10 @@ controller.updateToken = async (req, res) => {
   const { token, } = req.body;
   const userId = req.userId;
 
+  const options = { upsert: true };
+
   try {
-    await User.updateOne({
+    let response = await User.updateOne({
       _id: userId,
     }, {
       $set: {

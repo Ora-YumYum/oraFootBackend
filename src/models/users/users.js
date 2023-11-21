@@ -63,7 +63,10 @@ const userSchema = new Schema({
     required: false,
   },
 
-  
+  profile_img: {
+    type: String,
+    required: false,
+  },
 
   challanges: [
     {

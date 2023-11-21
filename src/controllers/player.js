@@ -3,43 +3,65 @@
 
 const Players = require("../models/users/players")
 
+const Users = require("../models/users/users")
+
+
 var controller = {};
 
 controller.SearchForPlayers = async (req, res) => {
 
     const query = req.query.query;
 
-    try {
-        let response = await Players.aggregate([
-            {
-                "$search": {
-                    "index": "default",
-                    "autocomplete": {
-                        "query": query,
-                        "path": "team_name",
-                        "fuzzy": {
-                            "maxEdits": 1,
-                            "prefixLength": 3,
-                        },
-                    },
+    if (query != "") {
+        try {
+            let response = await Users.aggregate([
+                {
+                    '$search': {
+                        "index": "default",
+                        'compound': {
+                            'should': [
+                                {
+                                    'autocomplete': {
+                                        'query': query,
+                                        'path': 'first_name'
+                                    }
+                                },
+                                {
+                                    'autocomplete': {
+                                        'query': query,
+                                        'path': 'last_name'
+                                    }
+                                }
+                            ],
+                            'minimumShouldMatch': 1
+                        }
+                    }
                 },
-            },
 
-            { $limit: 10, },
-        ]);
-        return res.status(200).send({
-            "results": response,
-            "success": true,
-            "message": "ok"
-        })
-    } catch (error) {
-        console.log(error);
+                { $limit: 10, },
+            ]);
+            return res.status(200).send({
+                "results": response,
+                "success": true,
+                "message": "ok"
+            })
+        } catch (error) {
+            console.log(error);
+            return res.status(400).send({
+                "results": null,
+                "success": false,
+                "message": "ok"
+            })
+        }
+    } else {
         return res.status(400).send({
             "results": null,
             "success": false,
-            "message": "ok"
+            "message": "invalid query"
         })
     }
+
+
 }
 
 controller.viewAllPlayers = async (req, res,) => {

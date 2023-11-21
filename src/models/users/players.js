@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const Playerschema = new Schema({
 
-
+    
     profile_img: {
         type: String,
         required: false,
