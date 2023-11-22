@@ -85,7 +85,7 @@ controller.viewAllPlayers = async (req, res,) => {
 
 controller.sendInvitation = async (req, res) => {
 
-    const { player_id, team_id , team_name } = req.body;
+    const { player_id, team_id, team_name } = req.body;
     try {
         let playerExits = await Players.findOne({ _id: player_id });
 
@@ -105,7 +105,7 @@ controller.sendInvitation = async (req, res) => {
                 type: "invite_team",
                 invitation: invitation,
                 user_id: player_id,
-                title : team_name,
+                title: team_name,
             });
 
             await Users.updateMany({ _id: { $in: [team_id, player_id] } }, {
@@ -147,7 +147,7 @@ controller.accepteInvitation = async (req, res) => {
         });
 
         let invitation = await Invitation.updateOne({ _id: invitation_id }, {
-            "$set" : {
+            "$set": {
                 status: 0,
             }
         })

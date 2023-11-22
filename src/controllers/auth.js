@@ -58,7 +58,9 @@ controller.onSignup = async (req, res,) => {
 
   let user_type = Number.parseInt(req.body.user_type)
   let gender = Number.parseInt(req.body.gender)
-  let wilaya = Number.parseInt(req.body.wilaya)
+
+
+
 
 
 
@@ -81,9 +83,14 @@ controller.onSignup = async (req, res,) => {
         last_name: lastName, gender: gender, username: username,
         phone_number: phone_number,
         user_type: user_type,
-        wilaya: wilaya,
+       
         fcm_token: "",
       });
+
+      if (wilaya != undefined) {
+        let wilaya = Number.parseInt(req.body.wilaya)
+        user.wilaya = wilaya;
+      }
 
       switch (user_type) {
         case 0:
