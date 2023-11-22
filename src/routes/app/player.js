@@ -13,6 +13,7 @@ router.get("/search_players", playerController.SearchForPlayers);
 
 router.get("/get_players", playerController.viewAllPlayers);
 
+router.post("/send_invitation", playerController.sendInvitation);
 
 
 module.exports = router;

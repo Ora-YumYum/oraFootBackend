@@ -59,11 +59,6 @@ controller.onSignup = async (req, res,) => {
   let user_type = Number.parseInt(req.body.user_type)
   let gender = Number.parseInt(req.body.gender)
 
-
-
-
-
-
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
@@ -83,7 +78,6 @@ controller.onSignup = async (req, res,) => {
         last_name: lastName, gender: gender, username: username,
         phone_number: phone_number,
         user_type: user_type,
-       
         fcm_token: "",
       });
 
@@ -169,7 +163,6 @@ controller.onSignup = async (req, res,) => {
             } catch (error) {
               console.log(error);
             }
-
           }
           user.photographer = photographer;
           break;
@@ -195,7 +188,6 @@ controller.onSignup = async (req, res,) => {
           user.staduim = staduim;
           break;
         case 5:
-
           if (req.files != undefined) {
             const player = players(req.body.player);
             try {
@@ -226,7 +218,8 @@ controller.onSignup = async (req, res,) => {
         process.env.SECRET_KEY,
         { expiresIn: "90d" }
       );
-      res.json({ success: true, message: 'Registration successful', token: token, });
+      user.password = "";
+     return res.json({ success: true, message: 'Registration successful', token: token, user : user });
     }
   } catch (error) {
     console.log(error);
