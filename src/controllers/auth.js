@@ -87,7 +87,7 @@ controller.onSignup = async (req, res,) => {
         fcm_token: "",
       });
 
-      if (wilaya != undefined) {
+      if (req.body.wilaya != undefined) {
         let wilaya = Number.parseInt(req.body.wilaya)
         user.wilaya = wilaya;
       }
