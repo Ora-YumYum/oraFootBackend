@@ -10,17 +10,23 @@ const requiredString = {
 
 const NotificationsSchema = new mongoose.Schema(
     {
+        type: {
+            type: String,
+        },
+
         title: {
             type: String,
-            required: true,
+            required: false,
         },
 
         user_name: {
             type: String,
-            required: true,
+            required: false,
         },
 
-        user_id: { type: Schema.Types.ObjectId, ref: "Users" },
+        user_id: { type: Schema.Types.ObjectId, ref: "Users"},
+
+        invitation: { type: Schema.Types.ObjectId, ref: "Invitation"},
 
 
         notifcation_pic: String,
@@ -33,11 +39,6 @@ const NotificationsSchema = new mongoose.Schema(
         read: {
             type: Boolean,
             default: false
-        },
-        
-        notification_type: {
-            type: Number,
-            default: 0,
         },
 
     },

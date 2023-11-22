@@ -4,18 +4,15 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
 
-
   email: {
     type: String,
     required: true,
   },
 
-
   username: {
     type: String,
     required: true,
   },
-
 
   password: {
     type: String,
@@ -25,7 +22,6 @@ const userSchema = new Schema({
   first_name: {
     type: String,
   },
-
 
   last_name: {
     type: String,
@@ -74,6 +70,14 @@ const userSchema = new Schema({
       ref: "Challanges",
     },
   ],
+
+  invitations: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Invitation",
+    },
+  ],
+
   comments: [
     {
       type: Schema.Types.ObjectId,
@@ -81,6 +85,13 @@ const userSchema = new Schema({
     },
   ],
 
+
+  notifications: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Notifications",
+    },
+  ],
 
   player: {
     type: Schema.Types.ObjectId,
