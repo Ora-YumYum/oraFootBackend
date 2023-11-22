@@ -33,7 +33,6 @@ const userSchema = new Schema({
 
   wilaya: {
     type: Number,
-
   },
 
 

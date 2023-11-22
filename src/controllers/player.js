@@ -45,6 +45,13 @@ controller.SearchForPlayers = async (req, res) => {
                 },
 
                 { $limit: 10, },
+                {
+                    $match: {
+                        "user_type": {
+                            $eq: 5,
+                        }
+                    }
+                }
             ]);
             return res.status(200).send({
                 "results": response,

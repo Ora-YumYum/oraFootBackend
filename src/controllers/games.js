@@ -23,8 +23,6 @@ controller.viewGames = async (req, res,) => {
 
 controller.getGameById = async (req, res,) => {
     const id = req.body.game_id;
-    
-    
 
     try {
         let game = await Games.findOne({ _id: id });
