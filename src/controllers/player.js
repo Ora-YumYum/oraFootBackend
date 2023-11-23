@@ -108,32 +108,42 @@ controller.sendInvitation = async (req, res) => {
                 status: 2,
             });
 
+            
             let notification = Notifications({
                 type: "invite_team",
                 invitation: invitation,
                 user_id: player_id,
                 title: team_name,
             });
+            await notification.save();
 
-            await Users.updateMany({ _id: { $in: [team_id, player_id] } }, {
+            await invitation.save();
+            
+            await Users.updateMany({ _id: { $in: [team_id.toString(), player_id.toString()] } }, {
                 "$push": {
                     "invitations": invitation
                 }
             },),
-
-                await Users.updateOne({ _id: player_id }, {
-                    "$push": {
-                        "notifications": notification
+            await Users.updateOne({ _id: player_id }, {
+            "$push": {
+                "notifications": notification
                     },
-                },)
+            },)
+            res.status(200).json({
+                "success": true,
+                "msg": "invitation was sent successfully",
+            });
+        } else {
+            res.status(400).json({
+                "success": false,
+                "msg": "Invalid id",
+            });
         }
 
-        res.status(200).json({
-            "success": true,
-            "msg": "invitation was sent successfully",
-        });
+
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             "success": false,
             "msg": error,

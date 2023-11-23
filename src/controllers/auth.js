@@ -219,7 +219,7 @@ controller.onSignup = async (req, res,) => {
         { expiresIn: "90d" }
       );
       user.password = "";
-     return res.json({ success: true, message: 'Registration successful', token: token, user : user });
+      return res.json({ success: true, message: 'Registration successful', token: token, user: user });
     }
   } catch (error) {
     console.log(error);
