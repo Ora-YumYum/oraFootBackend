@@ -94,9 +94,10 @@ controller.sendInvitation = async (req, res) => {
 
     const { player_id, team_id, team_name } = req.body;
     try {
-        console.log(player_id);
+      
+
         let playerExits = await Users.findOne({ _id: player_id });
-        console.log(playerExits);
+
         if (playerExits) {
 
             let invitation = Invitation({
@@ -105,10 +106,11 @@ controller.sendInvitation = async (req, res) => {
                 data: {
                     "team_id": team_id,
                     "player_id": player_id,
-                    "team_name" : team_name,
+                    "team_name": team_name,
                 },
                 status: 2,
             });
+
             let notification = Notifications({
                 type: "invite_team",
                 invitation: invitation,
@@ -124,11 +126,12 @@ controller.sendInvitation = async (req, res) => {
                     "invitations": invitation
                 }
             },),
-            await Users.updateOne({ _id: player_id }, {
-            "$push": {
-                "notifications": notification
+
+                await Users.updateOne({ _id: player_id }, {
+                    "$push": {
+                        "notifications": notification
                     },
-            },)
+                },)
             res.status(200).json({
                 "success": true,
                 "msg": "invitation was sent successfully",

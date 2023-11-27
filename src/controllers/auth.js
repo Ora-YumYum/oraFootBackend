@@ -306,6 +306,7 @@ controller.onLogin = async (req, res,) => {
 controller.getProfile = async (req, res,) => {
   const userId = req.userId;
 
+  
   if (!userId) {
     return res.status(401).json({ message: 'invalid userId' });
   }
@@ -317,7 +318,7 @@ controller.getProfile = async (req, res,) => {
 
     user.password = "";
 
-    res.json({ "success": true, "message": "ok", "data": user });
+    return res.status(200).json({ "success": true, "message": "ok", "data": user });
 
     if (!user) {
       return res.status(404).json({ message: 'no user was found wit this id' });

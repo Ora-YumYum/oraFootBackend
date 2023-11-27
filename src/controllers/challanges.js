@@ -3,6 +3,10 @@
 const Challanges = require("../models/challanges");
 const Users = require("../models/users/users");
 
+const Invitation = require("../models/invitation");
+
+const Notifications = require("../models/notifications");
+
 const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 
@@ -206,5 +210,72 @@ controller.changeStatus = async (req, res) => {
 
 };
 
+
+controller.sendInvitation = async (req, res) => {
+
+    const { player_id, team_id, team_name } = req.body;
+    try {
+
+
+
+        let playerExits = await Users.findOne({ _id: player_id });
+
+        if (playerExits) {
+
+            let invitation = Invitation({
+                type: "team_invitation",
+                user_id: player_id,
+                data: {
+                    "team_id": team_id,
+                    "player_id": player_id,
+                    "team_name": team_name,
+                },
+                status: 2,
+            });
+
+            let notification = Notifications({
+                type: "invite_team",
+                invitation: invitation,
+                user_id: player_id,
+                title: team_name,
+            });
+            await notification.save();
+
+            await invitation.save();
+
+            await Users.updateMany({ _id: { $in: [team_id.toString(), player_id.toString()] } }, {
+                "$push": {
+                    "invitations": invitation
+                }
+            },),
+
+                await Users.updateOne({ _id: player_id }, {
+                    "$push": {
+                        "notifications": notification
+                    },
+                },),
+
+
+                res.status(200).json({
+                    "success": true,
+                    "msg": "invitation was sent successfully",
+                });
+        } else {
+            res.status(400).json({
+                "success": false,
+                "msg": "Invalid id",
+            });
+        }
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
 
 module.exports = controller;
