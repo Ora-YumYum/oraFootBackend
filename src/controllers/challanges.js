@@ -28,7 +28,7 @@ controller.createChallange = async (req, res,) => {
             price, payment_method,
             isPrivateGame, notifyRefree,
             notifyPhotographer, chooseGender,
-            opponent_team,
+
         } = req.body;
 
         const challange = new Challanges({
@@ -43,7 +43,6 @@ controller.createChallange = async (req, res,) => {
             notifyRefree: notifyRefree,
             notifyPhotographer: notifyPhotographer,
             chooseGender: chooseGender,
-            opponent_team: opponent_team,
         });
 
         console.log(req.files);
@@ -67,11 +66,11 @@ controller.createChallange = async (req, res,) => {
 
         challange.postedBy = user_id;
 
-        const opponent_team_exits = await Users.findeOne({ _id: opponent_team })
+        //const opponent_team_exits = await Users.findeOne({ _id: opponent_team })
 
-        if (!opponent_team_exits) {
+        /*if (!opponent_team_exits) {
 
-        }
+        }*/
 
         const reponse = await Users.updateOne({ _id: user_id }, {
             "$push": {
