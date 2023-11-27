@@ -306,23 +306,32 @@ controller.onLogin = async (req, res,) => {
 controller.getProfile = async (req, res,) => {
   const userId = req.userId;
 
-  
+  console.log(userId)
   if (!userId) {
     return res.status(401).json({ message: 'invalid userId' });
   }
 
   try {
-    let path = getPath(userFound.user_type);
 
-    const user = await User.findOne({ phone_number }).populate(path.toString());
+    const userFound = await User.findOne({ _id: userId });
+    console.log(userFound)
 
-    user.password = "";
+    if (!userFound) {
 
-    return res.status(200).json({ "success": true, "message": "ok", "data": user });
-
-    if (!user) {
       return res.status(404).json({ message: 'no user was found wit this id' });
+    } else {
+      let path = getPath(userFound.user_type);
+
+      const user = await User.findOne({ _id: userId }).populate(path.toString());
+
+      user.password = "";
+      return res.status(200).json({ "success": true, "message": "ok", "data": user });
     }
+
+
+
+
+
   } catch (error) {
     return AppError.onError(res, "error" + error);
   }
