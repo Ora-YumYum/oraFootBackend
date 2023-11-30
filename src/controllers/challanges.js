@@ -28,6 +28,7 @@ controller.createChallange = async (req, res,) => {
             price, payment_method,
             isPrivateGame, notifyRefree,
             notifyPhotographer,
+            field_type,
 
         } = req.body;
 
@@ -42,7 +43,7 @@ controller.createChallange = async (req, res,) => {
             isPrivateGame: isPrivateGame,
             notifyRefree: notifyRefree,
             notifyPhotographer: notifyPhotographer,
-            
+            field_type:field_type
         });
 
         console.log(req.files);
@@ -138,7 +139,7 @@ controller.getStaduimsByWilaya = async (req, res,) => {
     if (req.query.wilaya != undefined || req.query.wilaya != "" || req.query.wilaya != null) {
         let wilaya = Number.parseInt(req.query.wilaya);
         try {
-            let staduims = await Staduims.find({   wilaya : wilaya })
+            let staduims = await Staduims.find({ wilaya: wilaya })
             res.status(200).json({
                 "success": true,
                 "staduims": staduims

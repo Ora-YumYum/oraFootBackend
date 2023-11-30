@@ -37,16 +37,21 @@ const challangesSchema = new Schema({
 
 
     match_type: {
-        type: String,
+        type: Number,
         required: true,
     },
 
 
     numbers_of_players: {
         type: Number,
-        required: false,
+        required: true,
     },
 
+
+    fieldType: {
+        type: Number,
+        required: true,
+    },
 
     price: {
         type: Number,
