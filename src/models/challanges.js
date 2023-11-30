@@ -24,7 +24,6 @@ const challangesSchema = new Schema({
         required: true,
     },
 
-
     staduim: {
         type: Schema.Types.ObjectId,
         ref: "Staduims",
@@ -32,7 +31,6 @@ const challangesSchema = new Schema({
 
     start_date: {
         type: Date,
-        default: Date.now(),
     },
 
 
@@ -48,7 +46,7 @@ const challangesSchema = new Schema({
     },
 
 
-    fieldType: {
+    field_type: {
         type: Number,
         required: true,
     },
