@@ -27,7 +27,7 @@ controller.createChallange = async (req, res,) => {
             match_type, numbers_of_players,
             price, payment_method,
             isPrivateGame, notifyRefree,
-            notifyPhotographer, chooseGender,
+            notifyPhotographer,
 
         } = req.body;
 
@@ -42,7 +42,7 @@ controller.createChallange = async (req, res,) => {
             isPrivateGame: isPrivateGame,
             notifyRefree: notifyRefree,
             notifyPhotographer: notifyPhotographer,
-            chooseGender: chooseGender,
+            
         });
 
         console.log(req.files);

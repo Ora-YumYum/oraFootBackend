@@ -14,7 +14,7 @@ const { body, check, validationResult } = require('express-validator');
 
 router.post("/add_challange", [
     body("title").notEmpty(),
-    body("location").notEmpty(),
+    
     body("price").notEmpty(),
 ]
     , (req, res, next) => {
