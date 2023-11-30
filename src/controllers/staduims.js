@@ -11,7 +11,7 @@ var controller = {}
 
 controller.getStaduims = async (req, res,) => {
 
-    let commune = req.body.commune;
+    let commune = Number.parseInt(req.body.commune);
 
     if (commune != undefined || commune != "" || commune != null) {
 
