@@ -136,9 +136,9 @@ function uploadImage(filePath, uploadPath, pic) {
 controller.getStaduimsByWilaya = async (req, res,) => {
 
     if (req.query.wilaya != undefined || req.query.wilaya != "" || req.query.wilaya != null) {
-        let wilaya = Number.parseInt(wilaya);
+        let wilaya = Number.parseInt(req.query.wilaya);
         try {
-            let staduims = await Staduims.find({ wilaya: wilaya })
+            let staduims = await Staduims.find({   wilaya : wilaya })
             res.status(200).json({
                 "success": true,
                 "staduims": staduims
