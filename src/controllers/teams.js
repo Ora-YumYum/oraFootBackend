@@ -7,6 +7,8 @@ const Teams = require("../models/users/Teams")
 
 const Users = require("../models/users/users")
 
+const {ObjectId} = require('mongodb'); // or ObjectID 
+
 
 var controller = {};
 
@@ -69,11 +71,11 @@ controller.getInvitations = async (req, res) => {
 }
 
 controller.getPlayers = async (req, res) => {
-    const id = req.userId;
+    const id = req.query.id;
     console.log(id);
     if (id != undefined && id != "") {
         try {
-            let team = await Teams.findOne({ _id: id }).populate("players");
+            let team = await Teams.findOne({ _id: new ObjectId(id) }).populate("players");
             console.log(team)
             return res.status(200).send({
                 success: true, message: "ok",

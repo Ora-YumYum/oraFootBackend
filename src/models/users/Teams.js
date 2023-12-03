@@ -105,8 +105,7 @@ const Teamschema = new Schema({
 
   players: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Users",
+      
     },
   ],
 
