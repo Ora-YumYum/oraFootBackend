@@ -67,8 +67,6 @@ controller.getInvitations = async (req, res) => {
                 user.invitations["player"] = players.
                 filter(el => el["user_id"].toString() == element.data.player_id.toString());
             });
-
-            
             return res.status(200).send({
                 success: true, message: "ok", results: {
                     invitations: user.invitations,
@@ -85,20 +83,31 @@ controller.getInvitations = async (req, res) => {
 
 controller.getPlayers = async (req, res) => {
     const id = req.query.id;
-    console.log(id);
-    let ids = []
+    let ids = [];
+    let playersList = [];
     if (id != undefined && id != "") {
         try {
             let team = await Teams.findOne({ _id: new ObjectId(id) }).populate("players");
             team.players.forEach(element => {
-                console.log(element.player);
                 ids.push(element.player);
             });
-            console.log(ids);
+            
             const players = await Players.find({ _id: ids}).populate("user_id");
+
+            
+            for (let index = 0; index < team.players.length; index++) {
+                const element = team.players[index];
+                let id = team.players[index]["player"];
+                
+                element["player_info"] = players.
+                filter(el => el["user_id"]["player"].toString() == id.toString());
+
+                playersList.push(element);
+            }
+
             return res.status(200).send({
                 success: true, message: "ok",
-                players: players,
+                players: playersList,
             });
         } catch (error) {
             console.log(error);
