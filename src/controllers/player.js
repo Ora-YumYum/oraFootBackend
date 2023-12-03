@@ -148,7 +148,7 @@ controller.sendInvitation = async (req, res) => {
                         "notifications": notification
                     },
                 },),
-                await Users.updateOne({ _id: team_id }, {
+                await Teams.updateOne({ _id: team_id }, {
                     "$push": {
                         "players": {
                             "player": playerExits.player,
