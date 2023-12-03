@@ -155,9 +155,27 @@ controller.getStaduimsByWilaya = async (req, res,) => {
 };
 
 
-controller.viewAllChallanges = async (req, res,) => {
+controller.viewMyChallanges = async (req, res,) => {
+
+
+    const id = req.userId;
+
     try {
-        let challanges = await Challanges.find()
+        let challanges = await Challanges.find({ postedBy: id }).populate("staduim")
+        res.status(200).json({
+            "success": true,
+            "challanges": challanges
+        });
+    } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
+
+
+controller.viewAllChallanges = async (req, res,) => {
+
+    try {
+        let challanges = await Challanges.find().populate("")
         res.status(200).json({
             "success": true,
             "challanges": challanges

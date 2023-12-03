@@ -32,6 +32,8 @@ router.post("/add_challange", [
 
 router.get("/", challangesController.viewAllChallanges);
 
+router.get("/my_challenges", middleware, challangesController.viewMyChallanges);
+
 router.get("/get_staduims", challangesController.getStaduimsByWilaya);
 
 router.delete("delete_challange", challangesController.deleteChallanges);
