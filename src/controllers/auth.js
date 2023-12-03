@@ -172,7 +172,8 @@ controller.onSignup = async (req, res,) => {
           user.doctor = doctor;
           break;
         case 4:
-          let staduim_data = JSON.parse(req.body.staduim);
+          console.log(req.body);
+          let staduim_data = req.body.staduim;
           let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
           let price_per_month = Number.parseFloat(staduim_data.price_per_month)
           let price_per_year = Number.parseFloat(staduim_data.price_per_year)
@@ -327,10 +328,6 @@ controller.getProfile = async (req, res,) => {
       user.password = "";
       return res.status(200).json({ "success": true, "message": "ok", "data": user });
     }
-
-
-
-
 
   } catch (error) {
     return AppError.onError(res, "error" + error);

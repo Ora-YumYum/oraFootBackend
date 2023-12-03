@@ -52,8 +52,9 @@ controller.SearchForTeams = async (req, res) => {
 
 controller.getInvitations = async (req, res) => {
     const id = req.userId;
-    let ids = []
-    console.log(id);
+    let ids = [];
+    let playersList = [];
+
     if (id != undefined && id != "") {
         try {
             let user = await Users.findOne({ _id: id }).populate("invitations");
@@ -61,15 +62,24 @@ controller.getInvitations = async (req, res) => {
             user.invitations.forEach(element => {
                 ids.push(element.data.player_id);
             });
-            const players = await Players.find({ _id: ids}).populate("user_id");
+            console.log(ids)
+            const players = await Players.find({ _id: ids }).populate("user_id");
 
-            user.invitations.forEach(element => {
-                user.invitations["player"] = players.
-                filter(el => el["user_id"].toString() == element.data.player_id.toString());
-            });
+            console.log(players);
+
+            for (let index = 0; index < user.invitations.length; index++) {
+                const element = user.invitations[index];
+                let id = user.invitations[index]["user_id"];
+
+                element["player_info"] = players.
+                    filter(el => el["user_id"]["player"].toString() == id.toString());
+
+                playersList.push(element);
+            }
+
             return res.status(200).send({
                 success: true, message: "ok", results: {
-                    invitations: user.invitations,
+                    invitations: playersList,
                 },
             });
         } catch (error) {
@@ -91,16 +101,16 @@ controller.getPlayers = async (req, res) => {
             team.players.forEach(element => {
                 ids.push(element.player);
             });
-            
-            const players = await Players.find({ _id: ids}).populate("user_id");
 
-            
+            const players = await Players.find({ _id: ids }).populate("user_id");
+
+
             for (let index = 0; index < team.players.length; index++) {
                 const element = team.players[index];
                 let id = team.players[index]["player"];
-                
+
                 element["player_info"] = players.
-                filter(el => el["user_id"]["player"].toString() == id.toString());
+                    filter(el => el["user_id"]["player"].toString() == id.toString());
 
                 playersList.push(element);
             }

@@ -46,7 +46,7 @@ controller.createLeague = async (req, res,) => {
 
                 let pic_name = (new Date().getTime()) + "-" + userPic.name;
 
-                let uploadPath = UPLOAD_DIR + "/challenges/";
+                let uploadPath = UPLOAD_DIR + "/leagues/";
 
                 const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
