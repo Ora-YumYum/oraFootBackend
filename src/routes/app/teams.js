@@ -13,5 +13,6 @@ router.get("/search_teams", TeamsController.SearchForTeams);
 
 router.get("/get_invitation",middleware, TeamsController.getInvitations);
 
+router.get("/get_players", TeamsController.getPlayers);
 
 module.exports = router;

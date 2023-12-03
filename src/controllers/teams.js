@@ -68,4 +68,24 @@ controller.getInvitations = async (req, res) => {
     }
 }
 
+controller.getPlayers = async (req, res) => {
+    const id = req.userId;
+    console.log(id);
+    if (id != undefined && id != "") {
+        try {
+            let team = await Teams.findOne({ _id: id }).populate("players");
+            console.log(team)
+            return res.status(200).send({
+                success: true, message: "ok",
+                players: team.players,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ success: false, message: "Server Error", results: null });
+        }
+    } else {
+        res.status(400).send({ success: false, message: "please enter an id " });
+    }
+}
+
 module.exports = controller;
