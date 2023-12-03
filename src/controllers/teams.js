@@ -3,11 +3,12 @@
 
 
 
-const Teams = require("../models/users/Teams")
+const Teams = require("../models/users/Teams");
+const Players = require("../models/users/players");
 
 const Users = require("../models/users/users")
 
-const {ObjectId} = require('mongodb'); // or ObjectID 
+const { ObjectId } = require('mongodb'); // or ObjectID 
 
 
 var controller = {};
@@ -51,11 +52,23 @@ controller.SearchForTeams = async (req, res) => {
 
 controller.getInvitations = async (req, res) => {
     const id = req.userId;
+    let ids = []
     console.log(id);
     if (id != undefined && id != "") {
         try {
             let user = await Users.findOne({ _id: id }).populate("invitations");
-            console.log(user)
+
+            user.invitations.forEach(element => {
+                ids.push(element.data.player_id);
+            });
+            const players = await Players.find({ _id: ids}).populate("user_id");
+
+            user.invitations.forEach(element => {
+                user.invitations["player"] = players.
+                filter(el => el["user_id"].toString() == element.data.player_id.toString());
+            });
+
+            
             return res.status(200).send({
                 success: true, message: "ok", results: {
                     invitations: user.invitations,
@@ -73,13 +86,19 @@ controller.getInvitations = async (req, res) => {
 controller.getPlayers = async (req, res) => {
     const id = req.query.id;
     console.log(id);
+    let ids = []
     if (id != undefined && id != "") {
         try {
             let team = await Teams.findOne({ _id: new ObjectId(id) }).populate("players");
-            console.log(team)
+            team.players.forEach(element => {
+                console.log(element.player);
+                ids.push(element.player);
+            });
+            console.log(ids);
+            const players = await Players.find({ _id: ids}).populate("user_id");
             return res.status(200).send({
                 success: true, message: "ok",
-                players: team.players,
+                players: players,
             });
         } catch (error) {
             console.log(error);
