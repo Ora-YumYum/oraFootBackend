@@ -109,7 +109,7 @@ controller.getTeamPlayers = async (req, res,) => {
 
 controller.sendInvitation = async (req, res) => {
 
-    const { player_id, team_id, team_name } = req.body;
+    const { player_id, team_id, team_name , position} = req.body;
     try {
 
 
@@ -153,6 +153,7 @@ controller.sendInvitation = async (req, res) => {
                         "players": {
                             "player": playerExits.player,
                             "status": 2,
+                            "position" : position,
                         }
                     },
                 },),
