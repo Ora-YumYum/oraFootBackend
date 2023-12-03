@@ -115,6 +115,8 @@ controller.sendInvitation = async (req, res) => {
 
         let playerExits = await Users.findOne({ _id: player_id });
 
+        let teamExits = await Users.findOne({ _id: team_id });
+
         if (playerExits) {
 
             let invitation = Invitation({
@@ -148,7 +150,7 @@ controller.sendInvitation = async (req, res) => {
                         "notifications": notification
                     },
                 },),
-                await Teams.updateOne({ _id: team_id }, {
+                await Teams.updateOne({ _id: teamExits.team }, {
                     "$push": {
                         "players": {
                             "player": playerExits.player,
