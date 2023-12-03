@@ -5,6 +5,9 @@
 
 const Teams = require("../models/users/Teams")
 
+const Users = require("../models/users/users")
+
+
 var controller = {};
 
 controller.SearchForTeams = async (req, res) => {
@@ -41,6 +44,27 @@ controller.SearchForTeams = async (req, res) => {
             "success": false,
             "message": "ok"
         })
+    }
+}
+
+controller.getInvitations = async (req, res) => {
+    const id = req.userId;
+    console.log(id);
+    if (id != undefined && id != "") {
+        try {
+            let user = await Users.findOne({ _id: id }).populate("invitations");
+            console.log(user)
+            return res.status(200).send({
+                success: true, message: "ok", results: {
+                    invitations: user.invitations,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ success: false, message: "Server Error", results: null });
+        }
+    } else {
+        res.status(400).send({ success: false, message: "please enter an id " });
     }
 }
 

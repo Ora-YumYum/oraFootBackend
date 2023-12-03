@@ -44,7 +44,7 @@ controller.createChallange = async (req, res,) => {
             isPrivateGame: isPrivateGame,
             notifyRefree: notifyRefree,
             notifyPhotographer: notifyPhotographer,
-            field_type:field_type,
+            field_type: field_type,
         });
 
         console.log(req.files);

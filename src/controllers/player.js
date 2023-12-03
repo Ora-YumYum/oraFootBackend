@@ -94,13 +94,13 @@ controller.getTeamPlayers = async (req, res,) => {
     const id = req.userId;
     try {
 
-        let players = await Teams.findOne({_id : id}).populate("players");
+        let players = await Teams.findOne({ _id: id }).populate("players");
 
         res.status(200).json({
             "success": true,
             "players": players
         });
-        
+
     } catch (error) {
         return AppError.onError(error, "restaurant add error" + error);
     }
@@ -111,7 +111,7 @@ controller.sendInvitation = async (req, res) => {
 
     const { player_id, team_id, team_name } = req.body;
     try {
-      
+
 
         let playerExits = await Users.findOne({ _id: player_id });
 
@@ -143,16 +143,23 @@ controller.sendInvitation = async (req, res) => {
                     "invitations": invitation
                 }
             },),
-
                 await Users.updateOne({ _id: player_id }, {
                     "$push": {
                         "notifications": notification
                     },
-                },)
-            res.status(200).json({
-                "success": true,
-                "msg": "invitation was sent successfully",
-            });
+                },),
+                await Users.updateOne({ _id: team_id }, {
+                    "$push": {
+                        "players": {
+                            "player": playerExits.player,
+                            "status": 2,
+                        }
+                    },
+                },),
+                res.status(200).json({
+                    "success": true,
+                    "msg": "invitation was sent successfully",
+                });
         } else {
             res.status(400).json({
                 "success": false,

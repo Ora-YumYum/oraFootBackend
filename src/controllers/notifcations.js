@@ -9,7 +9,7 @@ var controller = {};
 
 controller.getNotifcations = async (req, res) => {
 
-    const id = req.user.user_id;
+    const id = req.userId;
 
     const page = Number.parseInt(req.query.page) ?? 0;
 
@@ -17,7 +17,7 @@ controller.getNotifcations = async (req, res) => {
         try {
             let user = await Users.findOne({ _id: id }).populate("notifications").skip(page * 30).limit(30);
             console.log(user)
-            res.status(200).send({
+           return res.status(200).send({
                 success: true, message: "ok", results: {
                     notifications: user.notifications,
                 },
