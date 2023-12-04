@@ -163,7 +163,7 @@ controller.viewMyChallanges = async (req, res,) => {
 
     try {
         let challanges = await Challanges.find({ postedBy: id })
-            .populate("staduim").exec();
+            .populate("staduim").populate("team").exec();
 
         console.log(challanges)
         return res.status(200).send({
