@@ -109,7 +109,7 @@ controller.getTeamPlayers = async (req, res,) => {
 
 controller.sendInvitation = async (req, res) => {
 
-    const { player_id, team_id, team_name , position} = req.body;
+    const { player_id, team_id, team_name, position } = req.body;
     try {
 
 
@@ -155,7 +155,7 @@ controller.sendInvitation = async (req, res) => {
                         "players": {
                             "player": playerExits.player,
                             "status": 2,
-                            "position" : position,
+                            "position": position,
                         }
                     },
                 },),
@@ -183,7 +183,7 @@ controller.sendInvitation = async (req, res) => {
 
 controller.accepteInvitation = async (req, res) => {
 
-    const { team_id, player_name, invitation_id } = req.body;
+    const { team_user_id, player_name, invitation_id, player_id } = req.body;
 
     try {
 
@@ -198,8 +198,7 @@ controller.accepteInvitation = async (req, res) => {
                 status: 0,
             }
         })
-
-        await Users.updateOne({ _id: team_id }, {
+        await Teams.updateOne({ _id: team_user_id }, {
             "$push": {
                 "notifications": notification
             },

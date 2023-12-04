@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const Playerschema = new Schema({
 
-    
+
     profile_img: {
         type: String,
         required: false,
@@ -41,14 +41,19 @@ const Playerschema = new Schema({
 
     application_status: {
         type: Number,
-        default : 2,
+        default: 2,
     },
 
-     
-    user_id :  {
+    user_id: {
         type: Schema.Types.ObjectId,
         ref: "User",
-      },
+    },
+
+    player_team: {
+        type: Schema.Types.ObjectId,
+        ref: "Teams",
+    },
+
     followers: [
         {
             type: Schema.Types.ObjectId,
@@ -62,7 +67,6 @@ const Playerschema = new Schema({
             ref: "Users",
         },
     ],
-
 
     rating: {
         type: Number,
@@ -97,7 +101,7 @@ const Playerschema = new Schema({
         },
     ],
 
-    
+
     challanges: [
         {
             type: Schema.Types.ObjectId,

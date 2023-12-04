@@ -181,7 +181,7 @@ controller.sendInvitation = async (req, res) => {
                 await Challanges.updateOne({ _id: challange_id }, {
                     $set: {
                         "invitation": invitation,
-                        "opponent_team" : opponent_team_id,
+                        "opponent_team": opponent_team_id,
                     }
                 })
             res.status(200).json({
@@ -195,8 +195,6 @@ controller.sendInvitation = async (req, res) => {
             });
         }
 
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -205,5 +203,43 @@ controller.sendInvitation = async (req, res) => {
         });
     }
 }
+
+
+controller.accepteInvitation = async (req, res) => {
+
+    const { opponent_team_id, team_id, team_name, challange_id, invitation_id } = req.body;
+
+    try {
+
+        let notification = Notifications({
+            type: "accepted_invitation",
+            user_id: team_id,
+            title: team_name,
+        });
+
+        let invitation = await Invitation.updateOne({ _id: invitation_id }, {
+            "$set": {
+                status: 0,
+            }
+        })
+
+        await Teams.updateOne({ _id: opponent_team_id }, {
+            "$push": {
+                "notifications": notification
+            },
+        },);
+
+        await Challanges.updateOne({ _id: challange_id }, {
+            "$set": {
+                "status": 0
+            },
+        },);
+
+
+    } catch (error) {
+
+    }
+}
+
 
 module.exports = controller;

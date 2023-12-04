@@ -94,10 +94,16 @@ const challangesSchema = new Schema({
         default: false,
 
     },
+
     isActive: {
         type: Boolean,
         default: false,
 
+    },
+
+    status: {
+        type: Number,
+        default: 1,
     },
 
     postedBy: {
