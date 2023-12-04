@@ -181,6 +181,7 @@ controller.sendInvitation = async (req, res) => {
                 await Challanges.updateOne({ _id: challange_id }, {
                     $set: {
                         "invitation": invitation,
+                        "opponent_team" : opponent_team_id,
                     }
                 })
             res.status(200).json({
