@@ -6,6 +6,8 @@
 const Teams = require("../models/users/Teams");
 const Players = require("../models/users/players");
 
+const Challanges = require("../models/challanges");
+
 const Users = require("../models/users/users")
 
 const Invitation = require("../models/invitation");
@@ -136,7 +138,7 @@ controller.getPlayers = async (req, res) => {
 
 controller.sendInvitation = async (req, res) => {
 
-    const { opponent_team_id, team_id, team_name, } = req.body;
+    const { opponent_team_id, team_id, team_name, challange_id } = req.body;
     try {
 
         let opponent_team_Exits = await Users.findOne({ _id: opponent_team_id });
@@ -176,10 +178,15 @@ controller.sendInvitation = async (req, res) => {
                         "notifications": notification
                     },
                 },),
-                res.status(200).json({
-                    "success": true,
-                    "msg": "invitation was sent successfully",
-                });
+                await Challanges.updateOne({ _id: challange_id }, {
+                    $set: {
+                        "invitation": invitation,
+                    }
+                })
+            res.status(200).json({
+                "success": true,
+                "msg": "invitation was sent successfully",
+            });
         } else {
             res.status(400).json({
                 "success": false,

@@ -119,11 +119,13 @@ const challangesSchema = new Schema({
         ref: "Teams",
     },
 
-
+    invitation: {
+        type: Schema.Types.ObjectId,
+        ref: "Invitation",
+    },
 
     game_details: {
         type: {
-
         }
     }
 
