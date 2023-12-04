@@ -31,6 +31,7 @@ controller.createChallange = async (req, res,) => {
             field_type,
             start_date,
             start_time,
+            team,
 
         } = req.body;
 
@@ -38,6 +39,7 @@ controller.createChallange = async (req, res,) => {
             title: title,
             desc: desc,
             staduim: staduim,
+            team: team
             match_type: match_type,
             numbers_of_players: numbers_of_players,
             price: price,
@@ -157,12 +159,14 @@ controller.getStaduimsByWilaya = async (req, res,) => {
 
 controller.viewMyChallanges = async (req, res,) => {
 
-
     const id = req.userId;
 
     try {
-        let challanges = await Challanges.find({ postedBy: id }).populate("staduim")
-        res.status(200).json({
+        let challanges = await Challanges.find({ postedBy: id })
+            .populate("staduim").exec();
+
+        console.log(challanges)
+        return res.status(200).send({
             "success": true,
             "challanges": challanges
         });

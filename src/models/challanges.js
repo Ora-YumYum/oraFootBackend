@@ -98,7 +98,12 @@ const challangesSchema = new Schema({
 
     postedBy: {
         type: Schema.Types.ObjectId,
-        ref: "Users",
+        ref: "User",
+    },
+
+    team: {
+        type: Schema.Types.ObjectId,
+        ref: "Teams",
     },
 
     ageGroup: {
@@ -108,6 +113,14 @@ const challangesSchema = new Schema({
     opponent_team: {
         type: Schema.Types.ObjectId,
         ref: "Teams",
+    },
+
+
+
+    game_details: {
+        type: {
+
+        }
     }
 
     /*team: {
