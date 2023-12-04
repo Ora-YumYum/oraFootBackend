@@ -39,7 +39,7 @@ controller.createChallange = async (req, res,) => {
             title: title,
             desc: desc,
             staduim: staduim,
-            team: team
+            team: team,
             match_type: match_type,
             numbers_of_players: numbers_of_players,
             price: price,
