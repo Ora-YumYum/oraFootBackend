@@ -8,6 +8,10 @@ const Players = require("../models/users/players");
 
 const Users = require("../models/users/users")
 
+const Invitation = require("../models/invitation");
+
+const Notifications = require("../models/notifications");
+
 const { ObjectId } = require('mongodb'); // or ObjectID 
 
 
@@ -125,6 +129,72 @@ controller.getPlayers = async (req, res) => {
         }
     } else {
         res.status(400).send({ success: false, message: "please enter an id " });
+    }
+}
+
+
+
+controller.sendInvitation = async (req, res) => {
+
+    const { opponent_team_id, team_id, team_name, } = req.body;
+    try {
+
+        let opponent_team_Exits = await Users.findOne({ _id: opponent_team_id });
+
+        let teamExits = await Users.findOne({ _id: team_id });
+
+        if (opponent_team_Exits) {
+
+            let invitation = Invitation({
+                type: "team_invitation",
+                user_id: opponent_team_id,
+                data: {
+                    "team_id": team_id,
+                    "opponent_team_id": opponent_team_id,
+                    "team_name": team_name,
+                },
+                status: 2,
+            });
+
+            let notification = Notifications({
+                type: "invite_team",
+                invitation: invitation,
+                user_id: opponent_team_id,
+                title: team_name,
+            });
+            await notification.save();
+
+            await invitation.save();
+
+            await Users.updateMany({ _id: { $in: [team_id.toString(), opponent_team_id.toString()] } }, {
+                "$push": {
+                    "invitations": invitation
+                }
+            },),
+                await Users.updateOne({ _id: opponent_team_id }, {
+                    "$push": {
+                        "notifications": notification
+                    },
+                },),
+                res.status(200).json({
+                    "success": true,
+                    "msg": "invitation was sent successfully",
+                });
+        } else {
+            res.status(400).json({
+                "success": false,
+                "msg": "Invalid id",
+            });
+        }
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
     }
 }
 

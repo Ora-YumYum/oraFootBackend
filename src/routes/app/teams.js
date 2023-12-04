@@ -15,4 +15,7 @@ router.get("/get_invitation",middleware, TeamsController.getInvitations);
 
 router.get("/get_players", middleware, TeamsController.getPlayers);
 
+router.post("/send_invitation",middleware, TeamsController.sendInvitation);
+
+
 module.exports = router;
