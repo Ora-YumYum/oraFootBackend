@@ -154,6 +154,7 @@ controller.sendInvitation = async (req, res) => {
                     "team_id": team_id,
                     "opponent_team_id": opponent_team_id,
                     "team_name": team_name,
+                    "challange_id" : challange_id,
                 },
                 status: 2,
             });
