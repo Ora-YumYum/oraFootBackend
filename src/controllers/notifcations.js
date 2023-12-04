@@ -15,7 +15,12 @@ controller.getNotifcations = async (req, res) => {
 
     if (id != undefined && id != "") {
         try {
-            let user = await Users.findOne({ _id: id }).populate("notifications").skip(page * 30).limit(30);
+            let user = await Users.findOne({ _id: id }).populate({
+                path : "notifications",
+                populate : {
+                    path : "invitation",
+                }
+            }).skip(page * 30).limit(30);
             console.log(user)
            return res.status(200).send({
                 success: true, message: "ok", results: {
