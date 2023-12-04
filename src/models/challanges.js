@@ -33,6 +33,10 @@ const challangesSchema = new Schema({
         type: Date,
     },
 
+    start_time: {
+        type: Date,
+    },
+
 
     match_type: {
         type: Number,
