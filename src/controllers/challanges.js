@@ -98,7 +98,8 @@ controller.createChallange = async (req, res,) => {
         return res.json({
             "success": true,
             "message": "ok",
-            "data": response,
+            "data": challange,
+
         });
     } catch (error) {
         return AppError.onError(res, "restaurant add error" + error);
