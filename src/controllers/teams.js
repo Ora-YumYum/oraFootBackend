@@ -216,7 +216,7 @@ controller.accepteInvitation = async (req, res) => {
             type: "accepted_invitation",
             user_id: team_id,
             title: team_name,
-            invitation:invitation_id,
+            invitation: invitation_id,
         });
 
         let invitation = await Invitation.updateOne({ _id: invitation_id }, {

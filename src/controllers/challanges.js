@@ -181,7 +181,8 @@ controller.viewMyChallanges = async (req, res,) => {
 controller.viewAllChallanges = async (req, res,) => {
 
     try {
-        let challanges = await Challanges.find().populate("")
+        let challanges = await Challanges.find({ status: 0 }).populate("staduim").populate("team").
+            populate("invitation").populate("opponent_team").exec();
         res.status(200).json({
             "success": true,
             "challanges": challanges
