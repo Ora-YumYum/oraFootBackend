@@ -58,19 +58,19 @@ controller.SearchForTeams = async (req, res) => {
 
 controller.getInvitations = async (req, res) => {
     const id = req.userId;
-    
+
     let ids = [];
     let playersList = [];
-    
+
     if (id != undefined && id != "") {
         try {
             let user = await Users.findOne({ _id: id }).populate({
                 path: "invitations",
                 populate: {
                     "path": "opponent_team_id",
-                    "select" : "team",
-                    "populate" :  {
-                        path : "team"
+                    "select": "team",
+                    "populate": {
+                        path: "team"
                     }
                 },
             },);
@@ -211,6 +211,7 @@ controller.accepteInvitation = async (req, res) => {
             invitation: invitation_id,
         });
 
+        await notification.save();
         let invitation = await Invitation.updateOne({ _id: invitation_id }, {
             "$set": {
                 status: 0,
@@ -229,9 +230,16 @@ controller.accepteInvitation = async (req, res) => {
             },
         },);
 
-
+        res.status(200).json({
+            "success": true,
+            "msg": "Challenge accepted successfully",
+        });
     } catch (error) {
-
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
     }
 }
 

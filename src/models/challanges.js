@@ -116,9 +116,7 @@ const challangesSchema = new Schema({
         ref: "Teams",
     },
 
-    ageGroup: {
-        type: {},
-    },
+   
 
     opponent_team: {
         type: Schema.Types.ObjectId,
@@ -130,10 +128,15 @@ const challangesSchema = new Schema({
         ref: "Invitation",
     },
 
-    game_details: {
-        type: {
-        }
-    }
+    game: {
+        type: Schema.Types.ObjectId,
+        ref: "Games",
+    },
+
+    ageGroup: {
+        type: {},
+    },
+
 
     /*team: {
         type: Schema.Types.ObjectId,
