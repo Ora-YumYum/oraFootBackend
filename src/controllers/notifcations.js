@@ -23,6 +23,9 @@ controller.getNotifcations = async (req, res) => {
                         "type": "team_invitation",
                         "status": 2,
                     }
+                },
+                match: {
+                    "read": false,
                 }
             }).skip(page * 30).limit(30);
             console.log(user)
