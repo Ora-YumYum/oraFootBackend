@@ -223,11 +223,15 @@ controller.accepteInvitation = async (req, res) => {
             }
         })
 
-
-
         await Users.updateOne({ _id: opponent_team_id }, {
             "$push": {
                 "notifications": notification
+            },
+        },);
+
+        await Users.updateOne({ _id: team_id }, {
+            "$push": {
+                "challanges": challange_id
             },
         },);
 
@@ -237,6 +241,7 @@ controller.accepteInvitation = async (req, res) => {
             },
         },);
 
+
         if (notification_id != null) {
             let update_notifications = await Notifications.updateOne({ _id: notification_id }, {
                 "$set": {
@@ -244,7 +249,6 @@ controller.accepteInvitation = async (req, res) => {
                 }
             })
         }
-
         res.status(200).json({
             "success": true,
             "msg": "Challenge accepted successfully",
