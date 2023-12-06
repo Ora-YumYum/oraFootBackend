@@ -61,7 +61,7 @@ controller.getInvitations = async (req, res) => {
     
     let ids = [];
     let playersList = [];
-    const invitation_type = req.query.invitation_type.toString();
+    
     if (id != undefined && id != "") {
         try {
             let user = await Users.findOne({ _id: id }).populate({
@@ -73,10 +73,6 @@ controller.getInvitations = async (req, res) => {
                         path : "team"
                     }
                 },
-                match : {
-                    type : invitation_type,
-                    
-                }
             },);
             return res.status(200).send({
                 success: true, message: "ok", results: {
