@@ -12,14 +12,21 @@ const invitationSchema = new Schema({
     },
 
     user_id: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: false,
+    },
+
+    opponent_team_id: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
         required: false,
     },
 
     status: {
         type: Number,
         required: false,
-        default : 2,
+        default: 2,
     },
 
     createdDate: {

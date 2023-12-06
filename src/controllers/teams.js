@@ -58,34 +58,29 @@ controller.SearchForTeams = async (req, res) => {
 
 controller.getInvitations = async (req, res) => {
     const id = req.userId;
+    
     let ids = [];
     let playersList = [];
-
+    const invitation_type = req.query.invitation_type.toString();
     if (id != undefined && id != "") {
         try {
-            let user = await Users.findOne({ _id: id }).populate("invitations");
-
-            user.invitations.forEach(element => {
-                ids.push(element.data.player_id);
-            });
-            console.log(ids)
-            const players = await Players.find({ _id: ids }).populate("user_id");
-
-            console.log(players);
-
-            for (let index = 0; index < user.invitations.length; index++) {
-                const element = user.invitations[index];
-                let id = user.invitations[index]["user_id"];
-
-                element["player_info"] = players.
-                    filter(el => el["user_id"]["player"].toString() == id.toString());
-
-                playersList.push(element);
-            }
-
+            let user = await Users.findOne({ _id: id }).populate({
+                path: "invitations",
+                populate: {
+                    "path": "opponent_team_id",
+                    "select" : "team",
+                    "populate" :  {
+                        path : "team"
+                    }
+                },
+                match : {
+                    type : invitation_type,
+                    
+                }
+            },);
             return res.status(200).send({
                 success: true, message: "ok", results: {
-                    invitations: playersList,
+                    invitations: user.invitations,
                 },
             });
         } catch (error) {
@@ -100,6 +95,7 @@ controller.getInvitations = async (req, res) => {
 controller.getPlayers = async (req, res) => {
     const id = req.query.id;
     let ids = [];
+    console.log(id);
     let playersList = [];
     if (id != undefined && id != "") {
         try {
