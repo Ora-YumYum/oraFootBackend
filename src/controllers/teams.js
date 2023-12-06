@@ -73,6 +73,10 @@ controller.getInvitations = async (req, res) => {
                         path: "team"
                     }
                 },
+                match: {
+                    "type": "team_invitation",
+                    "status": 2,
+                }
             },);
             return res.status(200).send({
                 success: true, message: "ok", results: {
@@ -212,6 +216,7 @@ controller.accepteInvitation = async (req, res) => {
         });
 
         await notification.save();
+
         let invitation = await Invitation.updateOne({ _id: invitation_id }, {
             "$set": {
                 status: 0,

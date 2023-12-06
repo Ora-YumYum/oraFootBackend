@@ -19,6 +19,10 @@ controller.getNotifcations = async (req, res) => {
                 path: "notifications",
                 populate: {
                     path: "invitation",
+                    match: {
+                        "type": "team_invitation",
+                        "status": 2,
+                    }
                 }
             }).skip(page * 30).limit(30);
             console.log(user)
