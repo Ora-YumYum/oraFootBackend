@@ -162,7 +162,7 @@ controller.viewMyChallanges = async (req, res,) => {
 
     const id = req.userId;
     try {
-        let challanges = await Challanges.find({ $or:[ {'postedBy':id}, {'opponent_team':id} ]})
+        let challanges = await Challanges.find({ $or:[ {'postedBy':id}, {'opponent_id':id} ]})
             .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").exec();
 
