@@ -19,10 +19,6 @@ controller.getNotifcations = async (req, res) => {
                 path: "notifications",
                 populate: {
                     path: "invitation",
-                    match: {
-                        "type": "team_invitation",
-                        "status": 2,
-                    }
                 },
                 match: {
                     "read": false,

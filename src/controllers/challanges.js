@@ -23,7 +23,8 @@ controller.createChallange = async (req, res,) => {
     const user_id = req.userId;
 
     try {
-        const { title, desc, staduim,
+        const {
+            title, desc, staduim,
             match_type, numbers_of_players,
             price, payment_method,
             isPrivateGame, notifyRefree,
@@ -32,7 +33,6 @@ controller.createChallange = async (req, res,) => {
             start_date,
             start_time,
             team,
-
         } = req.body;
 
         const challange = new Challanges({
@@ -73,27 +73,19 @@ controller.createChallange = async (req, res,) => {
 
         challange.postedBy = user_id;
 
-        //const opponent_team_exits = await Users.findeOne({ _id: opponent_team })
-
-        /*if (!opponent_team_exits) {
-
-        }*/
-
-        const reponse = await Users.updateOne({ _id: user_id }, {
+        await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
             }
         })
 
-
-        const staduimResponse = await Staduims.updateOne({ _id: staduim }, {
+        await Staduims.updateOne({ _id: staduim }, {
             "$push": {
                 "challanges": challange
             }
         })
 
-
-        let response = await challange.save();
+        await challange.save();
 
         return res.json({
             "success": true,
@@ -162,7 +154,7 @@ controller.viewMyChallanges = async (req, res,) => {
 
     const id = req.userId;
     try {
-        let challanges = await Challanges.find({ $or:[ {'postedBy':id}, {'opponent_id':id} ]})
+        let challanges = await Challanges.find({ $or: [{ 'postedBy': id }, { 'opponent_id': id }] })
             .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").exec();
 
