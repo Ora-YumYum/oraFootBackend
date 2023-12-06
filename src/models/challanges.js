@@ -133,6 +133,22 @@ const challangesSchema = new Schema({
         ref: "Invitation",
     },
 
+
+    refree_invitation: {
+        type: Schema.Types.ObjectId,
+        ref: "Invitation",
+    },
+
+    photographer_invitation: {
+        type: Schema.Types.ObjectId,
+        ref: "Invitation",
+    },
+
+    staduim_invitation: {
+        type: Schema.Types.ObjectId,
+        ref: "Invitation",
+    },
+
     game: {
         type: Schema.Types.ObjectId,
         ref: "Games",
