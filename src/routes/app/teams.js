@@ -11,7 +11,10 @@ const { body, check, validationResult } = require('express-validator');
 
 router.get("/search_teams", TeamsController.SearchForTeams);
 
-router.get("/get_invitation",middleware, TeamsController.getInvitations);
+router.get("/get_challenges_invitation",middleware, TeamsController.getChallengesInvitations);
+
+router.get("/get_players_invitation",middleware, TeamsController.getPlayersInvitations);
+
 
 router.get("/get_players", middleware, TeamsController.getPlayers);
 

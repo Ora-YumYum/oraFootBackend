@@ -12,14 +12,10 @@ const NotificationsSchema = new mongoose.Schema(
     {
         type: {
             type: String,
+            required : false
         },
 
         title: {
-            type: String,
-            required: false,
-        },
-
-        user_name: {
             type: String,
             required: false,
         },
@@ -28,8 +24,10 @@ const NotificationsSchema = new mongoose.Schema(
 
         invitation: { type: Schema.Types.ObjectId, ref: "Invitation"},
 
-
-        notifcation_pic: String,
+        img: {
+            type : String,
+            default : ""
+        },
 
         created_at: {
             type: Date,
@@ -46,6 +44,7 @@ const NotificationsSchema = new mongoose.Schema(
         timestamps: true,
         minimize: false,
     },
+
     { collection: 'Notifications' }
 );
 

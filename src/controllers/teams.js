@@ -56,7 +56,38 @@ controller.SearchForTeams = async (req, res) => {
     }
 }
 
-controller.getInvitations = async (req, res) => {
+
+controller.getPlayersInvitations = async (req, res) => {
+    const id = req.userId;
+
+    if (id != undefined && id != "") {
+        try {
+            let user = await Users.findOne({ _id: id }).populate({
+                path: "invitations",
+                populate: {
+                    "path": "user_id",
+                },
+                match: {
+                    "type": "player_invitation",
+                    "status": 2,
+                }
+            },);
+            return res.status(200).send({
+                success: true, message: "ok", results: {
+                    invitations: user.invitations,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ success: false, message: "Server Error", results: null });
+        }
+    } else {
+        res.status(400).send({ success: false, message: "please enter an id " });
+    }
+}
+
+
+controller.getChallengesInvitations = async (req, res) => {
     const id = req.userId;
 
     let ids = [];
@@ -141,15 +172,17 @@ controller.sendInvitation = async (req, res) => {
 
         let teamExits = await Users.findOne({ _id: team_id });
 
+
+
         if (opponent_team_Exits) {
 
             let invitation = Invitation({
                 type: "team_invitation",
                 user_id: opponent_team_id,
                 data: {
-                    "team_id": team_id,
                     "opponent_team_id": opponent_team_id,
                     "team_name": team_name,
+                    "team_id": team_id,
                     "challange_id": challange_id,
                 },
                 status: 2,
@@ -160,6 +193,7 @@ controller.sendInvitation = async (req, res) => {
                 invitation: invitation,
                 user_id: opponent_team_id,
                 title: team_name,
+                img: teamExits.profile_img,
             });
             await notification.save();
 
@@ -180,7 +214,8 @@ controller.sendInvitation = async (req, res) => {
                         "invitation": invitation,
                         "opponent_team": opponent_team_id,
                     }
-                })
+                });
+
             res.status(200).json({
                 "success": true,
                 "msg": "invitation was sent successfully",
@@ -208,51 +243,63 @@ controller.accepteInvitation = async (req, res) => {
 
     try {
 
-        let notification = Notifications({
-            type: "accepted_invitation",
-            user_id: team_id,
-            title: team_name,
-            invitation: invitation_id,
-        });
+        let opponent_team_Exits = await Users.findOne({ _id: team_id });
 
-        await notification.save();
+        if (opponent_team_Exits) {
+            let notification = Notifications({
+                type: "accepted_invitation",
+                user_id: team_id,
+                title: team_name,
+                invitation: invitation_id,
+                img: opponent_team_Exits.profile_img,
+            });
 
-        let invitation = await Invitation.updateOne({ _id: invitation_id }, {
-            "$set": {
-                status: 0,
-            }
-        })
+            await notification.save();
 
-        await Users.updateOne({ _id: opponent_team_id }, {
-            "$push": {
-                "notifications": notification
-            },
-        },);
-
-        await Users.updateOne({ _id: team_id }, {
-            "$push": {
-                "challanges": challange_id
-            },
-        },);
-
-        await Challanges.updateOne({ _id: challange_id }, {
-            "$set": {
-                "status": 0
-            },
-        },);
-
-
-        if (notification_id != null) {
-            let update_notifications = await Notifications.updateOne({ _id: notification_id }, {
+            let invitation = await Invitation.updateOne({ _id: invitation_id }, {
                 "$set": {
-                    read: true,
+                    status: 0,
                 }
             })
+
+            await Users.updateOne({ _id: team_id }, {
+                "$push": {
+                    "challanges": challange_id
+                },
+            },);
+
+            await Users.updateOne({ _id: opponent_team_id }, {
+                "$push": {
+                    "notifications": notification,
+                },
+            },);
+
+            await Challanges.updateOne({ _id: challange_id }, {
+                "$set": {
+                    "status": 0
+                },
+            },);
+
+
+            if (notification_id != null) {
+                let update_notifications = await Notifications.updateOne({ _id: notification_id }, {
+                    "$set": {
+                        read: true,
+                    }
+                })
+            }
+            res.status(200).json({
+                "success": true,
+                "msg": "Challenge accepted successfully",
+            });
+        } else {
+            res.status(200).json({
+                "success": false,
+                "msg": "invalid team",
+            });
         }
-        res.status(200).json({
-            "success": true,
-            "msg": "Challenge accepted successfully",
-        });
+
+
     } catch (error) {
         console.log(error);
         res.status(500).json({

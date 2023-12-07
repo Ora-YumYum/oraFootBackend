@@ -52,7 +52,6 @@ controller.createChallange = async (req, res,) => {
             start_time: start_time,
         });
 
-        console.log(req.files);
         if (req.files != undefined) {
             try {
                 let userPic = req.files.image;
@@ -71,8 +70,6 @@ controller.createChallange = async (req, res,) => {
             }
         }
 
-        challange.postedBy = user_id;
-
         await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
@@ -85,18 +82,44 @@ controller.createChallange = async (req, res,) => {
             }
         })
 
+        let staduimInvite = Invitation({
+            type: "invite_staduim",
+            user_id: staduim,
+            data: {
+                "staduim_id": staduim,
+                "challenge_id": challange._id,
+                "team_name": team_name,
+            },
+            status: 2,
+        });
+
+        let notification = Notifications({
+            type: "invite_staduim",
+            invitation: staduimInvite,
+            user_id: user_id,
+            title: team_name,
+        });
+
+        await notification.save();
+
+        await staduimInvite.save();
+
         await challange.save();
+
+        challange.postedBy = user_id;
 
         return res.json({
             "success": true,
             "message": "ok",
             "data": challange,
-
         });
+
     } catch (error) {
-        return AppError.onError(res, "restaurant add error" + error);
+        return AppError.onError(res, " error" + error);
     }
 };
+
+
 
 
 function uploadImage(filePath, uploadPath, pic) {
@@ -132,6 +155,9 @@ function uploadImage(filePath, uploadPath, pic) {
         )
     })
 }
+
+
+
 
 controller.getStaduimsByWilaya = async (req, res,) => {
 

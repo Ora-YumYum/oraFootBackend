@@ -120,7 +120,7 @@ controller.sendInvitation = async (req, res) => {
         if (playerExits) {
 
             let invitation = Invitation({
-                type: "team_invitation",
+                type: "player_invitation",
                 user_id: player_id,
                 data: {
                     "team_id": team_id,
@@ -135,6 +135,7 @@ controller.sendInvitation = async (req, res) => {
                 invitation: invitation,
                 user_id: player_id,
                 title: team_name,
+                img : teamExits.profile_img
             });
             await notification.save();
 
