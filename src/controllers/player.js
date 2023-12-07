@@ -11,6 +11,7 @@ const Notifications = require("../models/notifications");
 
 const Teams = require("../models/users/Teams");
 
+const { ObjectId } = require('mongodb');
 
 var controller = {};
 
@@ -112,7 +113,6 @@ controller.sendInvitation = async (req, res) => {
     const { player_id, team_id, team_name, position } = req.body;
     try {
 
-
         let playerExits = await Users.findOne({ _id: player_id });
 
         let teamExits = await Users.findOne({ _id: team_id });
@@ -135,7 +135,7 @@ controller.sendInvitation = async (req, res) => {
                 invitation: invitation,
                 user_id: player_id,
                 title: team_name,
-                img : teamExits.profile_img
+                img: teamExits.profile_img
             });
             await notification.save();
 
@@ -184,14 +184,20 @@ controller.sendInvitation = async (req, res) => {
 
 controller.accepteInvitation = async (req, res) => {
 
-    const { team_user_id, player_name, invitation_id, player_id } = req.body;
+    const { team_id, team_user_id, player_name, invitation_id, player_id,player_user_id } = req.body;
 
     try {
 
+        let playerExits = await Users.findOne({ _id: player_user_id });
+
+        console.log(invitation_id)
+
         let notification = Notifications({
-            type: "accepted_invitation",
-            user_id: team_id,
+            type: "player_accepted_invitation",
+            user_id: team_user_id,
             title: player_name,
+            img: playerExits.profile_img,
+            invitation: invitation_id
         });
 
         let invitation = await Invitation.updateOne({ _id: invitation_id }, {
@@ -199,14 +205,30 @@ controller.accepteInvitation = async (req, res) => {
                 status: 0,
             }
         })
-        await Teams.updateOne({ _id: team_user_id }, {
+        await Users.updateOne({ _id: team_user_id,}, {
             "$push": {
                 "notifications": notification
             },
         },)
 
-    } catch (error) {
+        
+        await Teams.updateOne({ _id: team_id, "players.player": new ObjectId(player_id) }, {
+            "$set": {
+                "players.$.status": 0
+            },
+        },);
 
+        res.status(200).json({
+            "success": true,
+            "msg": "invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
     }
 }
 

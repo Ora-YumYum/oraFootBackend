@@ -14,7 +14,7 @@ const Invitation = require("../models/invitation");
 
 const Notifications = require("../models/notifications");
 
-const { ObjectId } = require('mongodb'); // or ObjectID 
+const { ObjectId } = require('mongodb');
 
 
 var controller = {};

@@ -17,5 +17,9 @@ router.post("/send_invitation", playerController.sendInvitation);
 
 router.post("/team_players", middleware, playerController.getTeamPlayers);
 
+router.post("/accepte_invitation", middleware, playerController.accepteInvitation);
+
+
+//
 
 module.exports = router;
