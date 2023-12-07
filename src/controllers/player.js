@@ -121,7 +121,7 @@ controller.sendInvitation = async (req, res) => {
 
             let invitation = Invitation({
                 type: "player_invitation",
-                user_id: player_id,
+                user_id: team_id,
                 data: {
                     "team_id": team_id,
                     "player_id": player_id,
@@ -182,9 +182,34 @@ controller.sendInvitation = async (req, res) => {
     }
 }
 
+
+controller.viewAllInvitations = async (req, res,) => {
+
+    const id = req.userId;
+    try {
+        let players = await Users.findOne({ _id: id }).populate({
+            path : "invitations",
+            populate : {
+                path : "user_id",
+                select : "profile_img team ",
+            },
+            match : {
+                type : "player_invitation",
+                status : 2,
+            }
+        }).select("invitations")
+        res.status(200).json({
+            "success": true,
+            "players": players
+        });
+    } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
+
 controller.accepteInvitation = async (req, res) => {
 
-    const { team_id, team_user_id, player_name, invitation_id, player_id,player_user_id } = req.body;
+    const { team_id, team_user_id, player_name, invitation_id, player_id, player_user_id } = req.body;
 
     try {
 
@@ -205,13 +230,13 @@ controller.accepteInvitation = async (req, res) => {
                 status: 0,
             }
         })
-        await Users.updateOne({ _id: team_user_id,}, {
+        await Users.updateOne({ _id: team_user_id, }, {
             "$push": {
                 "notifications": notification
             },
         },)
 
-        
+
         await Teams.updateOne({ _id: team_id, "players.player": new ObjectId(player_id) }, {
             "$set": {
                 "players.$.status": 0

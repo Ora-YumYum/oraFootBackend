@@ -19,6 +19,7 @@ router.post("/team_players", middleware, playerController.getTeamPlayers);
 
 router.post("/accepte_invitation", middleware, playerController.accepteInvitation);
 
+router.get("/team_invites", middleware, playerController.viewAllInvitations);
 
 //
 
