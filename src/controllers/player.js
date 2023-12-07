@@ -187,7 +187,7 @@ controller.viewAllInvitations = async (req, res,) => {
 
     const id = req.userId;
     try {
-        let players = await Users.findOne({ _id: id }).populate({
+        let player = await Users.findOne({ _id: id }).populate({
             path : "invitations",
             populate : {
                 path : "user_id",
@@ -200,7 +200,7 @@ controller.viewAllInvitations = async (req, res,) => {
         }).select("invitations")
         res.status(200).json({
             "success": true,
-            "players": players
+            "invites": player.invitations
         });
     } catch (error) {
         return AppError.onError(error, "restaurant add error" + error);
