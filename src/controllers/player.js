@@ -244,6 +244,12 @@ controller.accepteInvitation = async (req, res) => {
             },
         },);
 
+        await Players.updateOne({ _id: player_id, }, {
+            "$set": {
+                "player_team": team_id,
+            },
+        },);
+
         res.status(200).json({
             "success": true,
             "msg": "invitation was accepted successfully",
