@@ -110,7 +110,7 @@ controller.getTeamPlayers = async (req, res,) => {
 
 controller.sendInvitation = async (req, res) => {
 
-    const { player_id, team_id,team_user_id, team_name, position } = req.body;
+    const { player_id, team_id, team_user_id, team_name, position } = req.body;
     try {
 
         let playerExits = await Users.findOne({ _id: player_id });
@@ -124,7 +124,7 @@ controller.sendInvitation = async (req, res) => {
                 user_id: player_id,
                 data: {
                     "team_id": team_id,
-                    "team_user_id" : team_user_id,
+                    "team_user_id": team_user_id,
                     "player_id": player_id,
                     "team_name": team_name,
                 },
@@ -238,7 +238,7 @@ controller.accepteInvitation = async (req, res) => {
         },)
 
 
-        await Teams.updateOne({ _id: team_id, "players.player": new ObjectId(player_id) }, {
+        await Teams.updateOne({ _id: team_user_id, "players.player": new ObjectId(player_id) }, {
             "$set": {
                 "players.$.status": 0
             },
