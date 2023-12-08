@@ -110,7 +110,7 @@ controller.getTeamPlayers = async (req, res,) => {
 
 controller.sendInvitation = async (req, res) => {
 
-    const { player_id, team_id, team_name, position } = req.body;
+    const { player_id, team_id,team_user_id, team_name, position } = req.body;
     try {
 
         let playerExits = await Users.findOne({ _id: player_id });
@@ -124,6 +124,7 @@ controller.sendInvitation = async (req, res) => {
                 user_id: player_id,
                 data: {
                     "team_id": team_id,
+                    "team_user_id" : team_user_id,
                     "player_id": player_id,
                     "team_name": team_name,
                 },
@@ -131,7 +132,7 @@ controller.sendInvitation = async (req, res) => {
             });
 
             let notification = Notifications({
-                type: "invite_team",
+                type: "player_invitation",
                 invitation: invitation,
                 user_id: player_id,
                 title: team_name,
