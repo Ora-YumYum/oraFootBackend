@@ -305,7 +305,7 @@ controller.onLogin = async (req, res,) => {
 
 
 controller.getProfile = async (req, res,) => {
-  const userId = req.userId;
+  const userId = req.body.userId;
 
   console.log(userId)
   if (!userId) {
@@ -459,7 +459,10 @@ controller.findAccount = async (req, res) => {
       phone_number: phone_number,
     });
     if (!user) {
-      return res.status(200).send({ success: false, message: 'there"s no account with this phone number', reutls: false })
+      return res.status(200).send({
+        success: false, message:
+          'there"s no account with this phone number', reutls: false
+      })
     } else {
       res.status(200).send({
         success: true, message: 'ok', reutls: true,

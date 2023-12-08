@@ -21,7 +21,7 @@ router.post("/update_password", authController.updatePassowrd);
 
 router.post("/update_token", authController.updateToken);
 
-router.get("/profile", middleware ,authController.getProfile);
+router.post("/profile", middleware ,authController.getProfile);
 
 
 module.exports = router;
