@@ -171,8 +171,6 @@ controller.sendInvitation = async (req, res) => {
             });
         }
 
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -188,14 +186,14 @@ controller.viewAllInvitations = async (req, res,) => {
     const id = req.userId;
     try {
         let player = await Users.findOne({ _id: id }).populate({
-            path : "invitations",
-            populate : {
-                path : "user_id",
-                select : "profile_img team ",
+            path: "invitations",
+            populate: {
+                path: "user_id",
+                select: "profile_img team ",
             },
-            match : {
-                type : "player_invitation",
-                status : 2,
+            match: {
+                type: "player_invitation",
+                status: 2,
             }
         }).select("invitations")
         res.status(200).json({
@@ -224,6 +222,8 @@ controller.accepteInvitation = async (req, res) => {
             img: playerExits.profile_img,
             invitation: invitation_id
         });
+
+        notification.save();
 
         let invitation = await Invitation.updateOne({ _id: invitation_id }, {
             "$set": {
