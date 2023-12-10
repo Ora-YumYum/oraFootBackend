@@ -26,11 +26,11 @@ const StaduimsSchema = new Schema({
 
     location: {
         type: {
-            
+
         },
-        
+
     },
-    
+
     price_per_hour: {
         type: Number,
         required: false,
@@ -53,7 +53,7 @@ const StaduimsSchema = new Schema({
 
     photos: [
         {
-            type : String,
+            type: String,
         }
     ],
     games: [

@@ -70,6 +70,9 @@ controller.createChallange = async (req, res,) => {
             }
         }
 
+        let userExits = await Users.findOne({ _id: user_id }, {
+        }).populate("team")
+
         await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
@@ -88,7 +91,7 @@ controller.createChallange = async (req, res,) => {
             data: {
                 "staduim_id": staduim,
                 "challenge_id": challange._id,
-                "team_name": team_name,
+                "team_name": userExits.team.team_name,
             },
             status: 2,
         });
@@ -97,8 +100,38 @@ controller.createChallange = async (req, res,) => {
             type: "invite_staduim",
             invitation: staduimInvite,
             user_id: user_id,
-            title: team_name,
+            title: userExits.team.team_name,
         });
+
+        await notification.save();
+
+        await staduimInvite.save();
+
+        let RefreeInvite = Invitation({
+            type: "invite_refree",
+            data: {
+                "challenge_id": challange._id,
+                "team_name": userExits.team.team_name,
+            },
+            status: 2,
+        });
+
+        const refreesInWilaya = await Users.updateMany({ wilaya: userExits.wilaya, user_type: 1 }, {
+            $push: {
+                invitations: RefreeInvite
+            }
+        })
+
+        if (refreesInWilaya != null) {
+            let RefreeNotification = Notifications({
+                type: "invite_refree",
+                invitation: RefreeInvite,
+                user_id: user_id,
+                title: userExits.team.team_name,
+            });
+            RefreeInvite.save();
+            RefreeNotification.save();
+        }
 
         await notification.save();
 

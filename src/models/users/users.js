@@ -21,18 +21,22 @@ const userSchema = new Schema({
 
   first_name: {
     type: String,
+    required: false,
   },
 
   last_name: {
     type: String,
+    required: false,
   },
 
   address: {
     type: String,
+    required: false,
   },
 
   wilaya: {
     type: Number,
+    required: false,
   },
 
 
@@ -126,6 +130,27 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Teams",
   },
+
+  followers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    },
+  ],
+
+  following: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    },
+  ],
+
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Posts",
+    },
+  ],
 });
 
 
