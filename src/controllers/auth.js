@@ -173,7 +173,7 @@ controller.onSignup = async (req, res,) => {
           break;
         case 4:
           console.log(req.body);
-          let staduim_data = req.body.staduim;
+          let staduim_data = JSON.parse(req.body.staduim);
           let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
           let price_per_month = Number.parseFloat(staduim_data.price_per_month)
           let price_per_year = Number.parseFloat(staduim_data.price_per_year)
