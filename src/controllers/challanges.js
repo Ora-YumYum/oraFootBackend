@@ -115,20 +115,22 @@ controller.createChallange = async (req, res,) => {
             },
             status: 2,
         });
+        let RefreeNotification = Notifications({
+            type: "invite_refree",
+            invitation: RefreeInvite,
+            user_id: user_id,
+            title: userExits.team.team_name,
+        });
 
         const refreesInWilaya = await Users.updateMany({ wilaya: userExits.wilaya, user_type: 1 }, {
             $push: {
-                invitations: RefreeInvite
+                invitations: RefreeInvite,
+                notifications: RefreeNotification,
             }
         })
 
         if (refreesInWilaya != null) {
-            let RefreeNotification = Notifications({
-                type: "invite_refree",
-                invitation: RefreeInvite,
-                user_id: user_id,
-                title: userExits.team.team_name,
-            });
+
             RefreeInvite.save();
             RefreeNotification.save();
         }
