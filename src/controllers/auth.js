@@ -185,7 +185,7 @@ controller.onSignup = async (req, res,) => {
             price_per_hour: price_per_hour,
             staduim_name: staduim_data.staduim_name,
             wilaya: wilaya,
-            location : location
+            location : location,
           });
           await staduim.save();
           user.staduim = staduim;

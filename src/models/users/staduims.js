@@ -24,6 +24,13 @@ const StaduimsSchema = new Schema({
         required: false,
     },
 
+    location: {
+        type: {
+            
+        },
+        
+    },
+    
     price_per_hour: {
         type: Number,
         required: false,
