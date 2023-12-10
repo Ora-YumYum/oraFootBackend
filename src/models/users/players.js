@@ -54,6 +54,13 @@ const Playerschema = new Schema({
         ref: "Teams",
     },
 
+    location: {
+        type: {
+            
+        },
+        
+    },
+
     followers: [
         {
             type: Schema.Types.ObjectId,
@@ -68,7 +75,7 @@ const Playerschema = new Schema({
         },
     ],
 
- posts: [
+    posts: [
         {
             type: Object,
         },
