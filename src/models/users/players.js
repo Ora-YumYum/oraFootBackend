@@ -68,6 +68,11 @@ const Playerschema = new Schema({
         },
     ],
 
+ posts: [
+        {
+            type: Object,
+        },
+    ],
     rating: {
         type: Number,
         required: false,
