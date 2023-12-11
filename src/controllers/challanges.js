@@ -83,7 +83,7 @@ controller.createChallange = async (req, res,) => {
             "$push": {
                 "challanges": challange
             }
-        })
+        });
 
         let staduimInvite = Invitation({
             type: "invite_staduim",
@@ -115,6 +115,7 @@ controller.createChallange = async (req, res,) => {
             },
             status: 2,
         });
+        
         let RefreeNotification = Notifications({
             type: "invite_refree",
             invitation: RefreeInvite,
@@ -130,7 +131,6 @@ controller.createChallange = async (req, res,) => {
         })
 
         if (refreesInWilaya != null) {
-
             RefreeInvite.save();
             RefreeNotification.save();
         }
@@ -139,9 +139,9 @@ controller.createChallange = async (req, res,) => {
 
         await staduimInvite.save();
 
-        await challange.save();
-
         challange.postedBy = user_id;
+
+        await challange.save();
 
         return res.json({
             "success": true,
@@ -215,7 +215,10 @@ controller.viewMyChallanges = async (req, res,) => {
 
     const id = req.userId;
     try {
-        let challanges = await Challanges.find({ $or: [{ 'postedBy': id }, { 'opponent_id': id }] })
+        let challanges = await Challanges.find({
+            $or: [{ 'postedBy': id },
+            { 'opponent_id': id }], 
+        })
             .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").exec();
 
@@ -233,7 +236,7 @@ controller.viewMyChallanges = async (req, res,) => {
 controller.viewAllChallanges = async (req, res,) => {
 
     try {
-        let challanges = await Challanges.find({ status: 0 }).populate("staduim").populate("team").
+        let challanges = await Challanges.find({ status: 0 , isPrivateGame: false }).populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").exec();
         res.status(200).json({
             "success": true,

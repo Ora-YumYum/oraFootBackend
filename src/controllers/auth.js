@@ -132,9 +132,11 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               refeere.profile_img = pic_name;
+              
               uploadImage(filePath, uploadPath, userPic.data);
               await refeere.save();
               user.refeere = refeere;
+              
             } catch (error) {
               console.log(error);
             }
