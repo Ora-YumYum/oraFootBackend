@@ -11,6 +11,9 @@ const AppError = require("./errorController");
 
 const Challenges = require("../models/challanges");
 
+const Games = require("../models/games");
+
+
 const Refrees = require("../models/users/refeers");
 
 
@@ -58,8 +61,6 @@ controller.viewMyGames = async (req, res,) => {
 
     const refree_id = req.query.refree_id;
 
-
-
     const status = Number.parseInt(req.query.status);
 
     try {
@@ -69,6 +70,38 @@ controller.viewMyGames = async (req, res,) => {
         })
             .populate("postedBy").populate("invitation").populate("opponent_team").populate("staduim").populate("team");
 
+        console.log(challenges)
+        return res.status(200).send({
+            "success": true,
+            "challenges": challenges
+        });
+    } catch (error) {
+        console.log(error);
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
+
+
+controller.startGame = async (req, res,) => {
+
+    const { challenge_id, first_team, second_team, } = req.body;
+
+    try {
+
+        let game = Games({
+            challenge_id: challenge_id,
+            first_team: first_team,
+            second_team: second_team,
+        });
+
+        await game.save();
+
+        let challenges = await Challenges.updateOne({
+            _id: challenge_id,
+        }, {
+            "game": game,
+        });
+        
         console.log(challenges)
         return res.status(200).send({
             "success": true,

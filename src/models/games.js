@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const gamesSchema = new Schema({
 
 
-    gamesID: {
-        type: String,
-        required: true,
+    challenge_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Challanges",
     },
 
     first_team: {
@@ -23,7 +23,8 @@ const gamesSchema = new Schema({
 
     games_status: {
         type: Number,
-        required: true,
+        required: false,
+        default : 1,
     },
 
     game_youtube_video_url: {
