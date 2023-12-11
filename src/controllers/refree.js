@@ -7,6 +7,7 @@ const Players = require("../models/users/players");
 const Users = require("../models/users/users");
 const Notifications = require("../models/notifications");
 const Invitation = require("../models/invitation");
+const AppError = require("./errorController");
 
 const Challenges = require("../models/challanges");
 
@@ -66,7 +67,7 @@ controller.viewMyGames = async (req, res,) => {
             refree: refree_id,
             status: status
         })
-            .populate("postedBy").populate("invitation").populate("opponent_team").populate("staduim");
+            .populate("postedBy").populate("invitation").populate("opponent_team").populate("staduim").populate("team");
 
         console.log(challenges)
         return res.status(200).send({
@@ -74,6 +75,7 @@ controller.viewMyGames = async (req, res,) => {
             "challenges": challenges
         });
     } catch (error) {
+        console.log(error);
         return AppError.onError(error, "restaurant add error" + error);
     }
 };
@@ -92,6 +94,7 @@ controller.updateFouls = async (req, res) => {
                 }
             }
         });
+
         res.status(200).json({
             success: true,
             "message": "type was updated successfully"
