@@ -73,8 +73,6 @@ controller.createChallange = async (req, res,) => {
         let userExits = await Users.findOne({ _id: user_id }, {
         }).populate("team");
 
-        //console.log(userExits)
-
         await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
@@ -158,6 +156,7 @@ controller.createChallange = async (req, res,) => {
         });
 
     } catch (error) {
+        console.log(error);
         return AppError.onError(res, " error" + error);
     }
 };

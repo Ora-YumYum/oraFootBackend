@@ -10,6 +10,8 @@ const Invitation = require("../models/invitation");
 
 const Challenges = require("../models/challanges");
 
+const Refrees = require("../models/users/refeers");
+
 
 const controller = {}
 
@@ -49,6 +51,27 @@ controller.updateGoals = async (req, res) => {
         });
     }
 }
+
+
+controller.viewMyGames = async (req, res,) => {
+
+    const refree_id = req.query.refree_id;
+
+    try {
+        let challenges = await Challenges.find({
+            refree: refree_id
+        })
+    .populate("postedBy").populate("invitation").populate("opponent_team").populate("staduim");
+
+        console.log(challenges)
+        return res.status(200).send({
+            "success": true,
+            "challenges": challenges
+        });
+    } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
 
 
 controller.updateFouls = async (req, res) => {
@@ -192,13 +215,15 @@ controller.accepteInvitation = async (req, res) => {
             "$set": {
                 status: 0,
             }
-        })
+        });
 
         await Challenges.updateOne({ _id: challenge_id }, {
             "$set": {
                 refree: refree_user_id,
             }
-        })
+        });
+
+        await refree
 
         await Users.updateOne({ _id: challengeExits.team, }, {
             "$push": {
@@ -206,7 +231,7 @@ controller.accepteInvitation = async (req, res) => {
             },
         },);
 
-       return res.status(200).json({
+        return res.status(200).json({
             "success": true,
             "msg": "Invitation was accepted successfully",
         });

@@ -15,7 +15,6 @@ router.get("/get_challenges_invitation",middleware, TeamsController.getChallenge
 
 router.get("/get_players_invitation",middleware, TeamsController.getPlayersInvitations);
 
-
 router.get("/get_players", middleware, TeamsController.getPlayers);
 
 router.post("/send_invitation",middleware, TeamsController.sendInvitation);

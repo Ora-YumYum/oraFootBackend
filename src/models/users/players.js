@@ -54,12 +54,7 @@ const Playerschema = new Schema({
         ref: "Teams",
     },
 
-    location: {
-        type: {
-            
-        },
-        
-    },
+   
 
     followers: [
         {

@@ -17,6 +17,8 @@ router.post("/update_fouls", refreeController.updateFouls);
 
 router.post("/update_cards", middleware, refreeController.updateCards);
 
-//
+router.get("/my_games", middleware, refreeController.viewMyGames);
+
+////viewMyGames
 
 module.exports = router;
