@@ -57,11 +57,16 @@ controller.viewMyGames = async (req, res,) => {
 
     const refree_id = req.query.refree_id;
 
+
+
+    const status = Number.parseInt(req.query.status);
+
     try {
         let challenges = await Challenges.find({
-            refree: refree_id
+            refree: refree_id,
+            status: status
         })
-    .populate("postedBy").populate("invitation").populate("opponent_team").populate("staduim");
+            .populate("postedBy").populate("invitation").populate("opponent_team").populate("staduim");
 
         console.log(challenges)
         return res.status(200).send({
