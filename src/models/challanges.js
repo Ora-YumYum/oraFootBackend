@@ -94,6 +94,10 @@ const challangesSchema = new Schema({
         default: false,
 
     },
+    postedBy: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
 
     isActive: {
         type: Boolean,
@@ -106,10 +110,7 @@ const challangesSchema = new Schema({
         default: 1,
     },
 
-    postedBy: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-    },
+    
 
     team: {
         type: Schema.Types.ObjectId,
@@ -134,14 +135,14 @@ const challangesSchema = new Schema({
     },
 
 
-    refree_invitation: {
+    refree: {
         type: Schema.Types.ObjectId,
-        ref: "Invitation",
+        ref: "User",
     },
 
-    photographer_invitation: {
+    photographer: {
         type: Schema.Types.ObjectId,
-        ref: "Invitation",
+        ref: "User",
     },
 
     staduim_invitation: {

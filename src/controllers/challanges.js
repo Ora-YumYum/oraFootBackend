@@ -71,7 +71,9 @@ controller.createChallange = async (req, res,) => {
         }
 
         let userExits = await Users.findOne({ _id: user_id }, {
-        }).populate("team")
+        }).populate("team");
+
+        //console.log(userExits)
 
         await Users.updateOne({ _id: user_id }, {
             "$push": {
@@ -115,7 +117,7 @@ controller.createChallange = async (req, res,) => {
             },
             status: 2,
         });
-        
+
         let RefreeNotification = Notifications({
             type: "invite_refree",
             invitation: RefreeInvite,
@@ -123,12 +125,18 @@ controller.createChallange = async (req, res,) => {
             title: userExits.team.team_name,
         });
 
-        const refreesInWilaya = await Users.updateMany({ wilaya: userExits.wilaya, user_type: 1 }, {
-            $push: {
-                invitations: RefreeInvite,
-                notifications: RefreeNotification,
-            }
-        })
+        let challengeWilaya = userExits.wilaya;
+        console.log(challengeWilaya);
+        const refreesInWilaya = await
+            Users.updateMany({ "wilaya": { $eq: 16 }, "user_type": { $eq: 1 } }, {
+                "$push": {
+                    "invitations": RefreeInvite,
+                    "notifications": RefreeNotification,
+                }
+            });
+
+        console.log(refreesInWilaya)
+        /*  */
 
         if (refreesInWilaya != null) {
             RefreeInvite.save();
@@ -217,7 +225,7 @@ controller.viewMyChallanges = async (req, res,) => {
     try {
         let challanges = await Challanges.find({
             $or: [{ 'postedBy': id },
-            { 'opponent_id': id }], 
+            { 'opponent_id': id }],
         })
             .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").exec();
@@ -236,8 +244,11 @@ controller.viewMyChallanges = async (req, res,) => {
 controller.viewAllChallanges = async (req, res,) => {
 
     try {
-        let challanges = await Challanges.find({ status: 0 , isPrivateGame: false }).populate("staduim").populate("team").
+        let challanges = await Challanges.find({ status: 0, isPrivateGame: false })
+            .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").exec();
+
+
         res.status(200).json({
             "success": true,
             "challanges": challanges

@@ -5,6 +5,10 @@
 const Games = require("../models/games");
 const Players = require("../models/users/players");
 const Users = require("../models/users/users");
+const Notifications = require("../models/notifications");
+const Invitation = require("../models/invitation");
+
+const Challenges = require("../models/challanges");
 
 
 const controller = {}
@@ -160,6 +164,59 @@ controller.getMyChallenges = async (req, res) => {
         }
     } else {
         res.status(400).send({ success: false, message: "please enter an id " });
+    }
+}
+
+
+controller.accepteInvitation = async (req, res) => {
+
+    const { challenge_id, refree_user_id, refree_name, invitation_id, } = req.body;
+
+    try {
+
+        let refreeExits = await Users.findOne({ _id: refree_user_id });
+
+        let challengeExits = await Users.findOne({ _id: challenge_id });
+
+        let notification = Notifications({
+            type: "refree_accepted_invitation",
+            user_id: refree_user_id,
+            title: refree_name,
+            img: refreeExits.profile_img,
+            invitation: invitation_id
+        });
+
+        await notification.save();
+
+        await Invitation.updateOne({ _id: invitation_id }, {
+            "$set": {
+                status: 0,
+            }
+        })
+
+        await Challenges.updateOne({ _id: challenge_id }, {
+            "$set": {
+                refree: refree_user_id,
+            }
+        })
+
+        await Users.updateOne({ _id: challengeExits.team, }, {
+            "$push": {
+                "notifications": notification
+            },
+        },);
+
+       return res.status(200).json({
+            "success": true,
+            "msg": "Invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
     }
 }
 
