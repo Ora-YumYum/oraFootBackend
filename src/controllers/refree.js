@@ -106,13 +106,13 @@ controller.startGame = async (req, res,) => {
             "success": true,
             "message": "game started successfully",
         });
-        
+
     } catch (error) {
         return res.status(500).send({
             "success": false,
             "message": error
         });
-        return AppError.onError(error, "restaurant add error" + error);
+       
     }
 };
 
