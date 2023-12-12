@@ -256,15 +256,16 @@ controller.accepteInvitation = async (req, res) => {
         await notification.save();
 
         await Invitation.updateOne({ _id: invitation_id }, {
+
             "$set": {
-                status: 0,
+                "status": 0,
             }
         });
 
         await Challenges.updateOne({ _id: challenge_id }, {
             "$set": {
-                "refree": refree_user_id,
-            }
+            "refree": refree_user_id,
+            },
         });
 
         await Users.updateOne({ _id: challengeExits.team, }, {
