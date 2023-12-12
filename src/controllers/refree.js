@@ -272,7 +272,7 @@ controller.accepteInvitation = async (req, res) => {
             "$push": {
                 "notifications": notification
             },
-        },);
+        },)
 
         return res.status(200).json({
             "success": true,
