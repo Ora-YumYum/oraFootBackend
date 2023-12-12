@@ -44,9 +44,9 @@ const Teamschema = new Schema({
   ],
 
 
-  doctor: {
+  user_id: {
     type: Schema.Types.ObjectId,
-    ref: "Doctors",
+    ref: "User",
   },
 
 

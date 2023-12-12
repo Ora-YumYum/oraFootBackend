@@ -227,7 +227,7 @@ controller.viewMyChallanges = async (req, res,) => {
             { 'opponent_id': id }],
         })
             .populate("staduim").populate("team").
-            populate("invitation").populate("opponent_team").exec();
+            populate("invitation").populate("opponent_team").populate("game").exec();
 
         console.log(challanges)
         return res.status(200).send({

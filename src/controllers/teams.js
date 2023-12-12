@@ -172,8 +172,6 @@ controller.sendInvitation = async (req, res) => {
 
         let teamExits = await Users.findOne({ _id: team_id });
 
-
-
         if (opponent_team_Exits) {
 
             let invitation = Invitation({
@@ -239,7 +237,8 @@ controller.sendInvitation = async (req, res) => {
 
 controller.accepteInvitation = async (req, res) => {
 
-    const { opponent_team_id, team_id, team_name, challange_id, invitation_id, notification_id } = req.body;
+    const { opponent_team_id, team_id, team_name, challange_id,
+         invitation_id, notification_id } = req.body;
 
     try {
 

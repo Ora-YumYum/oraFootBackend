@@ -112,7 +112,7 @@ controller.startGame = async (req, res,) => {
             "success": false,
             "message": error
         });
-       
+
     }
 };
 
@@ -263,11 +263,9 @@ controller.accepteInvitation = async (req, res) => {
 
         await Challenges.updateOne({ _id: challenge_id }, {
             "$set": {
-                refree: refree_user_id,
+                "refree": refree_user_id,
             }
         });
-
-        await refree
 
         await Users.updateOne({ _id: challengeExits.team, }, {
             "$push": {

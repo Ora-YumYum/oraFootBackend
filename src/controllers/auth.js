@@ -109,6 +109,7 @@ controller.onSignup = async (req, res,) => {
                 about: team_data.about,
                 main_color: team_data.main_color,
                 secondary_color: team_data.secondary_color,
+                user_id : user._id
               })
               await team.save();
               user.team = team;

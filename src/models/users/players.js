@@ -83,7 +83,6 @@ const Playerschema = new Schema({
     ratings: [
         {
             type: Number,
-
         },
     ],
 
