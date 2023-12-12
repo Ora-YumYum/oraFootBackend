@@ -113,14 +113,8 @@ const userSchema = new Schema({
     ref: "Photographers",
   },
 
-
-  doctor: {
-    type: Schema.Types.ObjectId,
-    ref: "Doctors",
-  },
-
-
-  refeers: {
+  
+  refree: {
     type: Schema.Types.ObjectId,
     ref: "Refeers",
   },

@@ -30,21 +30,22 @@ function getPath(user_type) {
     case 0:
       path = "team";
       break;
+
     case 1:
-
-      path = "refeers";
+      path = "refree";
+      break;
     case 2:
-
       path = "photographer";
+      break;
     case 3:
-
       path = "doctor";
+      break;
     case 4:
-
       path = "staduim";
+      break;
     case 5:
-
       path = "player";
+      break;
     default:
       break;
   }
@@ -109,7 +110,7 @@ controller.onSignup = async (req, res,) => {
                 about: team_data.about,
                 main_color: team_data.main_color,
                 secondary_color: team_data.secondary_color,
-                user_id : user._id
+                user_id: user._id
               })
               await team.save();
               user.team = team;
@@ -133,16 +134,16 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               refeere.profile_img = pic_name;
-              
+
               uploadImage(filePath, uploadPath, userPic.data);
-             
+
 
             } catch (error) {
               console.log(error);
             }
           }
           await refeere.save();
-          user.refeere = refeere;
+          user.refree = refeere;
 
           break;
         case 2:
@@ -189,7 +190,7 @@ controller.onSignup = async (req, res,) => {
             price_per_hour: price_per_hour,
             staduim_name: staduim_data.staduim_name,
             wilaya: wilaya,
-            location : location,
+            location: location,
           });
           await staduim.save();
           user.staduim = staduim;
@@ -321,14 +322,14 @@ controller.getProfile = async (req, res,) => {
   try {
 
     const userFound = await User.findOne({ _id: userId });
-    console.log(userFound)
 
     if (!userFound) {
 
       return res.status(404).json({ message: 'no user was found wit this id' });
     } else {
+      console.log(userFound.user_type)
       let path = getPath(userFound.user_type);
-
+      console.log(path.toString());
       const user = await User.findOne({ _id: userId }).populate(path.toString());
 
       user.password = "";
