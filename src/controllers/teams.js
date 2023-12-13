@@ -178,9 +178,9 @@ controller.sendInvitation = async (req, res) => {
                 type: "team_invitation",
                 user_id: team_id,
                 data: {
-                    "opponent_team_id": team_id.user_id,
+                    "opponent_team_id": team_id,
                     "team_name": team_name,
-                    "team_id": opponent_team_Exits,
+                    "team_id": opponent_team_Exits._id,
                     "challange_id": challange_id,
                 },
                 status: 2,
@@ -265,15 +265,15 @@ controller.accepteInvitation = async (req, res) => {
                 }
             });
 
-            await Users.updateOne({ _id:  team_id}, {
+            await Users.updateOne({ _id: team_id }, {
                 "$push": {
                     "challanges": challange_id
                 },
             },);
 
-            await Users.updateOne({ _id: opponent_team_Exits.user_id  }, {
+            await Users.updateOne({ _id: opponent_team_Exits.user_id }, {
                 "$push": {
-                    "notifications": notification,  
+                    "notifications": notification,
                 },
             },);
 
