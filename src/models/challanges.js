@@ -122,10 +122,11 @@ const challangesSchema = new Schema({
         ref: "Teams",
     },
 
-    opponent_id: {
+    opponent_team_id: {
         type: Schema.Types.ObjectId,
         ref: "User",
     },
+
 
     invitation: {
         type: Schema.Types.ObjectId,
