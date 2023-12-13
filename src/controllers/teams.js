@@ -176,11 +176,11 @@ controller.sendInvitation = async (req, res) => {
 
             let invitation = Invitation({
                 type: "team_invitation",
-                user_id: opponent_team_Exits.user_id,
+                user_id: team_id,
                 data: {
-                    "opponent_team_id": opponent_team_Exits.user_id,
+                    "opponent_team_id": team_id,
                     "team_name": team_name,
-                    "team_id": team_id,
+                    "team_id": opponent_team_Exits.user_id,
                     "challange_id": challange_id,
                 },
                 status: 2,
