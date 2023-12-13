@@ -75,14 +75,8 @@ controller.createChallange = async (req, res,) => {
         await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
-            }
+            },
         })
-
-        await Staduims.updateOne({ _id: staduim }, {
-            "$push": {
-                "challanges": challange
-            }
-        });
 
         let staduimInvite = Invitation({
             type: "invite_staduim",
