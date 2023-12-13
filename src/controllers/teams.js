@@ -265,13 +265,13 @@ controller.accepteInvitation = async (req, res) => {
                 }
             });
 
-            await Users.updateOne({ _id: opponent_team_Exits.user_id }, {
+            await Users.updateOne({ _id: team_id}, {
                 "$push": {
                     "challanges": challange_id
                 },
             },);
 
-            await Users.updateOne({ _id: team_id  }, {
+            await Users.updateOne({ _id: opponent_team_Exits.user_id    }, {
                 "$push": {
                     "notifications": notification,
                 },
