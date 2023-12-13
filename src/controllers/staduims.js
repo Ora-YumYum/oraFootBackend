@@ -5,18 +5,19 @@
 const Challanges = require("../models/challanges");
 const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
-
+const Notifications = require("../models/notifications");
+const Invitation = require("../models/invitation");
 
 var controller = {}
 
 controller.getStaduims = async (req, res,) => {
 
-    let commune = Number.parseInt(req.body.commune);
+    let wilaya = Number.parseInt(req.body.wilaya);
 
-    if (commune != undefined || commune != "" || commune != null) {
+    if (wilaya != undefined || wilaya != "" || wilaya != null) {
 
         try {
-            let staduims = await Staduims.find({ address: commune })
+            let staduims = await Staduims.find({ wilaya: wilaya })
             res.status(200).json({
                 "success": true,
                 "staduims": staduims
@@ -56,6 +57,59 @@ controller.deleteStaduim = async (req, res) => {
         res.status(500).json({});
     }
 };
+
+controller.accepteInvitation = async (req, res) => {
+
+    const { challenge_id, staduim_user_id, staduim_name, invitation_id, } = req.body;
+
+    try {
+
+        let staduimExits = await Users.findOne({ _id: refree_user_id });
+
+        let challengeExits = await Users.findOne({ _id: challenge_id });
+
+        let notification = Notifications({
+            type: "staduim_accepted_invitation",
+            user_id: staduim_user_id,
+            title: staduim_name,
+            img: staduimExits.profile_img ??"",
+            invitation: invitation_id
+        });
+
+        await notification.save();
+
+        await Invitation.updateOne({ _id: invitation_id }, {
+
+            "$set": {
+                "status": 0,
+            }
+        });
+
+        await Challenges.updateOne({ _id: challenge_id }, {
+            "$set": {
+            "staduim": staduim_user_id,
+            },
+        });
+
+        await Users.updateOne({ _id: challengeExits.postedBy, }, {
+            "$push": {
+                "notifications": notification
+            },
+        },)
+
+        return res.status(200).json({
+            "success": true,
+            "msg": "Invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
 
 
 module.exports = controller;

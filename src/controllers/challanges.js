@@ -24,7 +24,7 @@ controller.createChallange = async (req, res,) => {
 
     try {
         const {
-            title, desc, staduim,
+            title, desc,
             match_type, numbers_of_players,
             price, payment_method,
             isPrivateGame, notifyRefree,
@@ -32,13 +32,12 @@ controller.createChallange = async (req, res,) => {
             field_type,
             start_date,
             start_time,
-           
+
         } = req.body;
 
         const challange = new Challanges({
             title: title,
             desc: desc,
-            staduim: staduim,
             match_type: match_type,
             numbers_of_players: numbers_of_players,
             price: price,
@@ -87,23 +86,22 @@ controller.createChallange = async (req, res,) => {
 
         let staduimInvite = Invitation({
             type: "invite_staduim",
-            user_id: staduim,
             data: {
-                "staduim_id": staduim,
                 "challenge_id": challange._id,
                 "team_name": userExits.team.team_name,
             },
             status: 2,
         });
 
-        let notification = Notifications({
+        let staduimNotification = Notifications({
             type: "invite_staduim",
             invitation: staduimInvite,
             user_id: user_id,
             title: userExits.team.team_name,
+            img: userExits.team.profile_img,
         });
 
-        await notification.save();
+        await staduimNotification.save();
 
         await staduimInvite.save();
 
@@ -121,19 +119,26 @@ controller.createChallange = async (req, res,) => {
             invitation: RefreeInvite,
             user_id: user_id,
             title: userExits.team.team_name,
+            img: userExits.team.profile_img,
         });
 
         let challengeWilaya = userExits.wilaya;
-        
+
         const refreesInWilaya = await
-            Users.updateMany({ "wilaya": { $eq: 16 }, "user_type": { $eq: 1 } }, {
+            Users.updateMany({ "wilaya": { $eq: challengeWilaya }, "user_type": { $eq: 1 } }, {
                 "$push": {
                     "invitations": RefreeInvite,
                     "notifications": RefreeNotification,
                 }
             });
 
-        console.log(refreesInWilaya)
+        const staduimsInWilaya = await
+            Users.updateMany({ "wilaya": { "$eq": challengeWilaya }, "user_type": { "$eq": 4 } }, {
+                "$push": {
+                    "invitations": staduimInvite,
+                    "notifications": staduimNotification,
+                }
+            });
         /*  */
 
         if (refreesInWilaya != null) {
@@ -141,7 +146,7 @@ controller.createChallange = async (req, res,) => {
             RefreeNotification.save();
         }
 
-        await notification.save();
+        await staduimNotification.save();
 
         await staduimInvite.save();
 
