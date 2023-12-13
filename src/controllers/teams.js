@@ -245,7 +245,7 @@ controller.accepteInvitation = async (req, res) => {
 
         let opponent_team_Exits = await Teams.findOne({ _id: opponent_team_id });
 
-        if (team_Exits) {
+        if (team_Exits && opponent_team_Exits) {
 
             let notification = Notifications({
                 type: "accepted_invitation",
