@@ -245,13 +245,13 @@ controller.accepteInvitation = async (req, res) => {
 
         let opponent_team_Exits = await Teams.findOne({ "_id": opponent_team_id });
 
-        console.log(invitation_id)
+
 
         if (team_Exits && opponent_team_Exits) {
 
             let notification = Notifications({
                 type: "accepted_invitation",
-                user_id: team_id,
+                user_id: opponent_team_Exits.user_id,
                 title: team_name,
                 invitation: invitation_id,
                 img: opponent_team_Exits.profile_img,
@@ -265,13 +265,13 @@ controller.accepteInvitation = async (req, res) => {
                 }
             });
 
-            await Users.updateOne({ _id: team_id}, {
+            await Users.updateOne({ _id: opponent_team_Exits.user_id }, {
                 "$push": {
                     "challanges": challange_id
                 },
             },);
 
-            await Users.updateOne({ _id: opponent_team_Exits.user_id    }, {
+            await Users.updateOne({ _id: team_id }, {
                 "$push": {
                     "notifications": notification,
                 },
@@ -279,7 +279,6 @@ controller.accepteInvitation = async (req, res) => {
 
             await Challanges.updateOne({ _id: challange_id }, {
                 "$set": {
-                    "status": 0,
                     "opponent_team": opponent_team_id,
                     "opponent_team_id": opponent_team_Exits.user_id,
                 },
