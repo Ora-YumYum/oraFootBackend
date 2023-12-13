@@ -224,7 +224,7 @@ controller.viewMyChallanges = async (req, res,) => {
     try {
         let challanges = await Challanges.find({
             $or: [{ 'postedBy': id },
-            { 'opponent_team': id }],
+            { 'opponent_team_id': id }],
         })
             .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").populate("game").exec();
@@ -310,8 +310,6 @@ controller.sendInvitation = async (req, res) => {
     const { player_id, team_id, team_name } = req.body;
     try {
 
-
-
         let playerExits = await Users.findOne({ _id: player_id });
 
         if (playerExits) {
@@ -342,7 +340,6 @@ controller.sendInvitation = async (req, res) => {
                     "invitations": invitation
                 }
             },),
-
                 await Users.updateOne({ _id: player_id }, {
                     "$push": {
                         "notifications": notification
