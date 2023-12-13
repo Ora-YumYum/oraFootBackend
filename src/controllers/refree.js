@@ -216,6 +216,7 @@ controller.getMyChallenges = async (req, res) => {
                         "challenges": challenges,
                     },
                 });
+            
             } else {
                 res.status(200).send({
                     "success": false, "message": "Invalid id", results: {
@@ -267,7 +268,7 @@ controller.accepteInvitation = async (req, res) => {
             },
         });
 
-        await Users.updateOne({ _id: challengeExits.team, }, {
+        await Users.updateOne({ _id: challengeExits.postedBy, }, {
             "$push": {
                 "notifications": notification
             },

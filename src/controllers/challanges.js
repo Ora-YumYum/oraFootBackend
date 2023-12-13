@@ -224,7 +224,7 @@ controller.viewMyChallanges = async (req, res,) => {
     try {
         let challanges = await Challanges.find({
             $or: [{ 'postedBy': id },
-            { 'opponent_id': id }],
+            { 'opponent_team': id }],
         })
             .populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").populate("game").exec();
