@@ -32,14 +32,13 @@ controller.createChallange = async (req, res,) => {
             field_type,
             start_date,
             start_time,
-            team,
+           
         } = req.body;
 
         const challange = new Challanges({
             title: title,
             desc: desc,
             staduim: staduim,
-            team: team,
             match_type: match_type,
             numbers_of_players: numbers_of_players,
             price: price,
@@ -73,6 +72,7 @@ controller.createChallange = async (req, res,) => {
         let userExits = await Users.findOne({ _id: user_id }, {
         }).populate("team");
 
+        challange.team = userExits.team._id;
         await Users.updateOne({ _id: user_id }, {
             "$push": {
                 "challanges": challange
@@ -124,7 +124,7 @@ controller.createChallange = async (req, res,) => {
         });
 
         let challengeWilaya = userExits.wilaya;
-        console.log(challengeWilaya);
+        
         const refreesInWilaya = await
             Users.updateMany({ "wilaya": { $eq: 16 }, "user_type": { $eq: 1 } }, {
                 "$push": {
