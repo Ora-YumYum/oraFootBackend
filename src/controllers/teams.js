@@ -197,7 +197,7 @@ controller.sendInvitation = async (req, res) => {
 
             await invitation.save();
 
-            await Users.updateMany({ _id: { $in: [team_id.toString(), opponent_team_id.toString()] } }, {
+            await Users.updateMany({ _id: { $in: [team_id.toString(), opponent_team_Exits.toString()] } }, {
                 "$push": {
                     "invitations": invitation
                 }
@@ -241,9 +241,11 @@ controller.accepteInvitation = async (req, res) => {
 
     try {
 
-        let team_Exits = await Users.findOne({ _id: team_id });
+        let team_Exits = await Users.findOne({ "_id": team_id });
 
-        let opponent_team_Exits = await Teams.findOne({ _id: opponent_team_id });
+        let opponent_team_Exits = await Teams.findOne({ "_id": opponent_team_id });
+
+        console.log(invitation_id)
 
         if (team_Exits && opponent_team_Exits) {
 
@@ -257,19 +259,19 @@ controller.accepteInvitation = async (req, res) => {
 
             await notification.save();
 
-            let invitation = await Invitation.updateOne({ _id: invitation_id }, {
+            await Invitation.updateOne({ _id: invitation_id }, {
                 "$set": {
                     status: 0,
                 }
-            })
+            });
 
-            await Users.updateOne({ _id: team_id }, {
+            await Users.updateOne({ _id: opponent_team_Exits.user_id }, {
                 "$push": {
                     "challanges": challange_id
                 },
             },);
 
-            await Users.updateOne({ _id: opponent_team_Exits.user_id }, {
+            await Users.updateOne({ _id: team_id }, {
                 "$push": {
                     "notifications": notification,
                 },
@@ -279,21 +281,21 @@ controller.accepteInvitation = async (req, res) => {
                 "$set": {
                     "status": 0,
                     "opponent_team": opponent_team_id,
-                    "opponent_team_id" : opponent_team_Exits.user_id,
-                    "invitation": invitation,
+                    "opponent_team_id": opponent_team_Exits.user_id,
                 },
             },);
 
-            if (notification_id != null) {
+            if (notification_id != null || notification_id != undefined) {
                 let update_notifications = await Notifications.updateOne({ _id: notification_id }, {
                     "$set": {
                         read: true,
                     }
-                })
-            }
+                });
+            };
+
             res.status(200).json({
                 "success": true,
-                "msg": "Challenge accepted successfully",
+                "msg": "Challenge accepted Successfully",
             });
         } else {
             res.status(200).json({
