@@ -221,12 +221,13 @@ controller.getStaduimsByWilaya = async (req, res,) => {
 controller.viewMyChallanges = async (req, res,) => {
 
     const id = req.userId;
+
     try {
+
         let challanges = await Challanges.find({
             $or: [{ 'postedBy': id },
             { 'opponent_team_id': id }],
-        })
-            .populate("staduim").populate("team").
+        }).populate("staduim").populate("team").
             populate("invitation").populate("opponent_team").populate("game").exec();
 
         console.log(challanges)
