@@ -2,12 +2,12 @@
 
 
 
-const Challanges = require("../models/challanges");
+const Challenges = require("../models/challanges");
 const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 const Notifications = require("../models/notifications");
 const Invitation = require("../models/invitation");
-
+const Users = require("../models/users/users");
 var controller = {}
 
 controller.getStaduims = async (req, res,) => {
