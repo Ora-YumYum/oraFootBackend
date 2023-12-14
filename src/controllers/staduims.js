@@ -66,13 +66,13 @@ controller.accepteInvitation = async (req, res) => {
 
         let staduimExits = await Users.findOne({ _id: staduim_user_id });
 
-        let challengeExits = await Users.findOne({ _id: challenge_id });
+        let challengeExits = await Challenges.findOne({ _id: challenge_id });
 
         let notification = Notifications({
             type: "staduim_accepted_invitation",
             user_id: staduim_user_id,
             title: staduim_name,
-            img: staduimExits.profile_img ??"",
+            img: staduimExits.profile_img ?? "",
             invitation: invitation_id
         });
 
@@ -87,7 +87,7 @@ controller.accepteInvitation = async (req, res) => {
 
         await Challenges.updateOne({ _id: challenge_id }, {
             "$set": {
-            "staduim": staduim_user_id,
+                "staduim": staduim_user_id,
             },
         });
 
