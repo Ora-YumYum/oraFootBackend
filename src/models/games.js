@@ -20,6 +20,15 @@ const gamesSchema = new Schema({
         ref: "Teams",
     },
 
+    first_team_score: {
+        type: Number,
+        default : 0,
+    },
+
+    second_team_score: {
+        type: Number,
+        default : 0,
+    },
 
     games_status: {
         type: Number,
