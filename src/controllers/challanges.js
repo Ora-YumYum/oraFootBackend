@@ -127,14 +127,12 @@ controller.createChallange = async (req, res,) => {
             });
 
         const staduimsInWilaya = await
-            Users.updateMany({ "wilaya": { "$eq": challengeWilaya }, "user_type": { "$eq": 4 } }, {
+            Staduims.updateMany({ "wilaya": { "$eq": challengeWilaya }, }, {
                 "$push": {
                     "invitations": staduimInvite,
                     "notifications": staduimNotification,
                 }
             });
-        /*  */
-
         if (refreesInWilaya != null) {
             RefreeInvite.save();
             RefreeNotification.save();
@@ -343,7 +341,6 @@ controller.sendInvitation = async (req, res) => {
                         "notifications": notification
                     },
                 },),
-
 
                 res.status(200).json({
                     "success": true,
