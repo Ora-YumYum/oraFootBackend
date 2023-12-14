@@ -14,6 +14,9 @@ const refreeRoutes = require("../app/refree")
 
 const staduimsRoutes = require("../app/staduims")
 
+const gamesRoutes = require("../app/games")
+
+
 const notifcationsRoutes = require("../app/notifcations")
 
 
@@ -36,6 +39,7 @@ router.use("/refree", refreeRoutes);
 
 router.use("/staduims", staduimsRoutes);
 
+router.use("/games", gamesRoutes);
 
 module.exports = router;
 

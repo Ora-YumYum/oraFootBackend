@@ -22,7 +22,7 @@ const Teamschema = new Schema({
 
   about: {
     type: String,
-    required: true,
+    required: false,
   },
 
   address: {
