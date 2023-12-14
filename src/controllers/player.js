@@ -205,7 +205,6 @@ controller.viewAllInvitations = async (req, res,) => {
         return AppError.onError(error, "restaurant add error" + error);
     }
 };
-
 controller.accepteInvitation = async (req, res) => {
 
     const { team_id, team_user_id, player_name, invitation_id, player_id, player_user_id } = req.body;
