@@ -238,7 +238,7 @@ controller.accepteInvitation = async (req, res) => {
         },)
 
 
-        await Teams.updateOne({ _id: team_user_id, "players.player": new ObjectId(player_id) }, {
+        await Teams.updateOne({ _id: team_user_id, "players.player": new ObjectId(player_user_id) }, {
             "$set": {
                 "players.$.status": 0
             },
