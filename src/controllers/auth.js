@@ -194,6 +194,7 @@ controller.onSignup = async (req, res,) => {
           });
           await staduim.save();
           user.staduim = staduim;
+          user.wilaya = wilaya;
           break;
         case 5:
           if (req.files != undefined) {

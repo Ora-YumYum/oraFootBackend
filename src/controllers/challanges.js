@@ -25,14 +25,16 @@ controller.createChallange = async (req, res,) => {
     try {
         const {
             title, desc,
-            match_type, numbers_of_players,
+            match_type,
+            numbers_of_players,
             price, payment_method,
-            isPrivateGame, notifyRefree,
+            isPrivateGame,
+            notifyRefree,
             notifyPhotographer,
             field_type,
             start_date,
             start_time,
-
+            staduim,
         } = req.body;
 
         const challange = new Challanges({
@@ -80,12 +82,15 @@ controller.createChallange = async (req, res,) => {
 
         let staduimInvite = Invitation({
             type: "invite_staduim",
+            user_id: staduim,
             data: {
+                "staduim_id": staduim,
                 "challenge_id": challange._id,
                 "team_name": userExits.team.team_name,
             },
             status: 2,
         });
+
 
         let staduimNotification = Notifications({
             type: "invite_staduim",
