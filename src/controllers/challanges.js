@@ -121,6 +121,8 @@ controller.createChallange = async (req, res,) => {
             img: userExits.team.profile_img,
         });
 
+        RefreeInvite.save();
+        RefreeNotification.save();
         let challengeWilaya = userExits.wilaya;
 
         const refreesInWilaya = await
@@ -138,10 +140,6 @@ controller.createChallange = async (req, res,) => {
                     "notifications": staduimNotification,
                 }
             });
-        if (refreesInWilaya != null) {
-            RefreeInvite.save();
-            RefreeNotification.save();
-        }
 
         await staduimNotification.save();
 
