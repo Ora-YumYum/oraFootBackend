@@ -13,7 +13,8 @@ controller.viewGames = async (req, res,) => {
 
     try {
 
-        let games = await Games.find().populate("first_team").populate("second_team")
+        let games = await Games.find().populate("first_team").
+        populate("second_team").populate("challenge_id")
         res.status(200).json({
             "success": true,
             "games": games
@@ -23,7 +24,7 @@ controller.viewGames = async (req, res,) => {
         console.log(error);
         return AppError.onError(error, "restaurant add error" + error);
     }
-    
+
 };
 
 
