@@ -67,7 +67,7 @@ controller.viewMyGames = async (req, res,) => {
             refree: refree_id,
             status: status
         })
-            .populate("postedBy").populate("refree").
+            .populate("postedBy").populate("refree").populate("game").
         populate("invitation").populate("opponent_team").populate("staduim").populate("team");
 
         console.log(challenges)
@@ -104,7 +104,7 @@ controller.startGame = async (req, res,) => {
 
         return res.status(200).send({
             "success": true,
-            "message": "game started successfully",
+            "message": "Game started successfully",
             "game" : game,
         });
 
@@ -113,7 +113,6 @@ controller.startGame = async (req, res,) => {
             "success": false,
             "message": error
         });
-
     }
 };
 
