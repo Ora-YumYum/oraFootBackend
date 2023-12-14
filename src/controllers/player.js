@@ -242,7 +242,6 @@ controller.accepteInvitation = async (req, res) => {
                 "players.$.status": 0
             },
         },);
-
         await Players.updateOne({ _id: player_id, }, {
             "$set": {
                 "player_team": team_id,
