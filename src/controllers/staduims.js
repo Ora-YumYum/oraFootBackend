@@ -87,7 +87,7 @@ controller.accepteInvitation = async (req, res) => {
 
         await Challenges.updateOne({ _id: challenge_id }, {
             "$set": {
-                "staduim": staduim_user_id,
+                "staduim": staduimExits.staduim,
             },
         });
 

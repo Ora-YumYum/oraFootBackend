@@ -105,6 +105,7 @@ controller.startGame = async (req, res,) => {
         return res.status(200).send({
             "success": true,
             "message": "game started successfully",
+            "game" : game,
         });
 
     } catch (error) {
