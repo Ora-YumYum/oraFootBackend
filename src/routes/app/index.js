@@ -12,6 +12,8 @@ const playersRoutes = require("../app/player")
 const refreeRoutes = require("../app/refree")
 
 
+const staduimsRoutes = require("../app/staduims")
+
 const notifcationsRoutes = require("../app/notifcations")
 
 
@@ -31,6 +33,8 @@ router.use("/teams", teamsRoutes);
 router.use("/players", playersRoutes);
 
 router.use("/refree", refreeRoutes);
+
+router.use("/staduims", staduimsRoutes);
 
 
 module.exports = router;

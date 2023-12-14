@@ -64,7 +64,7 @@ controller.accepteInvitation = async (req, res) => {
 
     try {
 
-        let staduimExits = await Users.findOne({ _id: refree_user_id });
+        let staduimExits = await Users.findOne({ _id: staduim_user_id });
 
         let challengeExits = await Users.findOne({ _id: challenge_id });
 

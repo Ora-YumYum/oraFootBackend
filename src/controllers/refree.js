@@ -302,7 +302,6 @@ controller.viewMyChallanges = async (req, res,) => {
         }).populate("staduim").populate("team").populate("refree").
             populate("invitation").populate("opponent_team_id").populate("game").exec();
 
-        
         return res.status(200).send({
             "success": true,
             "challanges": challanges
