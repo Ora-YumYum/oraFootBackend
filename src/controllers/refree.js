@@ -68,7 +68,7 @@ controller.viewMyGames = async (req, res,) => {
             status: status
         })
             .populate("postedBy").populate("refree")
-            populate("invitation").populate("opponent_team").populate("staduim").populate("team");
+        populate("invitation").populate("opponent_team").populate("staduim").populate("team");
 
         console.log(challenges)
         return res.status(200).send({
@@ -217,7 +217,7 @@ controller.getMyChallenges = async (req, res) => {
                         "challenges": challenges,
                     },
                 });
-            
+
             } else {
                 res.status(200).send({
                     "success": false, "message": "Invalid id", results: {
@@ -265,7 +265,7 @@ controller.accepteInvitation = async (req, res) => {
 
         await Challenges.updateOne({ _id: challenge_id }, {
             "$set": {
-            "refree": refree_user_id,
+                "refree": refree_user_id,
             },
         });
 
@@ -295,12 +295,12 @@ controller.accepteInvitation = async (req, res) => {
 controller.viewMyChallanges = async (req, res,) => {
 
     const id = req.userId;
-     console.log(id)
+    console.log(id)
     try {
         let challanges = await Challenges.find({
-         'refree': id 
-        }).populate("staduim").populate("team").populate("refree")
-            populate("invitation").populate("opponent_team_id").populate("game").exec();
+            'refree': id
+        }).populate("staduim").populate("team").populate("refree").
+        populate("invitation").populate("opponent_team_id").populate("game").exec();
 
         console.log(challanges)
         return res.status(200).send({
