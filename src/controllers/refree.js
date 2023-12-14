@@ -299,7 +299,7 @@ controller.viewMyChallanges = async (req, res,) => {
     try {
         let challanges = await Challenges.find({
          'refree': id 
-        }).populate("staduim").populate("team").
+        }).populate("staduim").populate("team").populate("refree")
             populate("invitation").populate("opponent_team_id").populate("game").exec();
 
         console.log(challanges)
