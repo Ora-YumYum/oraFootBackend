@@ -191,6 +191,7 @@ controller.onSignup = async (req, res,) => {
             staduim_name: staduim_data.staduim_name,
             wilaya: wilaya,
             location: location,
+            user_id : user._id,
           });
           await staduim.save();
           user.staduim = staduim;

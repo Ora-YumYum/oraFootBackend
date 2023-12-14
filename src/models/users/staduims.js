@@ -51,6 +51,12 @@ const StaduimsSchema = new Schema({
         required: false,
     },
 
+    user_id: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+
+
     photos: [
         {
             type: String,
