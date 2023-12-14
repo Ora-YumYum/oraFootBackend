@@ -21,14 +21,13 @@ controller.viewGames = async (req, res,) => {
 };
 
 
-controller.getGameById = async (req, res,) => {
-    const id = req.body.game_id;
+controller.getGames = async (req, res,) => {
 
     try {
-        let game = await Games.findOne({ _id: id });
+        let games = await Games.find({});
         res.status(200).json({
             "success": true,
-            "game": game,
+            "games": games,
         });
     } catch (error) {
         return AppError.onError(error, "restaurant add error" + error);

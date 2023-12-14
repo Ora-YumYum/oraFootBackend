@@ -81,9 +81,9 @@ controller.onSignup = async (req, res,) => {
         user_type: user_type,
         fcm_token: "",
       });
-
+      let wilaya;
       if (req.body.wilaya != undefined) {
-        let wilaya = Number.parseInt(req.body.wilaya)
+        wilaya = Number.parseInt(req.body.wilaya)
         user.wilaya = wilaya;
       }
 
@@ -191,7 +191,7 @@ controller.onSignup = async (req, res,) => {
             staduim_name: staduim_data.staduim_name,
             wilaya: wilaya,
             location: location,
-            user_id : user._id,
+            user_id: user._id,
           });
           await staduim.save();
           user.staduim = staduim;
@@ -210,6 +210,7 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
               player.profile_img = pic_name;
               player.user_id = user._id;
+              player.wilaya = wilaya;
               user.profile_img = pic_name;
               uploadImage(filePath, uploadPath, userPic.data);
               await player.save();

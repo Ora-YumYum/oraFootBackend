@@ -54,7 +54,7 @@ const Playerschema = new Schema({
         ref: "Teams",
     },
 
-   
+
 
     followers: [
         {
@@ -76,6 +76,11 @@ const Playerschema = new Schema({
         },
     ],
     rating: {
+        type: Number,
+        required: false,
+    },
+
+    wilaya: {
         type: Number,
         required: false,
     },

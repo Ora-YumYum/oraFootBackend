@@ -67,7 +67,7 @@ controller.viewMyGames = async (req, res,) => {
             refree: refree_id,
             status: status
         })
-            .populate("postedBy").populate("refree").populate("game").
+        .populate("postedBy").populate("refree").populate("game").
         populate("invitation").populate("opponent_team").populate("staduim").populate("team");
 
         console.log(challenges)
