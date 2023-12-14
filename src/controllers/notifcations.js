@@ -20,9 +20,6 @@ controller.getNotifcations = async (req, res) => {
                 populate: {
                     path: "invitation",
                 },
-                match: {
-                    "read": false,
-                }
             }).skip(page * 30).limit(30);
             console.log(user)
             return res.status(200).send({
