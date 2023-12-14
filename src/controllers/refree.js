@@ -244,7 +244,7 @@ controller.accepteInvitation = async (req, res) => {
 
         let refreeExits = await Users.findOne({ _id: refree_user_id });
 
-        let challengeExits = await Users.findOne({ _id: challenge_id });
+        let challengeExits = await Challenges.findOne({ _id: challenge_id });
 
         let notification = Notifications({
             type: "refree_accepted_invitation",
