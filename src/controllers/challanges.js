@@ -245,7 +245,7 @@ controller.viewAllChallanges = async (req, res,) => {
 
     try {
         let challanges = await Challanges.find({ status: 0, isPrivateGame: false })
-            .populate("staduim").populate("team").
+            .populate("staduim").populate("team").populate("game")
             populate("invitation").populate("opponent_team").exec();
         res.status(200).json({
             "success": true,
