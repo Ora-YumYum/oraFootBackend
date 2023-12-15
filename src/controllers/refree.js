@@ -197,6 +197,7 @@ controller.updateCards = async (req, res) => {
                     }
                 }
             }
+        
         } else if (team == 2) {
             update = {
                 "$push": {

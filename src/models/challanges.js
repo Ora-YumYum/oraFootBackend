@@ -107,7 +107,7 @@ const challangesSchema = new Schema({
 
     status: {
         type: Number,
-        default: 2,
+        default: 0,
     },
         
     team: {

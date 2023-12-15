@@ -234,6 +234,79 @@ controller.sendInvitation = async (req, res) => {
 }
 
 
+
+controller.sendRequestToChallenge = async (req, res) => {
+
+    const { opponent_team_id, team_id, team_name, challange_id } = req.body;
+    try {
+
+        let opponent_team_Exits = await Teams.findOne({ _id: new ObjectId(opponent_team_id) });
+
+        let teamExits = await Users.findOne({ _id: new ObjectId(team_id) });
+
+        if (opponent_team_Exits) {
+
+            let invitation = Invitation({
+                type: "challenge_request",
+                user_id: opponent_team_Exits.user_id,
+                data: {
+                    "opponent_team_id": team_id,
+                    "team_name": opponent_team_Exits.team_name,
+                    "team_id": opponent_team_Exits.user_id,
+                    "challange_id": challange_id,
+                },
+                status: 2,
+            });
+
+            let notification = Notifications({
+                type: "challenge_request",
+                invitation: invitation,
+                user_id: opponent_team_id,
+                title: opponent_team_Exits.team_name,
+                img: opponent_team_Exits.profile_img,
+            });
+            await notification.save();
+
+            await invitation.save();
+
+            await Users.updateMany({ _id: { $in: [team_id.toString(), opponent_team_Exits.user_id.toString()] } }, {
+                "$push": {
+                    "invitations": invitation
+                }
+            },),
+
+                await Users.updateOne({ _id: team_id }, {
+                    "$push": {
+                        "notifications": notification
+                    },
+                },),
+                await Challanges.updateOne({ _id: challange_id }, {
+                    $set: {
+                        "invitation": invitation,
+                    }
+                });
+
+            res.status(200).json({
+                "success": true,
+                "msg": "invitation was sent successfully",
+            });
+        } else {
+            res.status(400).json({
+                "success": false,
+                "msg": "Invalid id",
+            });
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
+
+
 controller.accepteInvitation = async (req, res) => {
 
     const { opponent_team_id, team_id, team_name, challange_id,
@@ -242,7 +315,6 @@ controller.accepteInvitation = async (req, res) => {
     try {
 
         let team_Exits = await Users.findOne({ "_id": team_id });
-
 
         let opponent_team_Exits = await Teams.findOne({ "_id": opponent_team_id });
 
