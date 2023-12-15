@@ -21,5 +21,8 @@ router.post("/send_invitation",middleware, TeamsController.sendInvitation);
 
 router.post("/accepte_invitation",middleware, TeamsController.accepteInvitation);
 
+router.post("/request_to_challenge",middleware, TeamsController.sendRequestToChallenge);
+
+router.post("/accepte_invitation_to_challenge",middleware, TeamsController.accepteRequestToChallenge);
 
 module.exports = router;
