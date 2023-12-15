@@ -41,31 +41,48 @@ const gamesSchema = new Schema({
         required: false,
     },
 
-
     game_deatils: {
         type: Object,
     },
 
-    goals: [
+    first_team_goals: [
         {
             type: Object,
         },
     ],
 
+    second_team_goals: [
+        {
+            type: Object,
+        },
+    ],
 
-    fouls: [
+    first_team_fouls: [
         {
             type: Object,
 
         },
     ],
 
+    second_team_fouls: [
+        {
+            type: Object,
 
-    cards: [
+        },
+    ],
+    
+    first_team_cards: [
         {
             type: Object,
         },
     ],
+
+    second_team_cards: [
+        {
+            type: Object,
+        },
+    ],
+
 });
 
 module.exports = mongoose.model("Games", gamesSchema);

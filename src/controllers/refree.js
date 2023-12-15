@@ -22,17 +22,34 @@ const controller = {}
 
 controller.updateGoals = async (req, res) => {
 
-    const { id, player_id, date } = req.body;
+    const { id, player_id, date, team } = req.body;
 
     try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "goals": {
-                    "player": player_id,
-                    'date': date,
+
+        let update = {}
+
+        if (team == 1) {
+            update = {
+                "$push": {
+                    "first_team_goals": {
+                        "player": player_id,
+                        'date': Date.now,
+                    }
                 }
             }
-        });
+        } else {
+            update = {
+                "$push": {
+                    "second_team_goals": {
+                        "player": player_id,
+                        'date': Date.now,
+                    }
+                }
+            }
+        }
+
+        await Games.updateOne({ _id: id }, update);
+
         await Players.updateOne({
             "$push": {
                 "goals": {
@@ -67,8 +84,8 @@ controller.viewMyGames = async (req, res,) => {
             refree: refree_id,
             status: status
         })
-        .populate("postedBy").populate("refree").populate("game").
-        populate("invitation").populate("opponent_team").populate("staduim").populate("team");
+            .populate("postedBy").populate("refree").populate("game").
+            populate("invitation").populate("opponent_team").populate("staduim").populate("team");
 
         console.log(challenges)
         return res.status(200).send({
@@ -96,7 +113,7 @@ controller.startGame = async (req, res,) => {
 
         await game.save();
 
-        let challenges = await Challenges.updateOne({
+        await Challenges.updateOne({
             _id: challenge_id,
         }, {
             "game": game,
@@ -105,7 +122,7 @@ controller.startGame = async (req, res,) => {
         return res.status(200).send({
             "success": true,
             "message": "Game started successfully",
-            "game" : game,
+            "game": game,
         });
 
     } catch (error) {
@@ -119,17 +136,33 @@ controller.startGame = async (req, res,) => {
 
 controller.updateFouls = async (req, res) => {
 
-    const { id, player_id, date } = req.body;
+    const { id, player_id, team } = req.body;
 
     try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "fouls": {
-                    "player": player_id,
-                    'date': date
+
+        let update = {}
+
+        if (team == 1) {
+            update = {
+                "$push": {
+                    "first_team_fouls": {
+                        "player": player_id,
+                        'date': Date.now,
+                    }
                 }
             }
-        });
+        } else if (team == 2) {
+            update = {
+                "$push": {
+                    "second_team_fouls": {
+                        "player": player_id,
+                        'date': Date.now,
+                    }
+                }
+            }
+        }
+
+        await Games.updateOne({ _id: id }, update);
 
         res.status(200).json({
             success: true,
@@ -148,18 +181,35 @@ controller.updateFouls = async (req, res) => {
 
 controller.updateCards = async (req, res) => {
 
-    const { id, player_id, date, card } = req.body;
+    const { id, player_id, card, team } = req.body;
 
     try {
-        await Games.updateOne({ _id: id }, {
-            "$push": {
-                "cards": {
-                    "player": player_id,
-                    "date": date,
-                    "card": card,
+
+        let update = {}
+
+        if (team == 1) {
+            update = {
+                "$push": {
+                    "first_team_cards": {
+                        "player": player_id,
+                        "card": card,
+                        'date': Date.now,
+                    }
                 }
             }
-        });
+        } else if (team == 2) {
+            update = {
+                "$push": {
+                    "second_team_cards": {
+                        "player": player_id,
+                        "card": card,
+                        'date': Date.now,
+                    }
+                }
+            }
+        }
+
+        await Games.updateOne({ _id: id }, update);
         res.status(200).json({
             success: true,
             "message": "type was updated successfully"
