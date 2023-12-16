@@ -219,11 +219,20 @@ controller.viewMyChallanges = async (req, res,) => {
 
     const id = req.userId;
 
+    const type = req.query.type;
+    let query = {};
+    if (type == "my_challenges") {
+        query = {
+            "postedBy": id,
+        };
+    } else if (type == "participated_challenges") {
+        query = {
+            "opponent_team_id": id,
+        };
+    }
+
     try {
-        let challanges = await Challanges.find({
-            $or: [{ 'postedBy': id },
-            { 'opponent_team_id': id }],
-        }).populate("staduim").populate("team").populate("refree").
+        let challanges = await Challanges.find(query).populate("staduim").populate("team").populate("refree").
             populate("invitation").populate("opponent_team").populate("game").exec();
 
         console.log(challanges)
@@ -242,7 +251,7 @@ controller.viewAllChallanges = async (req, res,) => {
     try {
         let challanges = await Challanges.find({ status: 0, isPrivateGame: false })
             .populate("staduim").populate("team").populate("game").populate("refree").
-        populate("invitation").populate("opponent_team").exec();
+            populate("invitation").populate("opponent_team").exec();
         res.status(200).json({
             "success": true,
             "challanges": challanges
