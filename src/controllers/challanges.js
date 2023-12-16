@@ -220,7 +220,6 @@ controller.viewMyChallanges = async (req, res,) => {
     const id = req.userId;
 
     try {
-
         let challanges = await Challanges.find({
             $or: [{ 'postedBy': id },
             { 'opponent_team_id': id }],

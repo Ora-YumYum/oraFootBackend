@@ -237,7 +237,7 @@ controller.sendInvitation = async (req, res) => {
 
 controller.sendRequestToChallenge = async (req, res) => {
 
-    const { opponent_team_id, team_id, team_name, challange_id } = req.body;
+    const { opponent_team_id, team_id,challange_id } = req.body;
     try {
 
         let opponent_team_Exits = await Teams.findOne({ _id: new ObjectId(opponent_team_id) });
@@ -353,8 +353,8 @@ controller.accepteRequestToChallenge = async (req, res) => {
             console.log("im her");
             await Challanges.updateOne({ _id: challange_id }, {
                 "$set": {
-                    "opponent_team": team_Exits._id,
-                    "opponent_team_id": team_Exits.team,
+                    "opponent_team": team_Exits.team,
+                    "opponent_team_id":team_Exits._id ,
                 },
             },);
 

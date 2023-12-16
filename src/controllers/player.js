@@ -79,8 +79,9 @@ controller.SearchForPlayers = async (req, res) => {
 }
 
 controller.viewAllPlayers = async (req, res,) => {
+    const id = req.query.id;
     try {
-        let players = await Users.find({ user_type: 5 }).populate("player")
+        let players = await Users.find({ _id: id }).populate("player")
         res.status(200).json({
             "success": true,
             "players": players
@@ -92,7 +93,7 @@ controller.viewAllPlayers = async (req, res,) => {
 
 
 controller.getTeamPlayers = async (req, res,) => {
-    const id = req.userId;
+    const id = req.query.id;
     try {
 
         let players = await Teams.findOne({ _id: id }).populate("players");

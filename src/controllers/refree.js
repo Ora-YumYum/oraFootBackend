@@ -20,57 +20,7 @@ const controller = {}
 
 
 
-controller.updateGoals = async (req, res) => {
 
-    const { id, player_id, date, team } = req.body;
-
-    try {
-
-        let update = {}
-
-        if (team == 1) {
-            update = {
-                "$push": {
-                    "first_team_goals": {
-                        "player": player_id,
-                        'date': Date.now,
-                    }
-                }
-            }
-        } else {
-            update = {
-                "$push": {
-                    "second_team_goals": {
-                        "player": player_id,
-                        'date': Date.now,
-                    }
-                }
-            }
-        }
-
-        await Games.updateOne({ _id: id }, update);
-
-        await Players.updateOne({
-            "$push": {
-                "goals": {
-                    "game": id,
-                    'date': date,
-                }
-            }
-        });
-        res.status(200).json({
-            success: true,
-            "message": "type was updated successfully"
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).jsons({
-            "success": false,
-            "message": "something happpend please try again later",
-        });
-    }
-}
 
 
 controller.viewMyGames = async (req, res,) => {
@@ -134,9 +84,60 @@ controller.startGame = async (req, res,) => {
 };
 
 
+controller.updateGoals = async (req, res) => {
+
+    const { game_id, player_id, team } = req.body;
+
+    try {
+
+        let update = {}
+
+        if (team == 1) {
+            update = {
+                "$push": {
+                    "first_team_goals": {
+                        "player": player_id,
+                        'date': Date.now,
+                    }
+                }
+            }
+        } else {
+            update = {
+                "$push": {
+                    "second_team_goals": {
+                        "player": player_id,
+                        'date': Date.now,
+                    }
+                }
+            }
+        }
+
+        await Games.updateOne({ _id: game_id }, update);
+
+        await Players.updateOne({
+            "$push": {
+                "goals": {
+                    "game": game_id,
+                }
+            }
+        });
+        res.status(200).json({
+            success: true,
+            "message": "type was updated successfully"
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).jsons({
+            "success": false,
+            "message": "something happpend please try again later",
+        });
+    }
+}
+
 controller.updateFouls = async (req, res) => {
 
-    const { id, player_id, team } = req.body;
+    const { game_id, player_id, team } = req.body;
 
     try {
 
@@ -162,7 +163,16 @@ controller.updateFouls = async (req, res) => {
             }
         }
 
-        await Games.updateOne({ _id: id }, update);
+        await Games.updateOne({ _id: game_id }, update);
+
+        await Players.updateOne({
+            "$push": {
+                "fouls": {
+                    "game": game_id,
+                }
+            }
+        });
+
 
         res.status(200).json({
             success: true,
@@ -181,7 +191,7 @@ controller.updateFouls = async (req, res) => {
 
 controller.updateCards = async (req, res) => {
 
-    const { id, player_id, card, team } = req.body;
+    const { game_id, player_id, card, team } = req.body;
 
     try {
 
@@ -197,7 +207,7 @@ controller.updateCards = async (req, res) => {
                     }
                 }
             }
-        
+
         } else if (team == 2) {
             update = {
                 "$push": {
@@ -210,7 +220,7 @@ controller.updateCards = async (req, res) => {
             }
         }
 
-        await Games.updateOne({ _id: id }, update);
+        await Games.updateOne({ _id: game_id }, update);
         res.status(200).json({
             success: true,
             "message": "type was updated successfully"
