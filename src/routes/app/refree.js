@@ -19,6 +19,8 @@ router.post("/update_cards", middleware, refreeController.updateCards);
 
 router.post("/start_game", middleware, refreeController.startGame);
 
+router.post("/end_game", middleware, refreeController.endGame);
+
 router.get("/my_games", middleware, refreeController.viewMyGames);
 
 router.get("/my_challenges", middleware, refreeController.viewMyChallanges);
