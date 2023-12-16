@@ -9,6 +9,7 @@ const Notifications = require("../models/notifications");
 const Invitation = require("../models/invitation");
 const AppError = require("./errorController");
 
+const Teams = require("../models/users/Teams")
 const Challenges = require("../models/challanges");
 
 
