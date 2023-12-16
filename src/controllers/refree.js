@@ -91,7 +91,7 @@ controller.endGame = async (req, res,) => {
 
     try {
 
-        let game = await Games.findeOne({ _id: game_id, },);
+        let game = await Games.findOne({ _id: game_id, });
 
         let winner;
         if (game != null) {
