@@ -97,7 +97,7 @@ controller.updateGoals = async (req, res) => {
                 "$push": {
                     "first_team_goals": {
                         "player": player_id,
-                        'date': Date.now,
+                        'date': Date.now(),
                     }
                 }
             }
@@ -106,7 +106,7 @@ controller.updateGoals = async (req, res) => {
                 "$push": {
                     "second_team_goals": {
                         "player": player_id,
-                        'date': Date.now,
+                        'date': Date.now(),
                     }
                 }
             }
@@ -148,7 +148,7 @@ controller.updateFouls = async (req, res) => {
                 "$push": {
                     "first_team_fouls": {
                         "player": player_id,
-                        'date': Date.now,
+                        'date': Date.now(),
                     }
                 }
             }
@@ -157,7 +157,7 @@ controller.updateFouls = async (req, res) => {
                 "$push": {
                     "second_team_fouls": {
                         "player": player_id,
-                        'date': Date.now,
+                        'date': Date.now(),
                     }
                 }
             }
@@ -203,7 +203,7 @@ controller.updateCards = async (req, res) => {
                     "first_team_cards": {
                         "player": player_id,
                         "card": card,
-                        'date': Date.now,
+                        'date':Date.now(),
                     }
                 }
             }
@@ -214,7 +214,7 @@ controller.updateCards = async (req, res) => {
                     "second_team_cards": {
                         "player": player_id,
                         "card": card,
-                        'date': Date.now,
+                        'date': Date.now(),
                     }
                 }
             }
