@@ -368,7 +368,7 @@ controller.checkPhoneNumber = async (req, res) => {
 
 controller.checkPassword = async (req, res) => {
   const { password } = req.body;
-  const id = req.user.user_id;
+  const id = req.userId;
 
   try {
     const user = await User.findOne({
@@ -400,7 +400,7 @@ controller.checkPassword = async (req, res) => {
 
 controller.updatePassowrd = async (req, res) => {
   const { old_password, password } = req.body;
-  const id = req.useId;
+  const id = req.userId;
   try {
     const user = await User.findOne({
       _id: id,
