@@ -82,11 +82,13 @@ controller.onSignup = async (req, res,) => {
         fcm_token: "",
         address: address,
       });
-      let wilaya;
+      let wilaya = null;
       if (req.body.wilaya != undefined) {
         wilaya = Number.parseInt(req.body.wilaya)
         user.wilaya = wilaya;
       }
+
+     
 
       switch (user_type) {
         case 0:
@@ -119,7 +121,6 @@ controller.onSignup = async (req, res,) => {
               console.log(error);
             }
           }
-
           break;
         case 1:
           const refeere = Refeers({ profile_img: "" })
@@ -172,11 +173,6 @@ controller.onSignup = async (req, res,) => {
           }
           user.photographer = photographer;
           break;
-        case 3:
-          const doctor = Doctor(req.body.doctor)
-          await doctor.save();
-          user.doctor = doctor;
-          break;
         case 4:
           console.log(req.body);
           let staduim_data = JSON.parse(req.body.staduim);
@@ -199,8 +195,12 @@ controller.onSignup = async (req, res,) => {
           user.wilaya = wilaya;
           break;
         case 5:
+          const player = players({
+            wilaya: user.wilaya,
+            user_id: user._id
+          });
           if (req.files != undefined) {
-            const player = players(req.body.player);
+
             try {
               let userPic = req.files.image;
 
@@ -210,18 +210,16 @@ controller.onSignup = async (req, res,) => {
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
               player.profile_img = pic_name;
-              player.user_id = user._id;
-              player.wilaya = wilaya;
-              user.wilaya = wilaya;
-              user.profile_img = pic_name;
+
               uploadImage(filePath, uploadPath, userPic.data);
-              user.player = player._id;
-              await player.save();
+
             } catch (error) {
               console.log(error);
             }
           }
-
+          await player.save();
+          user.player = player._id;
+          break;
         default:
           break;
       }
