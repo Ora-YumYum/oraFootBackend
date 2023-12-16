@@ -79,9 +79,9 @@ controller.SearchForPlayers = async (req, res) => {
 }
 
 controller.viewAllPlayers = async (req, res,) => {
-    const id = req.query.id;
+    const id = req.userId;
     try {
-        let players = await Users.find({ _id: id }).populate("player")
+        let players = await Users.find({}).populate("player")
         res.status(200).json({
             "success": true,
             "players": players
