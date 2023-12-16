@@ -81,7 +81,7 @@ controller.SearchForPlayers = async (req, res) => {
 controller.viewAllPlayers = async (req, res,) => {
     const id = req.userId;
     try {
-        let players = await Users.find({user_type : 5}).populate("player")
+        let players = await Users.find({ user_type: 5 }).populate("player")
         res.status(200).json({
             "success": true,
             "players": players

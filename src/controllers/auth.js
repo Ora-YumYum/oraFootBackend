@@ -212,6 +212,7 @@ controller.onSignup = async (req, res,) => {
               player.profile_img = pic_name;
               player.user_id = user._id;
               player.wilaya = wilaya;
+              user.wilaya = wilaya;
               user.profile_img = pic_name;
               uploadImage(filePath, uploadPath, userPic.data);
               await player.save();
