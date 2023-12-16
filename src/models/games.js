@@ -20,6 +20,11 @@ const gamesSchema = new Schema({
         ref: "Teams",
     },
 
+    winner: {
+        type: Schema.Types.ObjectId,
+        ref: "Teams",
+    },
+
     first_team_score: {
         type: Number,
         default : 0,
