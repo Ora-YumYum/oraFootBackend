@@ -108,7 +108,7 @@ controller.endGame = async (req, res,) => {
         });
 
 
-        await Teams.updateOne({
+        await Teams.updateMany({
             _id: { $in: first_team, second_team },
         }, {
             "$push": {
