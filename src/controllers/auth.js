@@ -80,7 +80,7 @@ controller.onSignup = async (req, res,) => {
         phone_number: phone_number,
         user_type: user_type,
         fcm_token: "",
-        address: address
+        address: address,
       });
       let wilaya;
       if (req.body.wilaya != undefined) {
@@ -215,8 +215,8 @@ controller.onSignup = async (req, res,) => {
               user.wilaya = wilaya;
               user.profile_img = pic_name;
               uploadImage(filePath, uploadPath, userPic.data);
+              user.player = player._id;
               await player.save();
-              user.player = player;
             } catch (error) {
               console.log(error);
             }
