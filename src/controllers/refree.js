@@ -93,13 +93,17 @@ controller.endGame = async (req, res,) => {
         await Games.updateOne({
             _id: challenge_id,
         }, {
-            "games_status": 0,
+            $set: {
+                "games_status": 0,
+            }
         });
 
         await Challenges.updateOne({
             _id: challenge_id,
         }, {
-            "status": 0,
+            $set: {
+                "status": 0,
+            }
         });
 
 
@@ -119,6 +123,7 @@ controller.endGame = async (req, res,) => {
         });
 
     } catch (error) {
+        console.log(error)
         return res.status(500).send({
             "success": false,
             "message": error
