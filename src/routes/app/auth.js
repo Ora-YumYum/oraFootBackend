@@ -17,7 +17,7 @@ router.post("/find_account", authController.findAccount);
 
 router.post("/reset_password", authController.resetPassowrd);
 
-router.post("/update_password", authController.updatePassowrd);
+router.post("/update_password", middleware, authController.updatePassowrd);
 
 router.post("/update_token", authController.updateToken);
 

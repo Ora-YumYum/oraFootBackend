@@ -406,7 +406,7 @@ controller.updatePassowrd = async (req, res) => {
       _id: id,
     });
     if (!user) {
-      return res.status(200).send({ success: false, message: 'there"s No Account with this Email', reutls: null })
+      return res.status(200).send({ success: false, message: 'there"s no account with this id', reutls: null })
     }
     const isPasswordValid = await bcryptjs.compare(
       old_password,
