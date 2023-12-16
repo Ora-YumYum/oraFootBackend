@@ -91,7 +91,7 @@ controller.endGame = async (req, res,) => {
 
     try {
 
-        let game = await Games.findOne({ _id: game_id, });
+        let game = await Games.findOne({ _id: game_id});
 
         let winner;
         if (game != null) {
@@ -120,7 +120,7 @@ controller.endGame = async (req, res,) => {
         });
 
         await Teams.updateMany({
-            _id: { $in: first_team, second_team },
+            _id: { $in: [first_team, second_team ]},
         }, {
             "$push": {
                 "games": game_id,
