@@ -55,7 +55,7 @@ function getPath(user_type) {
 
 controller.onSignup = async (req, res,) => {
 
-  const { email, password, firstName, lastName, phone_number, username, } = req.body;
+  const { email, password, firstName, lastName, phone_number, username, address } = req.body;
 
   let user_type = Number.parseInt(req.body.user_type)
   let gender = Number.parseInt(req.body.gender)
@@ -80,6 +80,7 @@ controller.onSignup = async (req, res,) => {
         phone_number: phone_number,
         user_type: user_type,
         fcm_token: "",
+        address: address
       });
       let wilaya;
       if (req.body.wilaya != undefined) {
@@ -427,6 +428,42 @@ controller.updatePassowrd = async (req, res) => {
     } else {
       return res.json({ success: false, message: 'wrong password', user: false })
     }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
+
+  }
+}
+
+
+controller.updateProfile = async (req, res) => {
+  const { firstName, lastName, phone_number, email, username, wilaya } = req.body;
+  const id = req.userId;
+  try {
+    const user = await User.findOne({
+      _id: id,
+    });
+    if (!user) {
+      return res.status(200).send({ success: false, message: 'there"s no account with this id', reutls: null })
+    }
+
+    let update = {
+      "first_name": firstName,
+      "last_name": lastName,
+      "phone_number": phone_number,
+      "email": email,
+      "username": username,
+    };
+    if (wilaya != null || wilaya != undefined) {
+      update["wilaya"] = wilaya;
+    }
+    await User.updateOne({
+      _id: id,
+    }, {
+      $set: update,
+    });
+    return res.status(200).send({
+      success: true, message: 'ok', reutls: "profile was updated successfuly"
+    })
   } catch (error) {
     return res.status(500).send({ success: false, message: 'Server Error', resutls: null })
 

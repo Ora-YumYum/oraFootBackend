@@ -23,5 +23,7 @@ router.post("/update_token", authController.updateToken);
 
 router.post("/profile", middleware ,authController.getProfile);
 
+router.post("/update_profile", middleware ,authController.updateProfile);
+
 
 module.exports = router;
