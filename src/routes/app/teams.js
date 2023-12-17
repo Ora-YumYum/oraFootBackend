@@ -25,4 +25,7 @@ router.post("/request_to_challenge",middleware, TeamsController.sendRequestToCha
 
 router.post("/accepte_invitation_to_challenge",middleware, TeamsController.accepteRequestToChallenge);
 
+router.post("/accepte_league_invitation",middleware, TeamsController.accepteLeagueInvitation);
+
+
 module.exports = router;

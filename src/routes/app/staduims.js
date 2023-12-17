@@ -14,6 +14,8 @@ const { body, check, validationResult } = require('express-validator');
 
 router.post("/accepte_invitation", staduimController.accepteInvitation);
 
+router.post("/accepte_league_invitation", staduimController.accepteInvitation);
+
 router.get("/get_staduims", staduimController.getStaduims);
 
 

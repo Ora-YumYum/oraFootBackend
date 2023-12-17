@@ -147,7 +147,6 @@ controller.getPlayers = async (req, res) => {
 
                 playersList.push(element);
             }
-
             return res.status(200).send({
                 success: true, message: "ok",
                 players: playersList,
@@ -469,5 +468,54 @@ controller.accepteInvitation = async (req, res) => {
     }
 }
 
+
+
+controller.accepteLeagueInvitation = async (req, res) => {
+
+    const { team_user_id, postedBy, invitation_id, } = req.body;
+
+    try {
+
+        let teamExits = await Users.findOne({ _id: team_user_id }).populate("team");
+
+
+        let notification = Notifications({
+            type: "team_accepted_league_invitation",
+            user_id: team_user_id,
+            title: teamExits.team.team_name,
+            img: teamExits.team.profile_img ?? "",
+            invitation: invitation_id
+        });
+
+        await notification.save();
+
+        await Invitation.updateOne({
+            _id: invitation_id,
+            "data.team_id": new ObjectId(teamExits.team._id)
+        }, {
+            "$set": {
+                "data.$.status": 0
+            },
+        },);
+
+        await Users.updateOne({ _id: postedBy, }, {
+            "$push": {
+                "notifications": notification
+            },
+        },)
+
+        return res.status(200).json({
+            "success": true,
+            "msg": "Invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
 
 module.exports = controller;

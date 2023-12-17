@@ -92,7 +92,7 @@ controller.createLeague = async (req, res,) => {
         for (let index = 0; index < staduims.length; index++) {
             const element = staduims[index];
             staduims_invite_list.push({
-                "team_id": element,
+                "staduim_id": element,
                 "league_id": league._id,
                 "invite_id": staduims_invite._id,
                 "postedBy": user_id,
@@ -178,12 +178,6 @@ controller.getAvailableLeagues = async (req, res,) => {
 
 
 module.exports = controller;
-
-
-
-
-
-
 /*let dividend = teams.length;
 let divisor = 4;
 let result = dividend / divisor;
