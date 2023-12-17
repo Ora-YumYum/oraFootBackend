@@ -121,7 +121,6 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
         let staduimExits = await Users.findOne({ _id: staduim_user_id }).populate("staduim");
 
-
         let notification = Notifications({
             type: "staduim_accepted_league_invitation",
             user_id: staduim_user_id,

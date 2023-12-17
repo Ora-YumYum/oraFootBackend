@@ -19,6 +19,8 @@ const notifcationsRoutes = require("../app/notifcations")
 
 const LeaguesRoutes = require("../app/leagues")
 
+const usersRoutes = require("../app/leagues")
+
 const express = require("express");
 
 const router = express.Router();
@@ -42,6 +44,8 @@ router.use("/staduims", staduimsRoutes);
 router.use("/games", gamesRoutes);
 
 router.use("/leagues", LeaguesRoutes);
+
+router.use("/users", usersRoutes);
 
 module.exports = router;
 
