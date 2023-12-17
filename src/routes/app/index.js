@@ -11,16 +11,16 @@ const playersRoutes = require("../app/player")
 
 const refreeRoutes = require("../app/refree")
 
-
 const staduimsRoutes = require("../app/staduims")
 
 const gamesRoutes = require("../app/games")
 
-
 const notifcationsRoutes = require("../app/notifcations")
 
+const LeaguesRoutes = require("../app/leagues")
 
 const express = require("express");
+
 const router = express.Router();
 
 router.use("/auth", authRoutes);
@@ -40,6 +40,8 @@ router.use("/refree", refreeRoutes);
 router.use("/staduims", staduimsRoutes);
 
 router.use("/games", gamesRoutes);
+
+router.use("/leagues", LeaguesRoutes);
 
 module.exports = router;
 

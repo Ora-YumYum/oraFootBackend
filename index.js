@@ -36,7 +36,7 @@ app.use(bodyParser.json())
 app.use('/api', routes);
 
 
-app.post("/", (req, res) => {
+app.get("/", (req, res) => {
 
   try {
     console.log(req.body.email);
