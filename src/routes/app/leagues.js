@@ -4,6 +4,8 @@
 
 const leaguesController = require("../../controllers/leagues")
 
+
+
 const express = require("express");
 const router = express.Router();
 
@@ -14,7 +16,6 @@ const { body, check, validationResult } = require('express-validator');
 
 router.post("/create_league", middleware, leaguesController.createLeague);
 
-router.get("/get_profile", middleware, leaguesController.createLeague);
 
 ////viewMyGames
 

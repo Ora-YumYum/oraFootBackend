@@ -19,7 +19,7 @@ const notifcationsRoutes = require("../app/notifcations")
 
 const LeaguesRoutes = require("../app/leagues")
 
-const usersRoutes = require("../app/leagues")
+const usersRoutes = require("../app/users")
 
 const express = require("express");
 
