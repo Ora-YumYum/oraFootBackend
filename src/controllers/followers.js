@@ -168,30 +168,54 @@ controller.getFollowers = async (req, res) => {
 
         const user = await Users.findOne({ _id: id });
 
-
         try {
             let results;
             switch (user.user_type) {
                 case 0:
-                    results = await Teams.findOne({ _id: user.team },).populate(path.toString()).skip(page * 30).limit(30);
+                    results = await
+                        Teams.findOne({ _id: user.team },).populate({
+                            "path": path.toString(),
+                            "select" : "team",
+                            "populate": {
+                                "path": "team",
+                            }
+                        }).skip(page * 30).limit(30);
                     break;
                 case 1:
-                    results = await Refrees.findOne({ _id: user.refree },).populate(path).skip(page * 30).limit(30);
+                    results = await Refrees.findOne({ _id: user.refree },).populate({
+                        "path": path.toString(),
+                        "select" : "refree",
+                        "populate": {
+                            "path": "refree"
+                        }
+                    }).skip(page * 30).limit(30);
                     break;
                 case 2:
                     results = await Photographers.findOne({ _id: user.photographer }).populate(path).skip(page * 30).limit(30);
                     break;
                 case 4:
-                    results = await Staduims.findOne({ _id: user.staduim },).populate(path).skip(page * 30).limit(30);
+                    results = await Staduims.findOne({ _id: user.staduim },).populate({
+                        "path": path.toString(),
+                        "select" : "staduim",
+                        "populate": {
+                            "path": "staduim"
+                        }
+                    }).skip(page * 30).limit(30);
                     break;
                 case 5:
-                    results = await Players.findOne({ _id: user.player },).populate(path).skip(page * 30).limit(30);
+                    results = await Players.findOne({ _id: user.player },).populate({
+                        "path": path.toString(),
+                        "select" : "player",
+                        "populate": {
+                            "path": "player"
+                        }
+                    }).skip(page * 30).limit(30);
                     break;
                 default:
                     break;
             }
             return res.status(200).send({
-                success: true, message: "ok", results:  results,
+                success: true, message: "ok", results: getFollowers ? results.followers : result.following,
             });
         } catch (error) {
             console.log(error);
