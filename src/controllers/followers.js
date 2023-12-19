@@ -62,9 +62,6 @@ controller.follow = async (req, res) => {
                 }
             };
 
-            await Users.findOne({ _id: user_id },);
-            const userFound = await Users.updateOne({ _id: user_id });
-
             switch (follower_id.user_type) {
                 case 0:
                     await Teams.updateOne({ _id: userFound.team }, update_following)
@@ -119,34 +116,64 @@ controller.follow = async (req, res) => {
 }
 
 
+controller.getFollowers = async (req, res) => {
+
+    const id = req.userId;
+
+    const page = Number.parseInt(req.query.page) ?? 0;
+
+    if (id != undefined && id != "") {
+        try {
+            let user = await Users.findOne({ _id: id }).populate({
+                path: "followers",
+                populate: {
+                    path: "invitation",
+                },
+            }).skip(page * 30).limit(30);
+            console.log(user)
+            return res.status(200).send({
+                success: true, message: "ok", results: {
+                    notifications: user.notifications,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ success: false, message: "Server Error", results: null });
+        }
+    } else {
+        res.status(400).send({ success: false, message: "please enter an id " });
+    }
+}
+
+
 controller.getProfile = async (req, res,) => {
     const userId = req.body.userId;
-  
+
     console.log(userId)
     if (!userId) {
-      return res.status(401).json({ message: 'invalid userId' });
+        return res.status(401).json({ message: 'invalid userId' });
     }
-  
+
     try {
-  
-      const userFound = await Users.findOne({ _id: userId });
-  
-      if (!userFound) {
-  
-        return res.status(404).json({ message: 'no user was found wit this id' });
-      } else {
-        console.log(userFound.user_type)
-        let path = getPath(userFound.user_type);
-        console.log(path.toString());
-        const user = await Users.findOne({ _id: userId }).populate(path.toString());
-  
-        user.password = "";
-        return res.status(200).json({ "success": true, "message": "ok", "data": user });
-      }
+
+        const userFound = await Users.findOne({ _id: userId });
+
+        if (!userFound) {
+
+            return res.status(404).json({ message: 'no user was found wit this id' });
+        } else {
+            console.log(userFound.user_type)
+            let path = getPath(userFound.user_type);
+            console.log(path.toString());
+            const user = await Users.findOne({ _id: userId }).populate(path.toString());
+
+            user.password = "";
+            return res.status(200).json({ "success": true, "message": "ok", "data": user });
+        }
     } catch (error) {
-      return AppError.onError(res, "error" + error);
+        return AppError.onError(res, "error" + error);
     }
-  };
+};
 
 
 module.exports = controller;
