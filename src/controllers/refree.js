@@ -26,7 +26,7 @@ const controller = {}
 
 controller.viewMyGames = async (req, res,) => {
 
-    const refree_id = req.query.refree_id;
+    const refree_id = req.userId;
 
     const status = Number.parseInt(req.query.status);
 
@@ -48,6 +48,8 @@ controller.viewMyGames = async (req, res,) => {
         return AppError.onError(error, "restaurant add error" + error);
     }
 };
+
+
 
 
 controller.startGame = async (req, res,) => {
