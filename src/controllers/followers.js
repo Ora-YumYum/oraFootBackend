@@ -149,7 +149,7 @@ controller.follow = async (req, res) => {
 
 controller.getFollowers = async (req, res) => {
 
-    const id = req.userId;
+    const id = req.body.id;
 
     const getFollowers = req.body.getFollowers;
 
@@ -215,7 +215,7 @@ controller.getFollowers = async (req, res) => {
                     break;
             }
             return res.status(200).send({
-                success: true, message: "ok", results: getFollowers ? results.followers : result.following,
+                success: true, message: "ok", results: getFollowers ? results.followers : results.following,
             });
         } catch (error) {
             console.log(error);
