@@ -48,13 +48,16 @@ function getPath(user_type) {
 controller.follow = async (req, res) => {
     const user_id = req.userId;
     const id = req.body.id;
+    const isFollowing = req.body.isFollowing;
+
+    console.log(isFollowing)
     try {
 
         const userFound = await Users.findOne({ _id: user_id });
 
         const follower_id = await Users.findOne({ _id: id });
 
-        console.log(follower_id)
+       
 
         if (!userFound) {
             return res.status(404).json({ message: 'no user was found wit this id' });
@@ -63,11 +66,21 @@ controller.follow = async (req, res) => {
 
             let update_following = {};
 
-            update_following = {
-                "$push": {
-                    "following": id,
-                }
-            };
+            if (isFollowing) {
+                update_following = {
+                    "$push": {
+                        "following": id,
+                    }
+                };
+            } else {
+                update_following = {
+                    "$pull": {
+                        "followers": id,
+                    }
+                };
+            }
+
+
 
             switch (follower_id.user_type) {
                 case 0:
@@ -88,12 +101,23 @@ controller.follow = async (req, res) => {
                 default:
                     break;
             }
+            let update = {}
 
-            let update = {
-                "$push": {
-                    "followers": user_id,
-                }
-            };
+            if (isFollowing) {
+                update = {
+                    "$push": {
+                        "followers": user_id,
+                    }
+                };
+            } else {
+                update = {
+                    "$pull": {
+                        "following": user_id,
+                    }
+                };
+            }
+
+
 
             switch (follower_id.user_type) {
                 case 0:
