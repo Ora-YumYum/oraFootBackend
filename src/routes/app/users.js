@@ -16,7 +16,7 @@ const { body, check, validationResult } = require('express-validator');
 
 router.post("/follow", middleware, followersController.follow);
 
-router.get("/get_profile", middleware, followersController.getProfile);
+router.post("/get_profile", middleware, followersController.getProfile);
 
 
 ////viewMyGames
