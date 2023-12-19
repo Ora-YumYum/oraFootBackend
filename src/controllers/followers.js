@@ -3,6 +3,9 @@ const Users = require("../models/users/users")
 
 const Refrees = require("../models/users/refeers")
 
+const Photographers = require("../models/users/photographers")
+
+
 const Players = require("../models/users/players")
 
 const Staduims = require("../models/users/staduims")
@@ -51,6 +54,7 @@ controller.follow = async (req, res) => {
 
         const follower_id = await Users.findOne({ _id: id });
 
+        console.log(follower_id)
 
         if (!userFound) {
             return res.status(404).json({ message: 'no user was found wit this id' });
@@ -93,24 +97,28 @@ controller.follow = async (req, res) => {
 
             switch (follower_id.user_type) {
                 case 0:
-                    await Teams.updateOne({ _id: id }, update)
+
+                    await Teams.updateOne({ _id: follower_id.team }, update)
                     break;
                 case 1:
-                    await Refrees.updateOne({ _id: id }, update)
+
+                    await Refrees.updateOne({ _id: follower_id.refree }, update)
                     break;
                 case 2:
-                    await Teams.updateOne({ _id: id }, update)
+
+                    await Photographers.updateOne({ _id: follower_id.photographer }, update)
                     break;
                 case 4:
-                    await Staduims.updateOne({ _id: id }, update)
+                    await Staduims.updateOne({ _id: follower_id.staduim }, update)
                     break;
                 case 5:
-                    await Players.updateOne({ _id: id }, update)
+
+                    await Players.updateOne({ _id: follower_id.player }, update)
                     break;
                 default:
                     break;
             }
-            return res.status(200).json({ "success": true, "message": "ok", "data": user });
+            return res.status(200).json({ "success": true, "message": "ok", });
         }
 
     } catch (error) {
