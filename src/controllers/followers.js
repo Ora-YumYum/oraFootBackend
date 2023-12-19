@@ -57,7 +57,7 @@ controller.follow = async (req, res) => {
 
         const follower_id = await Users.findOne({ _id: id });
 
-       
+
 
         if (!userFound) {
             return res.status(404).json({ message: 'no user was found wit this id' });
@@ -73,9 +73,10 @@ controller.follow = async (req, res) => {
                     }
                 };
             } else {
+                console.log("oui")
                 update_following = {
                     "$pull": {
-                        "followers": id,
+                        "following": id,
                     }
                 };
             }
@@ -112,7 +113,7 @@ controller.follow = async (req, res) => {
             } else {
                 update = {
                     "$pull": {
-                        "following": user_id,
+                        "followers": user_id,
                     }
                 };
             }
