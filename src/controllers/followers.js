@@ -68,13 +68,13 @@ controller.follow = async (req, res) => {
 
             if (isFollowing) {
                 update_following = {
-                    "$pull": {
+                    "$push": {
                         "following": id,
                     }
                 };
             } else {
                 update_following = {
-                    "$push": {
+                    "$pull": {
                         "followers": id,
                     }
                 };
@@ -105,13 +105,13 @@ controller.follow = async (req, res) => {
 
             if (isFollowing) {
                 update = {
-                    "$pull": {
+                    "$push": {
                         "followers": user_id,
                     }
                 };
             } else {
                 update = {
-                    "$push": {
+                    "$pull": {
                         "following": user_id,
                     }
                 };
