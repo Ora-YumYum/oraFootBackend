@@ -175,7 +175,7 @@ controller.getFollowers = async (req, res) => {
                     results = await
                         Teams.findOne({ _id: user.team },).populate({
                             "path": path.toString(),
-                            "select" : "team",
+                            "select": "team user_type",
                             "populate": {
                                 "path": "team",
                             }
@@ -184,10 +184,8 @@ controller.getFollowers = async (req, res) => {
                 case 1:
                     results = await Refrees.findOne({ _id: user.refree },).populate({
                         "path": path.toString(),
-                        "select" : "refree",
-                        "populate": {
-                            "path": "refree"
-                        }
+                        "select": "refree user_type",
+                        
                     }).skip(page * 30).limit(30);
                     break;
                 case 2:
@@ -196,7 +194,7 @@ controller.getFollowers = async (req, res) => {
                 case 4:
                     results = await Staduims.findOne({ _id: user.staduim },).populate({
                         "path": path.toString(),
-                        "select" : "staduim",
+                        "select": "staduim",
                         "populate": {
                             "path": "staduim"
                         }
@@ -205,10 +203,8 @@ controller.getFollowers = async (req, res) => {
                 case 5:
                     results = await Players.findOne({ _id: user.player },).populate({
                         "path": path.toString(),
-                        "select" : "player",
-                        "populate": {
-                            "path": "player"
-                        }
+                        "select": "player user_type",
+                      
                     }).skip(page * 30).limit(30);
                     break;
                 default:
