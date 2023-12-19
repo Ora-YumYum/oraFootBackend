@@ -59,14 +59,14 @@ const Playerschema = new Schema({
     followers: [
         {
             type: Schema.Types.ObjectId,
-            ref: "Users",
+            ref: "User",
         },
     ],
 
     following: [
         {
             type: Schema.Types.ObjectId,
-            ref: "Users",
+            ref: "User",
         },
     ],
 

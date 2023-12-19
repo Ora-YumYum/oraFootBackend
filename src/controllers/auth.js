@@ -345,7 +345,6 @@ controller.getProfile = async (req, res,) => {
 };
 
 
-
 controller.checkPhoneNumber = async (req, res) => {
 
   const phone_number = req.body.phone_number;

@@ -57,6 +57,20 @@ const StaduimsSchema = new Schema({
     },
 
 
+    followers: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+
+    following: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+
     photos: [
         {
             type: String,
