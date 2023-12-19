@@ -7,6 +7,9 @@ const Players = require("../models/users/players")
 
 const Staduims = require("../models/users/staduims")
 
+const Teams = require("../models/users/Teams")
+
+
 var controller = {};
 
 
