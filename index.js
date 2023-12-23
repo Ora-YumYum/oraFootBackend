@@ -39,8 +39,6 @@ app.use('/api', routes);
 
 //multer options
 
-
-
 app.get("/", (req, res) => {
 
   try {

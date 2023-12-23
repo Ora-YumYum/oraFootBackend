@@ -29,6 +29,10 @@ const LeaguesSchema = new Schema({
     default: Date.now(),
   },
 
+  end_date: {
+    type: Date,
+  },
+
   min_teams_needed: {
     type: Number,
     required: false,
@@ -80,12 +84,12 @@ const LeaguesSchema = new Schema({
     },
   ],
 
-  invitation: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Invitation",
-    },
-  ],
+  invitation:
+  {
+    type: Schema.Types.ObjectId,
+    ref: "Invitation",
+  },
+
 
   league_pre_video: {
     type: String,
