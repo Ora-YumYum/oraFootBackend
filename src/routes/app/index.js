@@ -21,6 +21,10 @@ const LeaguesRoutes = require("../app/leagues")
 
 const usersRoutes = require("../app/users")
 
+
+var videoUpload = require('./upload-videos')
+
+
 const express = require("express");
 
 const router = express.Router();
@@ -46,6 +50,9 @@ router.use("/games", gamesRoutes);
 router.use("/leagues", LeaguesRoutes);
 
 router.use("/users", usersRoutes);
+
+router.use("/videos", videoUpload);
+
 
 module.exports = router;
 

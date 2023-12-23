@@ -185,7 +185,7 @@ controller.getFollowers = async (req, res) => {
                     results = await Refrees.findOne({ _id: user.refree },).populate({
                         "path": path.toString(),
                         "select": "refree user_type",
-                        
+
                     }).skip(page * 30).limit(30);
                     break;
                 case 2:
@@ -204,7 +204,7 @@ controller.getFollowers = async (req, res) => {
                     results = await Players.findOne({ _id: user.player },).populate({
                         "path": path.toString(),
                         "select": "player user_type",
-                      
+
                     }).skip(page * 30).limit(30);
                     break;
                 default:
@@ -226,11 +226,10 @@ controller.getFollowers = async (req, res) => {
 controller.getProfile = async (req, res,) => {
     const userId = req.body.userId;
 
-    console.log(userId)
+    
     if (!userId) {
         return res.status(401).json({ message: 'invalid userId' });
     }
-
     try {
 
         const userFound = await Users.findOne({ _id: userId });

@@ -18,11 +18,15 @@ const routes = require("./src/routes/index")
 
 require('dotenv').config()
 
-const fileUpload = require('express-fileupload')
+
+const multer  = require('multer');
+const includeMulter = multer().any();
+
+require('./util/readenv').config();
 
 const app = express()
 
-app.use(fileUpload())
+
 
 const { UPLOAD_DIR } = require("./settings");
 
@@ -31,9 +35,10 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 
 app.use(bodyParser.json())
 
-
-
 app.use('/api', routes);
+
+//multer options
+
 
 
 app.get("/", (req, res) => {
@@ -48,6 +53,29 @@ app.get("/", (req, res) => {
     return res.send({ "error": error })
   }
 })
+
+function shouldParseRequest(req) {
+  const currentMethod = req.method;
+  const currentRoute = req.originalUrl;
+
+  const restrictedRoutes = [{
+    method: 'POST', originalUrl: '/'
+  }];
+
+  for(var i = 0; i < restrictedRoutes.length; i++ ) {
+    if(restrictedRoutes[i].method == currentMethod && restrictedRoutes[i].originalUrl == currentRoute ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+app.use(function(req, res, next) {
+  shouldParseRequest(req) ? includeMulter(req, res, next) : next();
+});
+
+
+console.log(process.env.DB_URL)
 
 mongoose
   .connect(process.env.DB_URL, {

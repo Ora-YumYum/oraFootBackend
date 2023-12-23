@@ -82,7 +82,7 @@ controller.createLeague = async (req, res,) => {
             });
         }
 
-        let staduims_invite = Invitation({
+       /* let staduims_invite = Invitation({
             type: "leagues_invite_staduims",
             user_id: user_id,
             data: staduims_invite_list,
@@ -98,7 +98,7 @@ controller.createLeague = async (req, res,) => {
                 "postedBy": user_id,
                 "status": 2,
             });
-        }
+        }*/
 
         let teams_notification = Notifications({
             type: "leagues_invite_teams",
@@ -107,20 +107,20 @@ controller.createLeague = async (req, res,) => {
             title: teamExits.team.team_name,
         });
 
-        let staduim_notification = Notifications({
+       /* let staduim_notification = Notifications({
             type: "leagues_invite_staduims",
             invitation: staduims_invite,
             user_id: user_id,
             title: teamExits.team.team_name,
-        });
+        });*/
 
-        await staduim_notification.save();
+      //  await staduim_notification.save();
 
         await teams_notification.save();
 
         await teams_invite.save();
 
-        await staduims_invite.save();
+       // await staduims_invite.save();
 
         await Users.updateMany({ _id: { $in: teams } }, {
             "$push": {
@@ -129,12 +129,12 @@ controller.createLeague = async (req, res,) => {
             }
         },);
 
-        await Users.updateMany({ _id: { $in: staduims } }, {
+       /* await Users.updateMany({ _id: { $in: staduims } }, {
             "$push": {
                 "invitations": staduims_invite,
                 "notifications": staduim_notification,
             }
-        },);
+        },);*/
 
         let response = await league.save();
 
