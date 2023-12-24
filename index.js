@@ -40,7 +40,6 @@ app.use('/api', routes);
 //multer options
 
 app.get("/", (req, res) => {
-
   try {
     console.log(req.body.email);
     return res.send({
@@ -73,7 +72,6 @@ app.use(function(req, res, next) {
 });
 
 
-console.log(process.env.DB_URL)
 
 mongoose
   .connect(process.env.DB_URL, {
