@@ -19,7 +19,7 @@ const routes = require("./src/routes/index")
 require('dotenv').config()
 
 
-const multer  = require('multer');
+const multer = require('multer');
 const includeMulter = multer().any();
 
 require('./util/readenv').config();
@@ -41,7 +41,7 @@ app.use('/api', routes);
 
 app.get("/", (req, res) => {
   try {
-    console.log(req.body.email);
+
     return res.send({
       "success": true,
       "message": ""
@@ -59,15 +59,15 @@ function shouldParseRequest(req) {
     method: 'POST', originalUrl: '/'
   }];
 
-  for(var i = 0; i < restrictedRoutes.length; i++ ) {
-    if(restrictedRoutes[i].method == currentMethod && restrictedRoutes[i].originalUrl == currentRoute ) {
+  for (var i = 0; i < restrictedRoutes.length; i++) {
+    if (restrictedRoutes[i].method == currentMethod && restrictedRoutes[i].originalUrl == currentRoute) {
       return false;
     }
   }
   return true;
 }
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   shouldParseRequest(req) ? includeMulter(req, res, next) : next();
 });
 
