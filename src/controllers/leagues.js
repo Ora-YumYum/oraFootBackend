@@ -196,6 +196,9 @@ controller.getAvailableLeagues = async (req, res,) => {
 };
 
 
+
+
+
 controller.accepteLeagueInvitation = async (req, res) => {
 
     const { team_id, postedBy, invitation_id, } = req.body;
@@ -222,6 +225,51 @@ controller.accepteLeagueInvitation = async (req, res) => {
         },);
 
         await Invitation.updateOne({ _id: invitation_id, "data.team_id": new ObjectId(team_id) }, {
+            "$set": {
+                "data.$.status": 0
+            },
+        },);
+
+
+        res.status(200).json({
+            "success": true,
+            "msg": "invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
+
+controller.accepteLeagueInvitationStaduim = async (req, res) => {
+
+    const { staduim_id, postedBy, invitation_id, } = req.body;
+
+    try {
+
+        let staduimExits = await Users.findOne({ _id: team_id }).populate("staduim");
+
+        let notification = Notifications({
+            type: "staduim_accepted_leauge_invitation",
+            user_id: staduimExits._id,
+            title: staduimExits.staduim.staduim_name,
+            img: staduimExits.staduim.profile_img,
+            invitation: invitation_id
+        });
+
+        await notification.save();
+
+        await Users.updateOne({ _id: postedBy, }, {
+            "$push": {
+                "notifications": notification
+            },
+        },);
+
+        await Invitation.updateOne({ _id: invitation_id, "data.staduim_id": new ObjectId(staduim_id) }, {
             "$set": {
                 "data.$.status": 0
             },
