@@ -227,6 +227,7 @@ controller.accepteLeagueInvitation = async (req, res) => {
             },
         },);
 
+        
         res.status(200).json({
             "success": true,
             "msg": "invitation was accepted successfully",
