@@ -33,6 +33,7 @@ controller.createLeague = async (req, res,) => {
             min_teams_needed, teams,
             staduims,
             max_teams_needed,
+            isPrivate,
             start_date,
             end_date,
         } = req.body;
@@ -43,6 +44,7 @@ controller.createLeague = async (req, res,) => {
             staduims: staduims,
             max_teams_needed: max_teams_needed,
             min_teams_needed: min_teams_needed,
+            isPrivate: isPrivate,
             // start_date: start_date,
             // end_date: end_date
         });
@@ -98,6 +100,10 @@ controller.createLeague = async (req, res,) => {
         await teams_notification.save();
 
         await teams_invite.save();
+
+        league.teams_invitation = teams_invite;
+
+        //league.teams_invitation = teams_invite;
 
         await Users.updateMany({ _id: { $in: teams } }, {
             "$push": {
@@ -169,26 +175,34 @@ controller.iviteStaduims = async (req, res) => {
     }
 }
 
-controller.getMyLeagues = async (req, res,) => {
+controller.viewMyLeagues = async (req, res,) => {
+
+    const id = req.userId;
+
+    console.log(id)
     try {
-        let Leagues = await Leagues.find()
+        let leagues = await Leagues.find({ "postedBy": id })
+            .populate("staduims").populate("teams_invitation").populate("games").populate("teams")
+            .exec();
         res.status(200).json({
             "success": true,
-            "message": "0k",
-            "Leagues": Leagues
+            "leagues": leagues
         });
     } catch (error) {
         return AppError.onError(error, "restaurant add error" + error);
     }
 };
 
-controller.getAvailableLeagues = async (req, res,) => {
+
+controller.viewAllLeagues = async (req, res,) => {
+
     try {
-        let Leagues = await Leagues.find({ league_status: 1 })
+        let leagues = await Leagues.find({ status: 2, })
+            .populate("staduims").populate("teams_invitation").populate("games").populate("teams")
+            .exec();
         res.status(200).json({
             "success": true,
-            "message": "0k",
-            "Leagues": Leagues
+            "leagues": leagues
         });
     } catch (error) {
         return AppError.onError(error, "restaurant add error" + error);
