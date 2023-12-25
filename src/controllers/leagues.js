@@ -16,7 +16,182 @@ const Notifications = require("../models/notifications");
 
 const { ObjectId } = require('mongodb');
 
+
+const Games = require("../models/games")
+
+const Rounds = require("../models/rounds");
+const { json } = require("body-parser");
+
 var controller = {}
+
+
+let round1 = {
+    "games": [
+    ],
+    "winners": [],
+};
+let round2 = {
+    "games": [
+    ],
+    "winners": [],
+};
+let round3 = {
+    "games": [
+    ],
+    "winners": [],
+};
+let final = {
+    "games": [
+    ],
+    "winners": [],
+};
+
+let groupsName = ["A", "B", "C", "D", "E", "F", "G", "H", "K", "M"];
+
+
+function createGroups(list_loop, round, teams) {
+    loop = Math.round(list_loop)
+    for (let index = 0; index < loop; index++) {
+
+        round.games.push(
+            {
+                "first_team": groupsName[index],
+                "first_team_id": teams[index],
+                "second_team_id": teams[index + loop],
+                "second_team": groupsName[index + loop],
+            }
+        );
+    }
+}
+
+function createRounds(teams, round) {
+    let dividend = teams.length;
+    let divisor = 2;
+    let result = dividend % divisor;
+
+    let groups = [];
+
+    console.log(result)
+    if (result == 1) {
+        createGroups(((teams.length) / 2) - 1, round, teams);
+        let lastElement = groupsName[teams.length - 1];
+
+        round.winners.push(
+            {
+                "team": lastElement,
+            }
+        );
+    } else {
+        createGroups((teams.length) / 2, round, teams);
+    }
+    ;
+    return round;
+}
+
+
+
+
+controller.iviteStaduims = async (req, res) => {
+
+    const id = req.userId;
+    const { leauge_id, teams_list } = req.body;
+
+
+    try {
+
+        const league = Leagues.findOne({ _id: leauge_id }).populate({
+            "path": "postedBy",
+            "select": "team_name _id user_id "
+        });
+
+        console.log(league.staduims)
+
+        if (league) {
+
+          /*  const staduims_list = league.staduims;
+            let round = createRounds(teams_list, round1);
+            let games = [];
+            games = [];
+            for (let index = 0; index < round.games.length; index++) {
+                const element = round.games[index];
+                let game = Games({
+                    first_team: element.first_team_id,
+                    second_team: element.second_team_id,
+                });
+                games.push(game);
+            }
+
+            let response = await Games.insertMany(games);
+
+            let rounds = [];
+
+            let roundOne = Rounds({
+                round: 1,
+                games: games,
+                winners: round.winners,
+                teams: teams_list,
+                published_by: id,
+            });
+
+            await roundOne.save();
+
+            let staduims_invite_list = [];
+
+            let staduims_invite = Invitation({
+                type: "leagues_invite_staduims",
+                user_id: id,
+                data: rounds,
+                status: 2,
+            });
+
+
+            for (let index = 0; index < staduims_list.length; index++) {
+                const element = staduims_list[index];
+                staduims_invite_list.push({
+                    "staduim_id": element,
+                    "league_id": league._id,
+                    "invite_id": staduims_invite._id,
+                    "postedBy": id,
+                    "status": 2,
+                });
+            }
+
+            let staduim_notification = Notifications({
+                type: "leagues_invite_staduims",
+                invitation: staduims_invite,
+                user_id: id,
+                title: league.team_name,
+            });
+
+            await staduim_notification.save();
+
+            await Users.updateMany({ _id: { $in: staduims_list } }, {
+                "$push": {
+                    "invitations": staduims_invite,
+                    "notifications": staduim_notification,
+                }
+            },);*/
+
+            return res.json({
+                "success": true,
+                "message": "ok",
+                "data": league,
+            });
+
+        } else {
+            return res.json({
+                "success": false,
+                "message": "invalid league id",
+                "data": null
+            });
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 controller.createLeague = async (req, res,) => {
 
@@ -36,7 +211,7 @@ controller.createLeague = async (req, res,) => {
             isPrivate,
             start_date,
             end_date,
-        } = req.body;
+        } = JSON.parse(req.body);
 
         const league = new Leagues({
             title: title,
@@ -127,53 +302,7 @@ controller.createLeague = async (req, res,) => {
 
 
 
-controller.iviteStaduims = async (req, res) => {
-    const { leauge_id, staduims_list, teams_list } = req.body;
 
-
-    try {
-
-        let staduims_invite_list = [];
-
-        let staduims_invite = Invitation({
-            type: "leagues_invite_staduims",
-            user_id: user_id,
-            data: staduims_invite_list,
-            status: 2,
-        });
-
-
-        for (let index = 0; index < staduims_list.length; index++) {
-            const element = staduims_list[index];
-            staduims_invite_list.push({
-                "staduim_id": element,
-                "league_id": leauge_id._id,
-                "invite_id": staduims_invite._id,
-                "postedBy": user_id,
-                "status": 2,
-            });
-        }
-
-        let staduim_notification = Notifications({
-            type: "leagues_invite_staduims",
-            invitation: staduims_invite,
-            user_id: user_id,
-            title: teamExits.team.team_name,
-        });
-
-        await staduim_notification.save();
-
-        await Users.updateMany({ _id: { $in: staduims } }, {
-            "$push": {
-                "invitations": staduims_invite,
-                "notifications": staduim_notification,
-            }
-        },);
-
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 controller.viewMyLeagues = async (req, res,) => {
 
@@ -206,8 +335,8 @@ controller.getLeagueById = async (req, res) => {
 
         let league = await Leagues.findOne({ "_id": id })
             .populate({
-                "path" : "staduims",
-                "select" : "staduim_name wilaya profile_img user_id _id",
+                "path": "staduims",
+                "select": "staduim_name wilaya profile_img user_id _id",
             }).populate("teams_invitation").populate("games").populate("teams")
             .exec();
 
@@ -235,7 +364,7 @@ controller.getLeagueById = async (req, res) => {
             teams_list.push(element);
         }
 
-        league_info  = league;
+        league_info = league;
 
         league_info["teams_list"] = teams_list;
 
@@ -349,6 +478,7 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
         },);
 
 
+
         res.status(200).json({
             "success": true,
             "msg": "invitation was accepted successfully",
@@ -364,36 +494,88 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 }
 
 module.exports = controller;
-/*let dividend = teams.length;
-let divisor = 4;
-let result = dividend / divisor;
+
+/*let teams = [{
+    team : "1",
+},{
+    team : "2",
+},{
+    team : "3",
+},{
+    team : "4",
+},{
+    team : "5",
+},{
+    team : "6"
+},{
+    team : "7",
+},{
+    team : "8"
+},{
+    team : "9"
+}];
+
+let dividend = teams.length;
+let divisor = 2;
+let result = dividend % divisor;
 
 let groups = [];
 
-if(teams.length>4){
-if(result!=1){
-let groupsName = ["A","B","C","D","E","F"];
- 
-for (let index = 0; index < (teams.length/4); index++) {
-const element = teams[index];
-let teams_to_invite = [];
-let teams_index = index;
-for (let i = (teams_index*4); i < (index+1)*4; i++) {
-  const my_teams = teams[i];
-  if(my_teams!= undefined) {
-   teams_to_invite.push(my_teams);
-  }
-}
-console.log(teams_to_invite.length)
- if(teams_to_invite.length == 3 || teams_to_invite.length==1){
- 
-}else{
- groups.push({
- "group" : groupsName[index],
- "teams" : teams_to_invite,
-})
-}
-}
-}
+let round1 = {
+    "games" : [
+        ],
+        "winners" : [],
+};
+let round2 = {};
+let round3 = {};
+let final = {};
 
-}*/
+
+let groupsName = ["A","B","C","D","E","F","G","H","K"];
+
+
+function exits(id){
+     let exists = round1.games.
+    filter(el => el["first_team"]== id);
+console.log(exists)
+if(exists){
+    return true;
+}else{
+    return false;
+}
+}
+let current_index = 0;
+function  createGroups (list_loop) {
+    loop = Math.round(list_loop)
+for (let index = 0; index < loop; index++) {
+    console.log(loop)
+ const element = teams[index];
+ let teams_index = index;
+
+       // console.log(groupsName[index]);
+        
+        round1.games.push(
+         {
+            "first_team" :   groupsName[index],
+            //"first_team_id" :teams[index]["team"],
+            //"second_team_id" :teams[index+2]["team"],
+            "second_team":  groupsName[index+loop],
+         }
+         );
+}
+ }
+ console.log(result)
+ if(result == 1){
+     createGroups(((teams.length)/2)-1);
+     let lastElement = groupsName[teams[teams.length-3]];
+     console.log(lastElement)
+      round1.winners.push(
+         {
+             "team" : lastElement,
+         }
+         );
+ } else{
+     createGroups((teams.length)/2);
+ }
+
+console.log(round1);*/

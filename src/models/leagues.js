@@ -69,6 +69,35 @@ const LeaguesSchema = new Schema({
     },
   ],
 
+  roundOne: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Rounds",
+    },
+  ],
+
+  roundTwo: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Rounds",
+    },
+  ],
+
+  roundThree: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Rounds",
+    },
+  ],
+
+  final: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Rounds",
+    },
+  ],
+
+
   staduims: [
     {
       type: Schema.Types.ObjectId,

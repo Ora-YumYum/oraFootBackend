@@ -10,6 +10,11 @@ const gamesSchema = new Schema({
         ref: "Challanges",
     },
 
+    league_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Leagues",
+    },
+
     first_team: {
         type: Schema.Types.ObjectId,
         ref: "Teams",
