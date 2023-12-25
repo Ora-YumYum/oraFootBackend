@@ -184,6 +184,9 @@ controller.viewMyLeagues = async (req, res,) => {
         let leagues = await Leagues.find({ "postedBy": id })
             .populate("staduims").populate("teams_invitation").populate("games").populate("teams")
             .exec();
+
+
+
         res.status(200).json({
             "success": true,
             "leagues": leagues
@@ -192,6 +195,62 @@ controller.viewMyLeagues = async (req, res,) => {
         return AppError.onError(error, "restaurant add error" + error);
     }
 };
+
+
+controller.getLeagueById = async (req, res) => {
+
+    const id = req.query.id;
+
+    let league_info = {};
+    try {
+
+        let league = await Leagues.findOne({ "_id": id })
+            .populate({
+                "path" : "staduims",
+                "select" : "staduim_name wilaya profile_img user_id _id",
+            }).populate("teams_invitation").populate("games").populate("teams")
+            .exec();
+
+        let ids = [];
+        let teams_list = [];
+
+        league.teams_invitation.data.forEach(element => {
+            ids.push(element.team_id);
+        });
+
+        const teams = await Users.find({ _id: { $in: ids } }).populate({
+            "path": "team",
+            "select": "team_name wilaya profile_img _id"
+        }).select("team _id")
+
+
+        for (let index = 0; index < ids.length; index++) {
+
+            let id = league.teams_invitation.data[index]["team_id"];
+
+            let element = league.teams_invitation.data[index];
+
+            element["team_info"] = teams.
+                filter(el => el["_id"] == id);
+            teams_list.push(element);
+        }
+
+        league_info  = league;
+
+        league_info["teams_list"] = teams_list;
+
+        res.status(200).json({
+            "success": true,
+            "leagues": league_info
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            "success": false,
+            "error": error
+        });
+    }
+}
 
 
 controller.viewAllLeagues = async (req, res,) => {

@@ -20,6 +20,8 @@ router.get("/", middleware, leaguesController.viewAllLeagues);
 
 router.get("/my_leagues", middleware, leaguesController.viewMyLeagues);
 
+router.get("/get_by_id", middleware, leaguesController.getLeagueById);
+
 
 router.post("/accepte_invitation", middleware, leaguesController.accepteLeagueInvitation);
 
