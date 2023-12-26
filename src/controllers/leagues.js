@@ -113,7 +113,7 @@ controller.iviteStaduims = async (req, res) => {
 
         if (league) {
 
-            /*  const staduims_list = league.staduims;
+             const staduims_list = league.staduims;
               let round = createRounds(teams_list, round1);
               let games = [];
               games = [];
@@ -175,7 +175,7 @@ controller.iviteStaduims = async (req, res) => {
                       "invitations": staduims_invite,
                       "notifications": staduim_notification,
                   }
-              },);*/
+              },);
 
             return res.json({
                 "success": true,
@@ -439,7 +439,7 @@ controller.viewAllLeagues = async (req, res,) => {
 
 controller.accepteLeagueInvitation = async (req, res) => {
 
-    const { team_id, postedBy, invitation_id, } = req.body;
+    const { team_id, postedBy, invitation_id, leauge_id } = req.body;
 
     try {
 
@@ -459,6 +459,12 @@ controller.accepteLeagueInvitation = async (req, res) => {
         await Users.updateOne({ _id: postedBy, }, {
             "$push": {
                 "notifications": notification
+            },
+        },);
+
+        await Leagues.updateOne({ _id: leauge_id, }, {
+            "$push": {
+                "teams": team_id
             },
         },);
 
