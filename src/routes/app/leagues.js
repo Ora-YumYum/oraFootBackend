@@ -26,6 +26,10 @@ router.post("/accepte_invitation", middleware, leaguesController.accepteLeagueIn
 
 router.post("/send_gamesTo_staduims", middleware, leaguesController.iviteStaduims);
 
+router.post("/accepte_league_staduimInv", middleware, leaguesController.accepteLeagueInvitationStaduim);
+
+
+
 
 ////viewMyGames
 

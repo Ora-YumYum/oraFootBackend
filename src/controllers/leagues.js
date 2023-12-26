@@ -118,8 +118,9 @@ controller.iviteStaduims = async (req, res) => {
 
 
                 let round = createRounds(teams_list, round1);
-                console.log(round)
+
                 let games = [];
+
                 games = [];
 
                 for (let index = 0; index < round.games.length; index++) {
@@ -127,7 +128,9 @@ controller.iviteStaduims = async (req, res) => {
                     let game = Games({
                         first_team: element.first_team_id,
                         second_team: element.second_team_id,
-                        games_status: 3
+                        first_team_hint: element.first_team,
+                        second_team_hint: element.second_team,
+                        games_status: 3,
                     });
                     games.push(game);
                 }
@@ -147,13 +150,6 @@ controller.iviteStaduims = async (req, res) => {
                 //rounds.push(rounds);
 
                 await roundOne.save();
-
-
-                await Leagues.updateOne({ _id: leauge_id }, {
-                    "$set": {
-                        "roundOne": roundOne,
-                    }
-                });
 
                 let staduims_invite_list = [];
 
@@ -182,14 +178,14 @@ controller.iviteStaduims = async (req, res) => {
                     user_id: id,
                     title: league.team_name,
                 });
+                await staduims_invite.save();
 
                 await staduim_notification.save();
-
-                await staduims_invite.save();
 
                 await Leagues.updateOne({ _id: leauge_id, }, {
                     "$set": {
                         "staduim_invitation": staduims_invite,
+                        "roundOne": roundOne,
                     }
                 });
 
@@ -203,7 +199,7 @@ controller.iviteStaduims = async (req, res) => {
                 return res.json({
                     "success": true,
                     "message": "ok",
-                    "data": league,
+                    "data": staduims_invite,
                 });
             }
 

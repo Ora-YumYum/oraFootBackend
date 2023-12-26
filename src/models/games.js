@@ -25,6 +25,17 @@ const gamesSchema = new Schema({
         ref: "Teams",
     },
 
+
+    first_team_hint: {
+        type: String,
+        ref: "Teams",
+    },
+
+    second_team_hint: {
+        type: String,
+        ref: "Teams",
+    },
+
     winner: {
         type: Schema.Types.ObjectId,
         ref: "Teams",
