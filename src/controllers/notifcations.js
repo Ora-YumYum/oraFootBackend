@@ -20,7 +20,7 @@ controller.getNotifcations = async (req, res) => {
                 populate: {
                     path: "invitation",
                 },
-            }).skip(page * 30).limit(30).sort("updatedAt");
+            }).skip(page * 30).limit(30).sort({updatedAt : - 1});
             console.log(user)
             return res.status(200).send({
                 success: true, message: "ok", results: {
