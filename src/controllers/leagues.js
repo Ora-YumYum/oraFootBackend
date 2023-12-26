@@ -156,7 +156,7 @@ controller.iviteStaduims = async (req, res) => {
                 let staduims_invite = Invitation({
                     type: "leagues_invite_staduims",
                     user_id: id,
-                    data: roundOne,
+                    data: staduims_invite_list,
                     status: 2,
                 });
 
@@ -169,6 +169,7 @@ controller.iviteStaduims = async (req, res) => {
                         "invite_id": staduims_invite._id,
                         "postedBy": id,
                         "status": 2,
+                        "round_data": round
                     });
                 }
 
@@ -178,6 +179,7 @@ controller.iviteStaduims = async (req, res) => {
                     user_id: id,
                     title: league.team_name,
                 });
+
                 await staduims_invite.save();
 
                 await staduim_notification.save();
@@ -241,8 +243,8 @@ controller.createLeague = async (req, res,) => {
             title: title,
             desc: desc,
             staduims: staduims,
-            max_teams_needed: Number.parseInt(max_teams_needed),
-            min_teams_needed: Number.parseInt(min_teams_needed),
+            max_teams_needed: max_teams_needed,
+            min_teams_needed: min_teams_needed,
             isPrivate: isPrivate,
         });
 
@@ -387,20 +389,32 @@ controller.getLeagueById = async (req, res) => {
             .populate({
                 "path": "staduims",
                 "select": "staduim_name wilaya profile_img user_id _id",
-            }).populate("teams_invitation").populate("games").populate("teams")
+            }).populate("teams_invitation").populate("").populate("games").populate("teams")
             .exec();
 
         let ids = [];
+        let staduims_ids = [];
         let teams_list = [];
+
+        let staduims_list = [];
 
         league.teams_invitation.data.forEach(element => {
             ids.push(element.team_id);
+        });
+
+        staduim_invitation.teams_invitation.data.forEach(element => {
+            staduims_ids.push(element.staduim_id);
         });
 
         const teams = await Users.find({ _id: { $in: ids } }).populate({
             "path": "team",
             "select": "team_name wilaya profile_img _id"
         }).select("team _id")
+
+        const staduims = await Users.find({ _id: { $in: staduims_ids } }).populate({
+            "path": "staduim",
+            "select": "staduim_name wilaya profile_img _id"
+        }).select("staduim _id")
 
 
         for (let index = 0; index < ids.length; index++) {
@@ -414,9 +428,23 @@ controller.getLeagueById = async (req, res) => {
             teams_list.push(element);
         }
 
+
+        for (let index = 0; index < staduims_ids.length; index++) {
+
+            let id = league.staduim_invitation.data[index]["staduim_id"];
+
+            let element = league.staduim_invitation.data[index];
+
+            element["team_info"] = staduims.
+                filter(el => el["_id"] == id);
+            staduims_list.push(element);
+        }
+
         league_info = league;
 
         league_info["teams_list"] = teams_list;
+
+        league_info["staduims_list"] = staduims_list;
 
         res.status(200).json({
             "success": true,
