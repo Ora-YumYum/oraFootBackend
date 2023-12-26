@@ -28,12 +28,11 @@ const gamesSchema = new Schema({
 
     first_team_hint: {
         type: String,
-        ref: "Teams",
+       
     },
 
     second_team_hint: {
         type: String,
-        ref: "Teams",
     },
 
     winner: {
