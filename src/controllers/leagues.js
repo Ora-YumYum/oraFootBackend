@@ -392,10 +392,10 @@ controller.getLeagueById = async (req, res) => {
             }).populate("teams_invitation").populate("staduim_invitation").populate({
                 "path": "roundOne",
                 "populate": {
-                    "path" : "games",
-                    "populate" : {
-                        "path" : "first_team second_team",
-                        "select" : "team_name wilaya profile_img user_id _id about",
+                    "path": "games",
+                    "populate": {
+                        "path": "first_team second_team",
+                        "select": "team_name wilaya profile_img user_id _id about",
                     },
                 }
             }).populate("roundTwo").populate("roundThree")
@@ -419,8 +419,6 @@ controller.getLeagueById = async (req, res) => {
         }).select("team _id")
 
 
-
-
         for (let index = 0; index < ids.length; index++) {
 
             let id = league.teams_invitation.data[index]["team_id"];
@@ -433,23 +431,23 @@ controller.getLeagueById = async (req, res) => {
         }
 
         league_info = league;
-
+       // console.log(league.staduim_invitation)
         if (league.staduim_invitation != null) {
             league.staduim_invitation.data.forEach(element => {
                 staduims_ids.push(element.staduim_id);
             });
-            const staduims = await Users.find({ _id: { $in: staduims_ids } }).populate({
-                "path": "staduim",
-                "select": "staduim_name wilaya profile_img _id"
-            }).select("staduim _id")
+            const staduims = await Staduims.find({ _id: { $in: staduims_ids } })
+                .select("staduim_name wilaya cover_img _id")
             for (let index = 0; index < staduims_ids.length; index++) {
 
                 let id = league.staduim_invitation.data[index]["staduim_id"];
 
-                let element = league.staduim_invitation.data[index];
+                console.log(staduims[index]["_id"])
 
-                element["team_info"] = staduims.
-                    filter(el => el["_id"] == id);
+                let element = league.staduim_invitation.data[index];
+                console.log(id);
+                element["staduim_info"] = staduims.
+                    filter(el => el["_id"].toString() == id.toString());
                 staduims_list.push(element);
             }
 
