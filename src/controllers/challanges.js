@@ -20,7 +20,7 @@ controller.createChallange = async (req, res,) => {
 
     const user_id = req.userId;
 
-   
+
     let body = JSON.parse(req.body.challenge);
 
     try {

@@ -16,7 +16,7 @@ const Notifications = require("../models/notifications");
 
 const { ObjectId } = require('mongodb');
 
-
+const { UPLOAD_DIR } = require("../../settings");
 const Games = require("../models/games")
 
 const Rounds = require("../models/rounds");
@@ -200,9 +200,7 @@ controller.createLeague = async (req, res,) => {
     console.log(user_id);
     const teamExits = await Users.findOne({ _id: user_id }).populate("team");
 
-  
-
-    let body = JSON.parse(req.body.league);
+    let body = JSON.parse(req.body.leauge);
 
     try {
         const { title, desc,
