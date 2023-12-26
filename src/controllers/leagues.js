@@ -108,69 +108,69 @@ controller.iviteStaduims = async (req, res) => {
 
         if (league) {
 
-          /*  const staduims_list = league.staduims;
-            let round = createRounds(teams_list, round1);
-            let games = [];
-            games = [];
-            for (let index = 0; index < round.games.length; index++) {
-                const element = round.games[index];
-                let game = Games({
-                    first_team: element.first_team_id,
-                    second_team: element.second_team_id,
-                });
-                games.push(game);
-            }
-
-            let response = await Games.insertMany(games);
-
-            let rounds = [];
-
-            let roundOne = Rounds({
-                round: 1,
-                games: games,
-                winners: round.winners,
-                teams: teams_list,
-                published_by: id,
-            });
-
-            await roundOne.save();
-
-            let staduims_invite_list = [];
-
-            let staduims_invite = Invitation({
-                type: "leagues_invite_staduims",
-                user_id: id,
-                data: rounds,
-                status: 2,
-            });
-
-
-            for (let index = 0; index < staduims_list.length; index++) {
-                const element = staduims_list[index];
-                staduims_invite_list.push({
-                    "staduim_id": element,
-                    "league_id": league._id,
-                    "invite_id": staduims_invite._id,
-                    "postedBy": id,
-                    "status": 2,
-                });
-            }
-
-            let staduim_notification = Notifications({
-                type: "leagues_invite_staduims",
-                invitation: staduims_invite,
-                user_id: id,
-                title: league.team_name,
-            });
-
-            await staduim_notification.save();
-
-            await Users.updateMany({ _id: { $in: staduims_list } }, {
-                "$push": {
-                    "invitations": staduims_invite,
-                    "notifications": staduim_notification,
-                }
-            },);*/
+            /*  const staduims_list = league.staduims;
+              let round = createRounds(teams_list, round1);
+              let games = [];
+              games = [];
+              for (let index = 0; index < round.games.length; index++) {
+                  const element = round.games[index];
+                  let game = Games({
+                      first_team: element.first_team_id,
+                      second_team: element.second_team_id,
+                  });
+                  games.push(game);
+              }
+  
+              let response = await Games.insertMany(games);
+  
+              let rounds = [];
+  
+              let roundOne = Rounds({
+                  round: 1,
+                  games: games,
+                  winners: round.winners,
+                  teams: teams_list,
+                  published_by: id,
+              });
+  
+              await roundOne.save();
+  
+              let staduims_invite_list = [];
+  
+              let staduims_invite = Invitation({
+                  type: "leagues_invite_staduims",
+                  user_id: id,
+                  data: rounds,
+                  status: 2,
+              });
+  
+  
+              for (let index = 0; index < staduims_list.length; index++) {
+                  const element = staduims_list[index];
+                  staduims_invite_list.push({
+                      "staduim_id": element,
+                      "league_id": league._id,
+                      "invite_id": staduims_invite._id,
+                      "postedBy": id,
+                      "status": 2,
+                  });
+              }
+  
+              let staduim_notification = Notifications({
+                  type: "leagues_invite_staduims",
+                  invitation: staduims_invite,
+                  user_id: id,
+                  title: league.team_name,
+              });
+  
+              await staduim_notification.save();
+  
+              await Users.updateMany({ _id: { $in: staduims_list } }, {
+                  "$push": {
+                      "invitations": staduims_invite,
+                      "notifications": staduim_notification,
+                  }
+              },);*/
 
             return res.json({
                 "success": true,
@@ -200,17 +200,18 @@ controller.createLeague = async (req, res,) => {
     console.log(user_id);
     const teamExits = await Users.findOne({ _id: user_id }).populate("team");
 
-    console.log(req.body.leauge);
+  
 
-
+    let body = JSON.parse(req.body.league);
 
     try {
         const { title, desc,
-            min_teams_needed, teams,
+            min_teams_needed,
             staduims,
+            teams,
             max_teams_needed,
             isPrivate,
-        } = JSON.parse(req.body.leauge);
+        } = body;
 
         const league = new Leagues({
             title: title,

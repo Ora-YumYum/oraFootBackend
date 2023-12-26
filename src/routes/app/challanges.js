@@ -13,9 +13,6 @@ const middleware = require("../../middlewares/userAuth")
 const { body, check, validationResult } = require('express-validator');
 
 router.post("/add_challange", [
-    body("title").notEmpty(),
-    
-    body("price").notEmpty(),
 ]
     , (req, res, next) => {
         const error = validationResult(req).formatWith(({ message }) => message);

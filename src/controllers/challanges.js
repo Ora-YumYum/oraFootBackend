@@ -1,5 +1,3 @@
-
-
 const Challanges = require("../models/challanges");
 const Users = require("../models/users/users");
 
@@ -22,6 +20,9 @@ controller.createChallange = async (req, res,) => {
 
     const user_id = req.userId;
 
+   
+    let body = JSON.parse(req.body.challenge);
+
     try {
         const {
             title, desc,
@@ -35,7 +36,7 @@ controller.createChallange = async (req, res,) => {
             start_date,
             start_time,
             staduim,
-        } = JSON.parse(req.body.challenge);
+        } = body;
 
         const challange = new Challanges({
             title: title,

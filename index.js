@@ -6,13 +6,15 @@ const mongoose = require("mongoose");
 
 const bodyParser = require("body-parser");
 
+var fileupload = require("express-fileupload");
+
+
 const helmet = require("helmet");
 
 const cors = require('cors')
 
 const morgan = require("morgan");
 
-const formidable = require("express-formidable")
 
 const routes = require("./src/routes/index")
 
@@ -31,9 +33,11 @@ const app = express()
 const { UPLOAD_DIR } = require("./settings");
 
 
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
+
 
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(fileupload());
 
 app.use('/api', routes);
 
@@ -51,25 +55,7 @@ app.get("/", (req, res) => {
   }
 })
 
-function shouldParseRequest(req) {
-  const currentMethod = req.method;
-  const currentRoute = req.originalUrl;
 
-  const restrictedRoutes = [{
-    method: 'POST', originalUrl: '/'
-  }];
-
-  for (var i = 0; i < restrictedRoutes.length; i++) {
-    if (restrictedRoutes[i].method == currentMethod && restrictedRoutes[i].originalUrl == currentRoute) {
-      return false;
-    }
-  }
-  return true;
-}
-
-app.use(function (req, res, next) {
-  shouldParseRequest(req) ? includeMulter(req, res, next) : next();
-});
 
 
 
