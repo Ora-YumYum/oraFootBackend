@@ -12,6 +12,16 @@ const LeaguesSchema = new Schema({
   },
 
 
+  min_teams_needed: {
+    type: Number,
+    required: false,
+  },
+
+  max_teams_needed: {
+    type: Number,
+    required: false,
+  },
+
   cover_img: {
     type: String,
     required: false,
@@ -32,15 +42,7 @@ const LeaguesSchema = new Schema({
     type: Date,
   },
 
-  min_teams_needed: {
-    type: Number,
-    required: false,
-  },
 
-  max_teams_needed: {
-    type: Number,
-    required: false,
-  },
 
   isPrivate: {
     type: Boolean,
@@ -69,31 +71,31 @@ const LeaguesSchema = new Schema({
     },
   ],
 
-  roundOne: [
+  roundOne: 
     {
       type: Schema.Types.ObjectId,
       ref: "Rounds",
     },
-  ],
+  
 
-  roundTwo: [
+  roundTwo: 
     {
       type: Schema.Types.ObjectId,
       ref: "Rounds",
     },
-  ],
+  
 
-  roundThree: [
+  roundThree: 
     {
       type: Schema.Types.ObjectId,
       ref: "Rounds",
     },
-  ],
+  
 
   final: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Rounds",
+      ref: "Games",
     },
   ],
 

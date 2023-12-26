@@ -32,23 +32,31 @@ const gamesSchema = new Schema({
 
     first_team_score: {
         type: Number,
-        default : 0,
+        default: 0,
     },
 
     second_team_score: {
         type: Number,
-        default : 0,
+        default: 0,
     },
 
     games_status: {
         type: Number,
         required: false,
-        default : 1,
+        default: 1,
     },
 
     game_youtube_video_url: {
         type: String,
         required: false,
+    },
+
+    start_date: {
+        type: Date,
+    },
+
+    start_time: {
+        type: Date,
     },
 
     game_deatils: {
@@ -80,7 +88,7 @@ const gamesSchema = new Schema({
 
         },
     ],
-    
+
     first_team_cards: [
         {
             type: Object,
@@ -92,6 +100,12 @@ const gamesSchema = new Schema({
             type: Object,
         },
     ],
+
+    staduim: {
+        type: Schema.Types.ObjectId,
+        ref: "Staduims",
+    },
+
 
 });
 
