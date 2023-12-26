@@ -200,7 +200,8 @@ controller.createLeague = async (req, res,) => {
     console.log(user_id);
     const teamExits = await Users.findOne({ _id: user_id }).populate("team");
 
-    console.log(teamExits);
+    console.log(req.body.leauge);
+
 
 
     try {
@@ -209,9 +210,7 @@ controller.createLeague = async (req, res,) => {
             staduims,
             max_teams_needed,
             isPrivate,
-            start_date,
-            end_date,
-        } = JSON.parse(req.body);
+        } = JSON.parse(req.body.leauge);
 
         const league = new Leagues({
             title: title,

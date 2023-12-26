@@ -35,7 +35,7 @@ controller.createChallange = async (req, res,) => {
             start_date,
             start_time,
             staduim,
-        } = req.body;
+        } = JSON.parse(req.body.challenge);
 
         const challange = new Challanges({
             title: title,
