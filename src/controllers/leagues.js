@@ -389,7 +389,7 @@ controller.getLeagueById = async (req, res) => {
             .populate({
                 "path": "staduims",
                 "select": "staduim_name wilaya profile_img user_id _id",
-            }).populate("teams_invitation").populate("").populate("games").populate("teams")
+            }).populate("teams_invitation").populate("staduim_invitation").populate("games").populate("teams")
             .exec();
 
         let ids = [];
@@ -422,6 +422,7 @@ controller.getLeagueById = async (req, res) => {
                 filter(el => el["_id"] == id);
             teams_list.push(element);
         }
+
         league_info = league;
 
         if (league.staduim_invitation != null) {
