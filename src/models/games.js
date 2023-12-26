@@ -112,6 +112,18 @@ const gamesSchema = new Schema({
         },
     ],
 
+    first_team_corners: [
+        {
+            type: Object,
+        },
+    ],
+
+    second_team_corners: [
+        {
+            type: Object,
+        },
+    ],
+
     staduim: {
         type: Schema.Types.ObjectId,
         ref: "Staduims",
