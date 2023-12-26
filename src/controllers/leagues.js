@@ -17,7 +17,12 @@ const Notifications = require("../models/notifications");
 const { ObjectId } = require('mongodb');
 
 const { UPLOAD_DIR } = require("../../settings");
+
 const Games = require("../models/games")
+
+const fs = require('fs');
+
+const { imageComproser } = require("../config/image-compr")
 
 const Rounds = require("../models/rounds");
 const { json } = require("body-parser");
