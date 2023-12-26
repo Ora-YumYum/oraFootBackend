@@ -402,19 +402,14 @@ controller.getLeagueById = async (req, res) => {
             ids.push(element.team_id);
         });
 
-        staduim_invitation.teams_invitation.data.forEach(element => {
-            staduims_ids.push(element.staduim_id);
-        });
+
 
         const teams = await Users.find({ _id: { $in: ids } }).populate({
             "path": "team",
             "select": "team_name wilaya profile_img _id"
         }).select("team _id")
 
-        const staduims = await Users.find({ _id: { $in: staduims_ids } }).populate({
-            "path": "staduim",
-            "select": "staduim_name wilaya profile_img _id"
-        }).select("staduim _id")
+        
 
 
         for (let index = 0; index < ids.length; index++) {
@@ -427,24 +422,35 @@ controller.getLeagueById = async (req, res) => {
                 filter(el => el["_id"] == id);
             teams_list.push(element);
         }
-
-
-        for (let index = 0; index < staduims_ids.length; index++) {
-
-            let id = league.staduim_invitation.data[index]["staduim_id"];
-
-            let element = league.staduim_invitation.data[index];
-
-            element["team_info"] = staduims.
-                filter(el => el["_id"] == id);
-            staduims_list.push(element);
-        }
-
         league_info = league;
+
+        if (league.staduim_invitation != null) {
+            league.staduim_invitation.data.forEach(element => {
+                staduims_ids.push(element.staduim_id);
+            });
+            const staduims = await Users.find({ _id: { $in: staduims_ids } }).populate({
+                "path": "staduim",
+                "select": "staduim_name wilaya profile_img _id"
+            }).select("staduim _id")
+            for (let index = 0; index < staduims_ids.length; index++) {
+
+                let id = league.staduim_invitation.data[index]["staduim_id"];
+
+                let element = league.staduim_invitation.data[index];
+
+                element["team_info"] = staduims.
+                    filter(el => el["_id"] == id);
+                staduims_list.push(element);
+            }
+
+            league_info["staduims_list"] = staduims_list;
+
+        } else {
+
+        }
 
         league_info["teams_list"] = teams_list;
 
-        league_info["staduims_list"] = staduims_list;
 
         res.status(200).json({
             "success": true,
@@ -452,6 +458,7 @@ controller.getLeagueById = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             "success": false,
             "error": error
