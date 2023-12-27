@@ -68,7 +68,7 @@ function randomString(length) {
     return str;
 }
 
-function createGroups(list_loop, round, teams) {
+function createGroups(list_loop, round, teams,start_date,end_date) {
     loop = Math.round(list_loop)
     for (let index = 0; index < loop; index++) {
 
@@ -79,13 +79,15 @@ function createGroups(list_loop, round, teams) {
                 "second_team_id": teams[index + loop],
                 "second_team": groupsName[index + loop],
                 "status": 2,
-                "game_id": randomString(9)
+                "game_id": randomString(9),
+                "end_date" : end_date,
+                "start_date" : start_date,
             }
         );
     }
 }
 
-function createRounds(teams, round) {
+function createRounds(teams, round,start_date,end_date) {
     let dividend = teams.length;
     let divisor = 2;
     let result = dividend % divisor;
@@ -94,7 +96,7 @@ function createRounds(teams, round) {
 
     console.log(result)
     if (result == 1) {
-        createGroups(((teams.length) / 2) - 1, round, teams);
+        createGroups(((teams.length) / 2) - 1, round, teams,start_date.end_date);
         let lastElement = groupsName[teams.length - 1];
 
         round.winners.push(
@@ -134,7 +136,7 @@ controller.iviteStaduims = async (req, res) => {
             if (teams_list.length != 0 || teams_list.length != 1) {
 
 
-                let round = createRounds(teams_list, round1);
+                let round = createRounds(teams_list, round1,leauge.start_date,leauge.end_date);
 
                 let games = [];
 
