@@ -234,6 +234,8 @@ controller.createLeague = async (req, res,) => {
             max_teams_needed,
             min_teams_needed,
             isPrivate,
+            start_date,
+            end_date
         } = body;
 
         const league = new Leagues({
@@ -243,6 +245,8 @@ controller.createLeague = async (req, res,) => {
             max_teams_needed: max_teams_needed,
             min_teams_needed: min_teams_needed,
             isPrivate: isPrivate,
+            start_date : start_date,
+            end_date:end_date,
         });
 
         if (req.files != undefined) {

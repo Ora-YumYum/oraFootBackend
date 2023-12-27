@@ -35,7 +35,6 @@ const LeaguesSchema = new Schema({
 
   start_date: {
     type: Date,
-    default: Date.now(),
   },
 
   end_date: {
@@ -71,26 +70,26 @@ const LeaguesSchema = new Schema({
     },
   ],
 
-  roundOne: 
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Rounds",
-    },
-  
+  roundOne:
+  {
+    type: Schema.Types.ObjectId,
+    ref: "Rounds",
+  },
 
-  roundTwo: 
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Rounds",
-    },
-  
 
-  roundThree: 
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Rounds",
-    },
-  
+  roundTwo:
+  {
+    type: Schema.Types.ObjectId,
+    ref: "Rounds",
+  },
+
+
+  roundThree:
+  {
+    type: Schema.Types.ObjectId,
+    ref: "Rounds",
+  },
+
 
   final: [
     {
