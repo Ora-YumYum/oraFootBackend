@@ -64,6 +64,7 @@ function createGroups(list_loop, round, teams) {
                 "first_team_id": teams[index],
                 "second_team_id": teams[index + loop],
                 "second_team": groupsName[index + loop],
+                "status": 2,
             }
         );
     }
@@ -137,8 +138,6 @@ controller.iviteStaduims = async (req, res) => {
 
                 let response = await Games.insertMany(games);
 
-                //let rounds = [];
-
                 let roundOne = Rounds({
                     round: 1,
                     games: games,
@@ -146,8 +145,6 @@ controller.iviteStaduims = async (req, res) => {
                     teams: teams_list,
                     published_by: id,
                 });
-
-                //rounds.push(rounds);
 
                 await roundOne.save();
 
@@ -393,10 +390,9 @@ controller.getLeagueById = async (req, res) => {
                 "path": "roundOne",
                 "populate": {
                     "path": "games",
-                    
-                    "populate" : {
-                        "path" : "staduim first_team second_team",
-                        "select" : "staduim_name user_id team_name _id wilaya profile_img cover_img"
+                    "populate": {
+                        "path": "staduim first_team second_team",
+                        "select": "staduim_name user_id team_name _id wilaya profile_img cover_img"
                     }
                 }
             }).populate("roundTwo").populate("roundThree")
@@ -411,8 +407,6 @@ controller.getLeagueById = async (req, res) => {
         league.teams_invitation.data.forEach(element => {
             ids.push(element.team_id);
         });
-
-
 
         const teams = await Users.find({ _id: { $in: ids } }).populate({
             "path": "team",
@@ -545,11 +539,13 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
 controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
-    const { staduim_id, postedBy, invitation_id, game_id, scheduled_date } = req.body;
+    const { staduim_id, postedBy, invitation_id, league_id, game_id, scheduled_date } = req.body;
 
     try {
 
         let staduimExits = await Staduims.findOne({ _id: staduim_id }).populate("user_id");
+
+        let postedByExits = await Users.findOne({ _id: postedBy }).populate("team");
 
         let notification = Notifications({
             type: "staduim_accepted_leauge_invitation",
@@ -569,13 +565,41 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
         await Invitation.updateOne({ _id: invitation_id, "data.staduim_id": new ObjectId(staduim_id) }, {
             "$set": {
-                "data.$.status": 0
+                "data.$[].round_data.games.$.status": 0
             },
         },);
 
+        let RefreeInvite = Invitation({
+            type: "leauge_invite_refrees",
+            data: {
+                "leauge_id": league_id,
+                "game_id": game_id,
+            },
+            status: 2,
+        });
+
+        let RefreeNotification = Notifications({
+            type: "leauge_invite_refrees",
+            invitation: RefreeInvite,
+            user_id: postedByExits._id,
+            title: postedByExits.team.team_name,
+            img: postedByExits.team.profile_img,
+        });
+
+        RefreeInvite.save();
+        RefreeNotification.save();
+        let challengeWilaya = userExits.wilaya;
+
+        await
+            Users.updateMany({ "wilaya": { $eq: challengeWilaya }, "user_type": { $eq: 1 } }, {
+                "$push": {
+                    "invitations": RefreeInvite,
+                    "notifications": RefreeNotification,
+                }
+            });
+
         await Games.updateOne({ _id: game_id, }, {
             "$set": {
-                "games_status": 1,
                 "staduim": staduimExits._id,
                 "start_date": scheduled_date,
             },
