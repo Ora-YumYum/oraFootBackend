@@ -35,6 +35,10 @@ const gamesSchema = new Schema({
         type: String,
     },
 
+    game_id: {
+        type: String,
+    },
+
     winner: {
         type: Schema.Types.ObjectId,
         ref: "Teams",
@@ -126,6 +130,11 @@ const gamesSchema = new Schema({
     staduim: {
         type: Schema.Types.ObjectId,
         ref: "Staduims",
+    },
+
+    refree: {
+        type: Schema.Types.ObjectId,
+        ref: "Refrees",
     },
 
 

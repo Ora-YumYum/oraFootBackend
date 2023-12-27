@@ -54,6 +54,20 @@ let final = {
 let groupsName = ["A", "B", "C", "D", "E", "F", "G", "H", "K", "M"];
 
 
+function randomString(length) {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
+
+    if (!length) {
+        length = Math.floor(Math.random() * chars.length);
+    }
+
+    var str = '';
+    for (var i = 0; i < length; i++) {
+        str += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return str;
+}
+
 function createGroups(list_loop, round, teams) {
     loop = Math.round(list_loop)
     for (let index = 0; index < loop; index++) {
@@ -65,6 +79,7 @@ function createGroups(list_loop, round, teams) {
                 "second_team_id": teams[index + loop],
                 "second_team": groupsName[index + loop],
                 "status": 2,
+                "game_id": randomString(9)
             }
         );
     }
@@ -113,6 +128,7 @@ controller.iviteStaduims = async (req, res) => {
         if (league) {
 
             const staduims_list = league.staduims;
+            const staduims_user_id_list = [];
             const teams_list = league.teams;
 
             if (teams_list.length != 0 || teams_list.length != 1) {
@@ -132,6 +148,7 @@ controller.iviteStaduims = async (req, res) => {
                         first_team_hint: element.first_team,
                         second_team_hint: element.second_team,
                         games_status: 3,
+                        game_id: element.game_id
                     });
                     games.push(game);
                 }
@@ -187,8 +204,17 @@ controller.iviteStaduims = async (req, res) => {
                         "roundOne": roundOne,
                     }
                 });
+                const StaduimsIds = await Staduims.find({ _id: { $in: staduims_list } }).
+                    populate("user_id").select("_id");
 
-                await Users.updateMany({ _id: { $in: staduims_list } }, {
+                for (let index = 0; index < StaduimsIds.length; index++) {
+                    const element = StaduimsIds[index];
+                    staduims_user_id_list.push(element["user_id"]["_id"]);
+                }
+
+                console.log(staduims_user_id_list)
+
+                await Users.updateMany({ _id: { $in: staduims_user_id_list } }, {
                     "$push": {
                         "invitations": staduims_invite,
                         "notifications": staduim_notification,
@@ -245,8 +271,8 @@ controller.createLeague = async (req, res,) => {
             max_teams_needed: max_teams_needed,
             min_teams_needed: min_teams_needed,
             isPrivate: isPrivate,
-            start_date : start_date,
-            end_date:end_date,
+            start_date: start_date,
+            end_date: end_date,
         });
 
         if (req.files != undefined) {
@@ -541,6 +567,65 @@ controller.accepteLeagueInvitation = async (req, res) => {
     }
 }
 
+
+controller.accepteRefreeInvitation = async (req, res) => {
+
+    const { refree_id, postedBy, invitation_id, leauge_id, game_id } = req.body;
+
+    try {
+
+        let refreeExits = await Users.findOne({ _id: refree_id }).populate("refree");
+
+
+        let notification = Notifications({
+            type: "refree_accepted_leauge_invitation",
+            user_id: refreeExits._id,
+            title: refreeExits.first_name + refreeExits.second_name,
+            img: refreeExits.profile_img,
+            invitation: invitation_id
+        });
+
+        await notification.save();
+
+        await Users.updateOne({ _id: postedBy, }, {
+            "$push": {
+                "notifications": notification
+            },
+        },);
+
+        await Leagues.updateOne({ _id: leauge_id, }, {
+            "$push": {
+            },
+        },);
+
+        await Games.updateOne({ game_id: game_id, }, {
+            "$set": {
+                "refree": refree_id,
+                // "start_date": scheduled_date,
+            },
+        });
+
+        await Invitation.updateOne({ _id: new ObjectId(invitation_id), }, {
+            "$set": {
+                "status": 0
+            },
+        },);
+
+        res.status(200).json({
+            "success": true,
+            "msg": "invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
+
+
 controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
     const { staduim_id, postedBy, invitation_id, league_id, game_id, scheduled_date } = req.body;
@@ -567,9 +652,12 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
             },
         },);
 
-        await Invitation.updateOne({ _id: invitation_id, "data.staduim_id": new ObjectId(staduim_id) }, {
+        await Invitation.updateOne({
+            _id: invitation_id,
+            "data.staduim_id": new ObjectId(staduim_id)
+        }, {
             "$set": {
-                "data.$[].round_data.games.$.status": 0
+                "data.$[].round_data.games.$[].status": 0
             },
         },);
 
@@ -602,7 +690,7 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
                 }
             });
 
-        await Games.updateOne({ _id: game_id, }, {
+        await Games.updateOne({ game_id: game_id, }, {
             "$set": {
                 "staduim": staduimExits._id,
                 "start_date": scheduled_date,
