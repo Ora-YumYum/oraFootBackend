@@ -431,7 +431,7 @@ controller.getLeagueById = async (req, res) => {
         }
 
         league_info = league;
-       // console.log(league.staduim_invitation)
+        // console.log(league.staduim_invitation)
         if (league.staduim_invitation != null) {
             league.staduim_invitation.data.forEach(element => {
                 staduims_ids.push(element.staduim_id);
@@ -544,7 +544,7 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
 controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
-    const { staduim_id, postedBy, invitation_id, game_id, start_date } = req.body;
+    const { staduim_id, postedBy, invitation_id, game_id, scheduled_date } = req.body;
 
     try {
 
@@ -576,7 +576,7 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
             "$set": {
                 "games_status": 1,
                 "staduim": staduimExits.staduim._id,
-                "start_date": start_date,
+                "start_date": scheduled_date,
             },
         });
 
