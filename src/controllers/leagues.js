@@ -575,7 +575,7 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
         await Games.updateOne({ _id: game_id, }, {
             "$set": {
                 "games_status": 1,
-                "staduim": staduimExits.staduim._id,
+                "staduim": staduimExits._id,
                 "start_date": scheduled_date,
             },
         });
