@@ -393,13 +393,10 @@ controller.getLeagueById = async (req, res) => {
                 "path": "roundOne",
                 "populate": {
                     "path": "games",
-                    "populate": {
-                        "path": "first_team second_team",
-                        "select": "team_name wilaya profile_img user_id _id about",
-                    },
+                    
                     "populate" : {
-                        "path" : "staduim",
-                        "select": "staduim_name wilaya profile_img user_id _id",
+                        "path" : "staduim first_team second_team",
+                        "select" : "staduim_name user_id team_name _id wilaya profile_img cover_img"
                     }
                 }
             }).populate("roundTwo").populate("roundThree")
