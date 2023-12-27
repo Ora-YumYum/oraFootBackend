@@ -588,7 +588,7 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
         RefreeInvite.save();
         RefreeNotification.save();
-        let challengeWilaya = userExits.wilaya;
+        let challengeWilaya = postedByExits.team.wilaya;
 
         await
             Users.updateMany({ "wilaya": { $eq: challengeWilaya }, "user_type": { $eq: 1 } }, {
