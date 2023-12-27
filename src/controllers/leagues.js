@@ -548,13 +548,13 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
     try {
 
-        let staduimExits = await Users.findOne({ _id: staduim_id }).populate("staduim");
+        let staduimExits = await Staduims.findOne({ _id: staduim_id }).populate("user_id");
 
         let notification = Notifications({
             type: "staduim_accepted_leauge_invitation",
-            user_id: staduimExits._id,
-            title: staduimExits.staduim.staduim_name,
-            img: staduimExits.staduim.profile_img,
+            user_id: staduimExits.user_id._id,
+            title: staduimExits.staduim_name,
+            img: staduimExits.profile_img,
             invitation: invitation_id
         });
 
