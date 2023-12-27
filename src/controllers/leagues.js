@@ -256,7 +256,8 @@ controller.createLeague = async (req, res,) => {
     let body = JSON.parse(req.body.leauge);
 
     try {
-        const { title, desc,
+        const { 
+            title, desc,
             staduims,
             teams,
             max_teams_needed,
@@ -663,11 +664,14 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
             },
         },);
 
+        let game = await Games.findOne({ game_id: game_id, }, {});
+
         let RefreeInvite = Invitation({
             type: "leauge_invite_refrees",
             data: {
                 "leauge_id": league_id,
                 "game_id": game_id,
+                "game" : game,
             },
             status: 2,
         });
