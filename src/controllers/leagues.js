@@ -136,7 +136,7 @@ controller.iviteStaduims = async (req, res) => {
             if (teams_list.length != 0 || teams_list.length != 1) {
 
 
-                let round = createRounds(teams_list, round1,leauge.start_date,leauge.end_date);
+                let round = createRounds(teams_list, round1,league.start_date,league.end_date);
 
                 let games = [];
 
