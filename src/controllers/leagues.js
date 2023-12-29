@@ -68,7 +68,7 @@ function randomString(length) {
     return str;
 }
 
-function createGroups(list_loop, round, teams,start_date,end_date) {
+function createGroups(list_loop, round, teams, start_date, end_date) {
     loop = Math.round(list_loop)
     for (let index = 0; index < loop; index++) {
 
@@ -80,14 +80,14 @@ function createGroups(list_loop, round, teams,start_date,end_date) {
                 "second_team": groupsName[index + loop],
                 "status": 2,
                 "game_id": randomString(9),
-                "end_date" : end_date,
-                "start_date" : start_date,
+                "end_date": end_date,
+                "start_date": start_date,
             }
         );
     }
 }
 
-function createRounds(teams, round,start_date,end_date) {
+function createRounds(teams, round, start_date, end_date) {
     let dividend = teams.length;
     let divisor = 2;
     let result = dividend % divisor;
@@ -96,7 +96,7 @@ function createRounds(teams, round,start_date,end_date) {
 
     console.log(result)
     if (result == 1) {
-        createGroups(((teams.length) / 2) - 1, round, teams,start_date.end_date);
+        createGroups(((teams.length) / 2) - 1, round, teams, start_date.end_date);
         let lastElement = groupsName[teams.length - 1];
 
         round.winners.push(
@@ -136,7 +136,7 @@ controller.iviteStaduims = async (req, res) => {
             if (teams_list.length != 0 || teams_list.length != 1) {
 
 
-                let round = createRounds(teams_list, round1,league.start_date,league.end_date);
+                let round = createRounds(teams_list, round1,);
 
                 let games = [];
 
@@ -185,7 +185,9 @@ controller.iviteStaduims = async (req, res) => {
                         "invite_id": staduims_invite._id,
                         "postedBy": id,
                         "status": 2,
-                        "round_data": round
+                        "round_data": round,
+                        "start_date" : league.start_date,
+                        "end_date": league.end_date,
                     });
                 }
 
@@ -256,7 +258,7 @@ controller.createLeague = async (req, res,) => {
     let body = JSON.parse(req.body.leauge);
 
     try {
-        const { 
+        const {
             title, desc,
             staduims,
             teams,
@@ -671,7 +673,7 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
             data: {
                 "leauge_id": league_id,
                 "game_id": game_id,
-                "game" : game,
+                "game": game,
             },
             status: 2,
         });
