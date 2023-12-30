@@ -80,8 +80,6 @@ function createGroups(list_loop, round, teams, start_date, end_date) {
                 "second_team": groupsName[index + loop],
                 "status": 2,
                 "game_id": randomString(9),
-                "end_date": end_date,
-                "start_date": start_date,
             }
         );
     }
@@ -150,7 +148,7 @@ controller.iviteStaduims = async (req, res) => {
                         first_team_hint: element.first_team,
                         second_team_hint: element.second_team,
                         games_status: 3,
-                        game_id: element.game_id
+                        game_id: element.game_id,
                     });
                     games.push(game);
                 }
