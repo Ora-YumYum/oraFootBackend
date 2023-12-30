@@ -109,7 +109,8 @@ controller.onSignup = async (req, res,) => {
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
-              team.profile_img = pic_name,
+              team.profile_img = pic_name;
+              const compression = 60;
 
                 fs.writeFile(filePath, userPic.data, async function (error) {
                   if (error) throw error
@@ -148,6 +149,7 @@ controller.onSignup = async (req, res,) => {
             await team.save();
             user.team = team;
           }
+
           break;
         case 1:
           const refeere = Refeers({ profile_img: "" })
@@ -163,9 +165,9 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               refeere.profile_img = pic_name;
+              const compression = 60;
 
-
-              fs.writeFile(filePath, userPic.data, async function (error) {
+              fs.writeFile(filePath, userPic.data, function (error) {
                 if (error) throw error
 
                 compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
@@ -196,7 +198,6 @@ controller.onSignup = async (req, res,) => {
                 )
               })
 
-
             } catch (error) {
               console.log(error);
             }
@@ -217,12 +218,12 @@ controller.onSignup = async (req, res,) => {
 
               let uploadPath = UPLOAD_DIR + "/users/";
 
-
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               photographer.profile_img = pic_name;
 
-              fs.writeFile(filePath, userPic.data, async function (error) {
+              const compression = 60;
+              fs.writeFile(filePath, userPic.data, function (error) {
                 if (error) throw error
 
                 compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
@@ -230,7 +231,7 @@ controller.onSignup = async (req, res,) => {
                   { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
                   { svg: { engine: "svgo", command: "--multipass" } },
                   { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
-                  async function (error, completed, statistic) {
+                   function (error, completed, statistic) {
                     console.log("-------------")
                     console.log(error)
                     console.log(completed)
@@ -260,14 +261,17 @@ controller.onSignup = async (req, res,) => {
           await photographer.save();
           user.photographer = photographer;
           break;
+
         case 4:
           console.log(req.body);
+
           let staduim_data = JSON.parse(req.body.staduim);
           let price_per_hour = Number.parseFloat(staduim_data.price_per_hour)
           let price_per_month = Number.parseFloat(staduim_data.price_per_month)
           let price_per_year = Number.parseFloat(staduim_data.price_per_year)
           let wilaya = Number.parseInt(staduim_data.wilaya);
           let location = staduim_data.location;
+
           const staduim = staduims({
             price_per_year: price_per_year,
             price_per_month: price_per_month,
@@ -278,7 +282,6 @@ controller.onSignup = async (req, res,) => {
             user_id: user._id,
           });
 
-
           if (req.files != undefined) {
 
             try {
@@ -288,20 +291,19 @@ controller.onSignup = async (req, res,) => {
 
               let uploadPath = UPLOAD_DIR + "/users/";
 
-
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               staduim.cover_img = pic_name;
+              const compression = 60;
 
-              fs.writeFile(filePath, userPic.data, async function (error) {
+              fs.writeFile(filePath, userPic.data,  function (error) {
                 if (error) throw error
-
                 compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
                   { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
                   { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
                   { svg: { engine: "svgo", command: "--multipass" } },
                   { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
-                  async function (error, completed, statistic) {
+                   function (error, completed, statistic) {
                     console.log("-------------")
                     console.log(error)
                     console.log(completed)
@@ -332,6 +334,7 @@ controller.onSignup = async (req, res,) => {
           user.staduim = staduim;
           user.wilaya = wilaya;
           break;
+
         case 5:
           const player = players({
             wilaya: user.wilaya,
@@ -350,15 +353,16 @@ controller.onSignup = async (req, res,) => {
 
               player.profile_img = pic_name;
 
-              fs.writeFile(filePath, userPic.data, async function (error) {
-                if (error) throw error
+              const compression = 60;
 
+              fs.writeFile(filePath, userPic.data,  function (error) {
+                if (error) throw error
                 compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
                   { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
                   { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
                   { svg: { engine: "svgo", command: "--multipass" } },
                   { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
-                  async function (error, completed, statistic) {
+                   function (error, completed, statistic) {
                     console.log("-------------")
                     console.log(error)
                     console.log(completed)
