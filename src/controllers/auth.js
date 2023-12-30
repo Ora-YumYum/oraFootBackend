@@ -110,6 +110,9 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               team.profile_img = pic_name;
+
+              user.profile_img = pic_name;
+              
               const compression = 60;
 
                 fs.writeFile(filePath, userPic.data, async function (error) {
@@ -165,6 +168,9 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               refeere.profile_img = pic_name;
+
+              user.profile_img = pic_name;
+
               const compression = 60;
 
               fs.writeFile(filePath, userPic.data, function (error) {
@@ -221,6 +227,8 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               photographer.profile_img = pic_name;
+
+              user.profile_img = pic_name;
 
               const compression = 60;
               fs.writeFile(filePath, userPic.data, function (error) {
@@ -294,6 +302,9 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               staduim.cover_img = pic_name;
+
+              user.profile_img = pic_name;
+
               const compression = 60;
 
               fs.writeFile(filePath, userPic.data,  function (error) {
@@ -352,6 +363,8 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               player.profile_img = pic_name;
+
+              user.profile_img = pic_name;
 
               const compression = 60;
 
