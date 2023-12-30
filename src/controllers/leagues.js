@@ -182,7 +182,8 @@ controller.iviteStaduims = async (req, res) => {
                     },
                     status: 2,
                 });
-                
+
+
                 let staduim_notification = Notifications({
                     type: "leagues_invite_staduims",
                     invitation: staduims_invite,
