@@ -174,7 +174,6 @@ controller.iviteStaduims = async (req, res) => {
                         "round_data": round,
                         "leauge_data": {
                             "league_id": league._id,
-                            "invite_id": staduims_invite._id,
                             "postedBy": id,
                             "status": 2,
                             "start_date": league.start_date,
