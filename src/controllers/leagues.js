@@ -353,7 +353,7 @@ function uploadImage(filePath, uploadPath, pic) {
     fs.writeFile(filePath, pic, async function (error) {
         if (error) throw error
 
-        compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+        compressImages(filePath, uploadPath.data, { compress_force: false, statistic: true, autoupdate: true }, false,
             { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
             { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
             { svg: { engine: "svgo", command: "--multipass" } },
