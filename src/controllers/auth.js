@@ -63,11 +63,9 @@ controller.onSignup = async (req, res,) => {
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
-
     const userExits = await User.findOne({ "phone_number": phone_number });
 
     if (userExits) {
-
 
       return res.status(200).send({
         success: false, message:
@@ -87,9 +85,6 @@ controller.onSignup = async (req, res,) => {
         wilaya = Number.parseInt(req.body.wilaya)
         user.wilaya = wilaya;
       }
-
-     
-
       switch (user_type) {
         case 0:
 
@@ -206,12 +201,50 @@ controller.onSignup = async (req, res,) => {
 
               let pic_name = (new Date().getTime()) + "-" + userPic.name;
 
-              let uploadPath = UPLOAD_DIR + "/users/";
+
+
+              let uploadPath = UPLOAD_DIR + "/users/" ;
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+
               player.profile_img = pic_name;
 
               uploadImage(filePath, uploadPath, userPic.data);
+
+
+              fs.writeFile(filePath, userPic.data, async function (error) {
+                if (error) throw error
+    
+                compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+                    { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+                    { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+                    { svg: { engine: "svgo", command: "--multipass" } },
+                    { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+                    async function (error, completed, statistic) {
+                        console.log("-------------")
+                        console.log(error)
+                        console.log(completed)
+                        console.log(statistic)
+                        console.log("-------------")
+    
+                        try {
+                            fs.unlink(filePath, function (error) {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+    
+                                }
+                            })
+                        } catch (error) {
+                            return res.status(500).send({ success: false, message: "server error", results: null });
+    
+                        }
+                    }
+                )
+            })
+    
+        
 
             } catch (error) {
               console.log(error);
@@ -238,12 +271,14 @@ controller.onSignup = async (req, res,) => {
   }
 };
 
+
+
 function uploadImage(filePath, uploadPath, pic) {
   const compression = 60;
   fs.writeFile(filePath, pic, async function (error) {
     if (error) throw error
 
-    compressImages(filePath, uploadPath.data, { compress_force: false, statistic: true, autoupdate: true }, false,
+    compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
       { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
       { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
       { svg: { engine: "svgo", command: "--multipass" } },
@@ -260,12 +295,10 @@ function uploadImage(filePath, uploadPath, pic) {
             if (error) {
               console.log(error);
             } else {
-
             }
           })
         } catch (error) {
           return res.status(500).send({ success: false, message: "server error", results: null });
-
         }
       }
     )
