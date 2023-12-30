@@ -94,7 +94,7 @@ function createRounds(teams, round, start_date, end_date) {
 
     console.log(result)
     if (result == 1) {
-        createGroups(((teams.length) / 2) - 1, round, teams, start_date.end_date);
+        createGroups(((teams.length) / 2) - 1, round, teams, start_date, end_date,);
         let lastElement = groupsName[teams.length - 1];
 
         round.winners.push(
@@ -170,25 +170,20 @@ controller.iviteStaduims = async (req, res) => {
                 let staduims_invite = Invitation({
                     type: "leagues_invite_staduims",
                     user_id: id,
-                    data: staduims_invite_list,
+                    data: {
+                        "round_data": round,
+                        "leauge_data": {
+                            "league_id": league._id,
+                            "invite_id": staduims_invite._id,
+                            "postedBy": id,
+                            "status": 2,
+                            "start_date": league.start_date,
+                            "end_date": league.end_date,
+                        }
+                    },
                     status: 2,
                 });
-
-
-                for (let index = 0; index < staduims_list.length; index++) {
-                    const element = staduims_list[index];
-                    staduims_invite_list.push({
-                        "staduim_id": element,
-                        "league_id": league._id,
-                        "invite_id": staduims_invite._id,
-                        "postedBy": id,
-                        "status": 2,
-                        "round_data": round,
-                        "start_date" : league.start_date,
-                        "end_date": league.end_date,
-                    });
-                }
-
+                
                 let staduim_notification = Notifications({
                     type: "leagues_invite_staduims",
                     invitation: staduims_invite,
@@ -637,6 +632,8 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
         let staduimExits = await Staduims.findOne({ _id: staduim_id }).populate("user_id");
 
+        console.log(staduimExits)
+
         let postedByExits = await Users.findOne({ _id: postedBy }).populate("team");
 
         let notification = Notifications({
@@ -657,7 +654,8 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
         await Invitation.updateOne({
             _id: invitation_id,
-            "data.staduim_id": new ObjectId(staduim_id)
+            "data.staduim_id": new ObjectId(staduim_id),
+            "data.$[].round_data.games.$[].game_id": game_id,
         }, {
             "$set": {
                 "data.$[].round_data.games.$[].status": 0
