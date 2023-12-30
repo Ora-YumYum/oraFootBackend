@@ -159,7 +159,7 @@ controller.onSignup = async (req, res,) => {
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
               refeere.profile_img = pic_name;
-              uploadImage(filePath, uploadPath, userPic.data);
+              uploadImage(filePath, uploadPath, userPic);
               await photographer.save();
               user.photographer = photographer;
             } catch (error) {
@@ -275,7 +275,7 @@ controller.onSignup = async (req, res,) => {
 
 function uploadImage(filePath, uploadPath, pic) {
   const compression = 60;
-  fs.writeFile(filePath, pic, async function (error) {
+  fs.writeFile(filePath, pic.data, async function (error) {
     if (error) throw error
 
     compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
