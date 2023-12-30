@@ -454,31 +454,6 @@ controller.getLeagueById = async (req, res) => {
         }
 
         league_info = league;
-        // console.log(league.staduim_invitation)
-        if (league.staduim_invitation != null) {
-            league.staduim_invitation.data.forEach(element => {
-                staduims_ids.push(element.staduim_id);
-            });
-            const staduims = await Staduims.find({ _id: { $in: staduims_ids } })
-                .select("staduim_name wilaya cover_img _id")
-            for (let index = 0; index < staduims_ids.length; index++) {
-
-                let id = league.staduim_invitation.data[index]["staduim_id"];
-
-                console.log(staduims[index]["_id"])
-
-                let element = league.staduim_invitation.data[index];
-                console.log(id);
-                element["staduim_info"] = staduims.
-                    filter(el => el["_id"].toString() == id.toString());
-                staduims_list.push(element);
-            }
-
-            league_info["staduims_list"] = staduims_list;
-
-        } else {
-
-        }
 
         league_info["teams_list"] = teams_list;
 
