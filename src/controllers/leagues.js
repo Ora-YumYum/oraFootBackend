@@ -654,11 +654,10 @@ controller.accepteLeagueInvitationStaduim = async (req, res) => {
 
         await Invitation.updateOne({
             _id: invitation_id,
-            "data.staduim_id": new ObjectId(staduim_id),
-            "data.$[].round_data.games.$[].game_id": game_id,
+            "data.round_data.games.game_id": game_id,
         }, {
             "$set": {
-                "data.$[].round_data.games.$[].status": 0
+                "data.round_data.games.$.status": 0
             },
         },);
 
