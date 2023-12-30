@@ -91,6 +91,15 @@ controller.onSignup = async (req, res,) => {
           if (req.files != undefined) {
             let team_data = JSON.parse(req.body.team);
             let team_wilaya = Number.parseInt(team_data.wilaya);
+
+            const team = Teams({
+              wilaya: team_wilaya,
+              team_name: team_data.team_name,
+              about: team_data.about,
+              main_color: team_data.main_color,
+              secondary_color: team_data.secondary_color,
+              user_id: user._id
+            })
             try {
               let userPic = req.files.image;
 
@@ -100,21 +109,44 @@ controller.onSignup = async (req, res,) => {
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
-              uploadImage(filePath, uploadPath, userPic.data);
-              const team = Teams({
-                profile_img: pic_name,
-                wilaya: team_wilaya,
-                team_name: team_data.team_name,
-                about: team_data.about,
-                main_color: team_data.main_color,
-                secondary_color: team_data.secondary_color,
-                user_id: user._id
-              })
-              await team.save();
-              user.team = team;
+              team.profile_img = pic_name,
+
+                fs.writeFile(filePath, userPic.data, async function (error) {
+                  if (error) throw error
+
+                  compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+                    { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+                    { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+                    { svg: { engine: "svgo", command: "--multipass" } },
+                    { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+                    async function (error, completed, statistic) {
+                      console.log("-------------")
+                      console.log(error)
+                      console.log(completed)
+                      console.log(statistic)
+                      console.log("-------------")
+
+                      try {
+                        fs.unlink(filePath, function (error) {
+                          if (error) {
+                            console.log(error);
+                          } else {
+
+                          }
+                        })
+                      } catch (error) {
+                        return res.status(500).send({ success: false, message: "server error", results: null });
+
+                      }
+                    }
+                  )
+                })
             } catch (error) {
               console.log(error);
             }
+
+            await team.save();
+            user.team = team;
           }
           break;
         case 1:
@@ -132,7 +164,37 @@ controller.onSignup = async (req, res,) => {
 
               refeere.profile_img = pic_name;
 
-              uploadImage(filePath, uploadPath, userPic.data);
+
+              fs.writeFile(filePath, userPic.data, async function (error) {
+                if (error) throw error
+
+                compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+                  { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+                  { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+                  { svg: { engine: "svgo", command: "--multipass" } },
+                  { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+                  async function (error, completed, statistic) {
+                    console.log("-------------")
+                    console.log(error)
+                    console.log(completed)
+                    console.log(statistic)
+                    console.log("-------------")
+
+                    try {
+                      fs.unlink(filePath, function (error) {
+                        if (error) {
+                          console.log(error);
+                        } else {
+
+                        }
+                      })
+                    } catch (error) {
+                      return res.status(500).send({ success: false, message: "server error", results: null });
+
+                    }
+                  }
+                )
+              })
 
 
             } catch (error) {
@@ -158,14 +220,44 @@ controller.onSignup = async (req, res,) => {
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
-              refeere.profile_img = pic_name;
-              uploadImage(filePath, uploadPath, userPic);
-              await photographer.save();
-              user.photographer = photographer;
+              photographer.profile_img = pic_name;
+
+              fs.writeFile(filePath, userPic.data, async function (error) {
+                if (error) throw error
+
+                compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+                  { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+                  { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+                  { svg: { engine: "svgo", command: "--multipass" } },
+                  { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+                  async function (error, completed, statistic) {
+                    console.log("-------------")
+                    console.log(error)
+                    console.log(completed)
+                    console.log(statistic)
+                    console.log("-------------")
+
+                    try {
+                      fs.unlink(filePath, function (error) {
+                        if (error) {
+                          console.log(error);
+                        } else {
+
+                        }
+                      })
+                    } catch (error) {
+                      return res.status(500).send({ success: false, message: "server error", results: null });
+
+                    }
+                  }
+                )
+              })
+
             } catch (error) {
               console.log(error);
             }
           }
+          await photographer.save();
           user.photographer = photographer;
           break;
         case 4:
@@ -185,6 +277,57 @@ controller.onSignup = async (req, res,) => {
             location: location,
             user_id: user._id,
           });
+
+
+          if (req.files != undefined) {
+
+            try {
+              let userPic = req.files.image;
+
+              let pic_name = (new Date().getTime()) + "-" + userPic.name;
+
+              let uploadPath = UPLOAD_DIR + "/users/";
+
+
+              const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
+
+              staduim.cover_img = pic_name;
+
+              fs.writeFile(filePath, userPic.data, async function (error) {
+                if (error) throw error
+
+                compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
+                  { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+                  { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+                  { svg: { engine: "svgo", command: "--multipass" } },
+                  { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+                  async function (error, completed, statistic) {
+                    console.log("-------------")
+                    console.log(error)
+                    console.log(completed)
+                    console.log(statistic)
+                    console.log("-------------")
+
+                    try {
+                      fs.unlink(filePath, function (error) {
+                        if (error) {
+                          console.log(error);
+                        } else {
+
+                        }
+                      })
+                    } catch (error) {
+                      return res.status(500).send({ success: false, message: "server error", results: null });
+
+                    }
+                  }
+                )
+              })
+
+            } catch (error) {
+              console.log(error);
+            }
+          }
           await staduim.save();
           user.staduim = staduim;
           user.wilaya = wilaya;
@@ -201,50 +344,42 @@ controller.onSignup = async (req, res,) => {
 
               let pic_name = (new Date().getTime()) + "-" + userPic.name;
 
-
-
-              let uploadPath = UPLOAD_DIR + "/users/" ;
+              let uploadPath = UPLOAD_DIR + "/users/";
 
               const filePath = UPLOAD_DIR + "/temp-uploads/" + pic_name;
 
-
               player.profile_img = pic_name;
-
-              uploadImage(filePath, uploadPath, userPic.data);
-
 
               fs.writeFile(filePath, userPic.data, async function (error) {
                 if (error) throw error
-    
+
                 compressImages(filePath, uploadPath, { compress_force: false, statistic: true, autoupdate: true }, false,
-                    { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
-                    { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
-                    { svg: { engine: "svgo", command: "--multipass" } },
-                    { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
-                    async function (error, completed, statistic) {
-                        console.log("-------------")
-                        console.log(error)
-                        console.log(completed)
-                        console.log(statistic)
-                        console.log("-------------")
-    
-                        try {
-                            fs.unlink(filePath, function (error) {
-                                if (error) {
-                                    console.log(error);
-                                } else {
-    
-                                }
-                            })
-                        } catch (error) {
-                            return res.status(500).send({ success: false, message: "server error", results: null });
-    
+                  { jpg: { engine: "mozjpeg", command: ["-quality", compression] } },
+                  { png: { engine: "pngquant", command: ["--quality=" + compression + "-" + compression, "-o"] } },
+                  { svg: { engine: "svgo", command: "--multipass" } },
+                  { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+                  async function (error, completed, statistic) {
+                    console.log("-------------")
+                    console.log(error)
+                    console.log(completed)
+                    console.log(statistic)
+                    console.log("-------------")
+
+                    try {
+                      fs.unlink(filePath, function (error) {
+                        if (error) {
+                          console.log(error);
+                        } else {
+
                         }
+                      })
+                    } catch (error) {
+                      return res.status(500).send({ success: false, message: "server error", results: null });
+
                     }
+                  }
                 )
-            })
-    
-        
+              })
 
             } catch (error) {
               console.log(error);
