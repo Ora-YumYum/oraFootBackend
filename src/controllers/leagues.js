@@ -550,7 +550,7 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
         await Leagues.updateOne({ _id: leauge_id, }, {
             "$push": {
-                "teams": team_id
+                "teams": team_id.team
             },
         },);
 

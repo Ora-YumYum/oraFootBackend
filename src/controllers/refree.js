@@ -93,7 +93,7 @@ controller.endGame = async (req, res,) => {
 
     try {
 
-        let game = await Games.findOne({ _id: game_id});
+        let game = await Games.findOne({ _id: game_id });
 
         let winner;
         if (game != null) {
@@ -122,7 +122,7 @@ controller.endGame = async (req, res,) => {
         });
 
         await Teams.updateMany({
-            _id: { $in: [first_team, second_team ]},
+            _id: { $in: [first_team, second_team] },
         }, {
             "$push": {
                 "games": game_id,
@@ -445,7 +445,11 @@ controller.accepteInvitation = async (req, res) => {
             "$push": {
                 "notifications": notification
             },
-        },)
+        },);
+
+        await Games.updateOne({ "_id": challengeExits.game, }, {
+            "refree": refree_user_id,
+        });
 
         return res.status(200).json({
             "success": true,
