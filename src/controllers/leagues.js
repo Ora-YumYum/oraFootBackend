@@ -577,13 +577,13 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
 controller.accepteRefreeInvitation = async (req, res) => {
 
-    const { refree_id, invitation_id, game_id } = req.body;
+    const { refree_id, invitation_id, leauge_id } = req.body;
 
     try {
 
-        let refreeExits = await Users.findOne({ _id: refree_id }).populate("refree");
+        let refreeExits = await Users.findOne({ _id: refree_id });
 
-        let leaugeExits = await Leagues.findOne({ "game_id": game_id });
+        let leaugeExits = await Leagues.findOne({ _id: leauge_id });
 
 
         let notification = Notifications({
@@ -620,6 +620,7 @@ controller.accepteRefreeInvitation = async (req, res) => {
                 "status": 0
             },
         },);
+
 
         res.status(200).json({
             "success": true,
