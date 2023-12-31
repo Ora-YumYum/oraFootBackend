@@ -11,6 +11,8 @@ const { body, check, validationResult } = require('express-validator');
 
 router.get("/search_teams", TeamsController.SearchForTeams);
 
+router.get("/teams", TeamsController.viewAllTeams);
+
 router.get("/get_challenges_invitation",middleware, TeamsController.getChallengesInvitations);
 
 router.get("/get_players_invitation",middleware, TeamsController.getPlayersInvitations);
