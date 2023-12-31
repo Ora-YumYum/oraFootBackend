@@ -27,6 +27,9 @@ router.get("/my_games", middleware, refreeController.viewMyGames);
 
 router.get("/my_challenges", middleware, refreeController.viewMyChallanges);
 
+router.get("/games", middleware, refreeController.viewGames);
+
+
 ////viewMyGames
 
 module.exports = router;

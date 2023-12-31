@@ -482,7 +482,60 @@ controller.viewMyChallanges = async (req, res,) => {
             "success": true,
             "challanges": challanges
         });
+
     } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
+
+
+controller.viewMyLeauges = async (req, res,) => {
+
+    const id = req.userId;
+    console.log(id)
+    try {
+        let challanges = await Challenges.find({
+            'refree': id
+        }).populate("staduim").populate("team").populate("refree").
+            populate("invitation").populate("opponent_team_id").populate("game").exec();
+
+        return res.status(200).send({
+            "success": true,
+            "challanges": challanges
+        });
+
+    } catch (error) {
+        return AppError.onError(error, "restaurant add error" + error);
+    }
+};
+
+
+controller.viewGames = async (req, res,) => {
+
+    const id = req.userId;
+    console.log(id)
+    try {
+        let games = await Games.find({
+            'refree': id
+        }).populate({
+            "path": "staduim",
+            "select": "staduim_name wilaya user_id _id location cover_img"
+        }).populate({
+            "path": "first_team",
+            "select": "team_name wilaya user_id _id profile_img"
+        }).populate("refree")
+            .populate({
+                "path": "second_team",
+                "select": "team_name wilaya user_id _id profile_img"
+            }).populate("challenge_id").exec();
+
+        return res.status(200).send({
+            "success": true,
+            "games": games
+        });
+
+    } catch (error) {
+        console.log(error);
         return AppError.onError(error, "restaurant add error" + error);
     }
 };

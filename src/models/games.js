@@ -134,7 +134,7 @@ const gamesSchema = new Schema({
 
     refree: {
         type: Schema.Types.ObjectId,
-        ref: "Refrees",
+        ref: "Refeers",
     },
 
 
