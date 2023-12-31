@@ -577,13 +577,15 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
 controller.accepteRefreeInvitation = async (req, res) => {
 
-    const { refree_id, invitation_id, leauge_id , game_id} = req.body;
+    const { refree_id, invitation_id, leauge_id, game_id } = req.body;
 
     try {
 
         let refreeExits = await Users.findOne({ _id: refree_id });
 
         let leaugeExits = await Leagues.findOne({ _id: leauge_id });
+
+        let gameExits = await Games.findOne({ "game_id": game_id });
 
 
         let notification = Notifications({
@@ -604,14 +606,13 @@ controller.accepteRefreeInvitation = async (req, res) => {
 
         await Leagues.updateOne({ _id: leaugeExits._id, }, {
             "$push": {
-                "games": game_id
+                "games": gameExits._id
             },
         },);
 
-        await Games.updateOne({ game_id: game_id, }, {
+        await Games.updateOne({ "_id": gameExits._id, }, {
             "$set": {
                 "refree": refree_id,
-                "start_time": scheduled_date,
             },
         });
 
