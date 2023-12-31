@@ -542,7 +542,7 @@ controller.viewGames = async (req, res,) => {
     try {
         let games = await Games.find({
             'refree': id,
-            "status": status,
+            "games_status": status,
         }).populate({
             "path": "staduim",
             "select": "staduim_name wilaya user_id _id location cover_img"
