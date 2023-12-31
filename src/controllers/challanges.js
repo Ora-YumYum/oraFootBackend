@@ -11,6 +11,7 @@ const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 
 const compressImages = require("compress-images")
+
 const { UPLOAD_DIR } = require("../../settings");
 
 const Refeers = require("../models/users/refeers");
@@ -18,6 +19,7 @@ const Refeers = require("../models/users/refeers");
 const Photographers = require("../models/users/photographers");
 
 const fs = require('fs');
+
 var controller = {}
 
 controller.createChallange = async (req, res,) => {

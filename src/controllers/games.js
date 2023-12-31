@@ -32,7 +32,6 @@ controller.activeGames = async (req, res,) => {
 
     games = await Games.find({
         "games_status": 1,
-
     }).populate({
         "path": "staduim",
         "select": "staduim_name wilaya user_id _id location cover_img"
