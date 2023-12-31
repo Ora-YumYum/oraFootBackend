@@ -64,7 +64,7 @@ controller.startGame = async (req, res,) => {
             second_team: second_team,
         });
 
-        if (type == "game") {
+        if (type == "Challenge") {
             game.challenge_id = challenge_id;
             await Challenges.updateOne({
                 _id: challenge_id,
@@ -122,7 +122,7 @@ controller.endGame = async (req, res,) => {
             }
         });
 
-        if (type == "game") {
+        if (type == "Challenge") {
             await Challenges.updateOne({
                 _id: challenge_id,
             }, {
