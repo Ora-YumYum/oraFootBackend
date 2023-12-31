@@ -54,7 +54,7 @@ controller.viewMyGames = async (req, res,) => {
 
 controller.startGame = async (req, res,) => {
 
-    const { challenge_id, first_team, second_team, } = req.body;
+    const { type, game_id, challenge_id, first_team, second_team, } = req.body;
 
     try {
 
@@ -64,13 +64,22 @@ controller.startGame = async (req, res,) => {
             second_team: second_team,
         });
 
-        await game.save();
+        if (type == "game") {
+            game.challenge_id = challenge_id;
+            await Challenges.updateOne({
+                _id: challenge_id,
+            }, {
+                "game": game,
+            });
+            await game.save();
+        } else {
+            await Games.updateOne({
+                _id: game_id,
+            }, {
+                "games_status": 1,
+            });
+        }
 
-        await Challenges.updateOne({
-            _id: challenge_id,
-        }, {
-            "game": game,
-        });
 
         return res.status(200).send({
             "success": true,
@@ -89,7 +98,7 @@ controller.startGame = async (req, res,) => {
 
 controller.endGame = async (req, res,) => {
 
-    const { challenge_id, game_id, first_team, second_team, } = req.body;
+    const { type, challenge_id, game_id, first_team, second_team, } = req.body;
 
     try {
 
@@ -113,13 +122,25 @@ controller.endGame = async (req, res,) => {
             }
         });
 
-        await Challenges.updateOne({
-            _id: challenge_id,
-        }, {
-            $set: {
-                "status": 0,
-            }
-        });
+        if (type == "game") {
+            await Challenges.updateOne({
+                _id: challenge_id,
+            }, {
+                "$set": {
+                    "status": 0,
+                }
+            });
+        } else {
+            await Games.updateOne({
+                _id: game_id,
+            }, {
+                "$set": {
+                    "status": 0,
+                }
+            });
+        }
+
+
 
         await Teams.updateMany({
             _id: { $in: [first_team, second_team] },
@@ -521,7 +542,7 @@ controller.viewGames = async (req, res,) => {
     try {
         let games = await Games.find({
             'refree': id,
-            "status" : status,
+            "status": status,
         }).populate({
             "path": "staduim",
             "select": "staduim_name wilaya user_id _id location cover_img"
