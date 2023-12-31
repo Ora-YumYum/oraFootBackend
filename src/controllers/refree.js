@@ -513,10 +513,15 @@ controller.viewMyLeauges = async (req, res,) => {
 controller.viewGames = async (req, res,) => {
 
     const id = req.userId;
+
+
+    const status = Number.parseInt(req.query.status);
+
     console.log(id)
     try {
         let games = await Games.find({
-            'refree': id
+            'refree': id,
+            "status" : status,
         }).populate({
             "path": "staduim",
             "select": "staduim_name wilaya user_id _id location cover_img"
