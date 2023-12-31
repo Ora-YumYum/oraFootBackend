@@ -55,27 +55,26 @@ const StaduimsSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
-
-
     followers: [
         {
-            type: Schema.Types.ObjectId,
-            ref: "User",
+          type: Schema.Types.ObjectId,
+          ref: "User",
         },
-    ],
-
-    following: [
+      ],
+    
+      following: [
         {
-            type: Schema.Types.ObjectId,
-            ref: "User",
+          type: Schema.Types.ObjectId,
+          ref: "User",
         },
-    ],
-
-    photos: [
+      ],
+    
+      posts: [
         {
-            type: String,
-        }
-    ],
+          type: Schema.Types.ObjectId,
+          ref: "Posts",
+        },
+      ],
     games: [
         {
             type: Schema.Types.ObjectId,
