@@ -29,10 +29,6 @@ router.post("/accepte_refree_invitation", middleware, leaguesController.accepteR
 router.post("/send_gamesTo_staduims", middleware, leaguesController.iviteStaduims);
 
 router.post("/accepte_league_staduimInv", middleware, leaguesController.accepteLeagueInvitationStaduim);
-
-
-
-
 ////viewMyGames
 
 module.exports = router;

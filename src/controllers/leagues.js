@@ -350,6 +350,7 @@ controller.createLeague = async (req, res,) => {
             type: "leagues_invite_teams",
             invitation: teams_invite,
             user_id: user_id,
+            img: "teamExits.team.team_name",
             title: teamExits.team.team_name,
         });
 
@@ -576,15 +577,17 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
 controller.accepteRefreeInvitation = async (req, res) => {
 
-    const { refree_id, postedBy, invitation_id, leauge_id, game_id } = req.body;
+    const { refree_id, invitation_id, game_id } = req.body;
 
     try {
 
         let refreeExits = await Users.findOne({ _id: refree_id }).populate("refree");
 
+        let leaugeExits = await Leagues.findOne({ "game_id": game_id });
+
 
         let notification = Notifications({
-            type: "refree_accepted_leauge_invitation",
+            type: "refree_accepeted_leauge_invitation",
             user_id: refreeExits._id,
             title: refreeExits.first_name + refreeExits.second_name,
             img: refreeExits.profile_img,
@@ -593,21 +596,22 @@ controller.accepteRefreeInvitation = async (req, res) => {
 
         await notification.save();
 
-        await Users.updateOne({ _id: postedBy, }, {
+        await Users.updateOne({ _id: leaugeExits.postedBy }, {
             "$push": {
                 "notifications": notification
             },
         },);
 
-        await Leagues.updateOne({ _id: leauge_id, }, {
+        await Leagues.updateOne({ _id: leaugeExits._id, }, {
             "$push": {
+                "games": game_id
             },
         },);
 
         await Games.updateOne({ game_id: game_id, }, {
             "$set": {
                 "refree": refree_id,
-                // "start_date": scheduled_date,
+                "start_time": scheduled_date,
             },
         });
 
