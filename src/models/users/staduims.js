@@ -46,7 +46,7 @@ const StaduimsSchema = new Schema({
         required: false,
     },
 
-    staduim_img: {
+    cover_img: {
         type: String,
         required: false,
     },

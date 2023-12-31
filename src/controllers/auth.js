@@ -5,14 +5,21 @@ const { APP_KEY } = require("../config/AppConst");
 const fs = require('file-system');
 
 const { validationResult } = require("express-validator");
-const { imageComproser } = require("../config/image-compr")
+
 const User = require("../models/users/users");
+
 const Teams = require("../models/users/Teams");
+
 const Refeers = require("../models/users/refeers");
+
 const Photographers = require("../models/users/photographers");
+
 const Doctor = require("../models/users/doctor");
+
 const staduims = require("../models/users/staduims");
+
 const players = require("../models/users/players");
+
 const { UPLOAD_DIR } = require("../../settings");
 
 
@@ -692,11 +699,12 @@ controller.findAccount = async (req, res) => {
       return res.status(200).send({
         success: false, message:
           'there"s no account with this phone number', reutls: false
-      })
+      });
+
     } else {
       res.status(200).send({
         success: true, message: 'ok', reutls: true,
-      })
+      });
     }
 
   } catch (error) {

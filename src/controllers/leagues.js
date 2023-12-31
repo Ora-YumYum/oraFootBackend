@@ -4,6 +4,9 @@
 const Leagues = require("../models/leagues");
 const AppError = require("./errorController");
 
+
+const compressImages = require("compress-images")
+
 const Staduims = require("../models/users/staduims");
 
 const Users = require("../models/users/users");
@@ -22,7 +25,6 @@ const Games = require("../models/games")
 
 const fs = require('fs');
 
-const { imageComproser } = require("../config/image-compr")
 
 const Rounds = require("../models/rounds");
 const { json } = require("body-parser");

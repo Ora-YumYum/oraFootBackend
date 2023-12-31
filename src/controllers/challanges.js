@@ -1,15 +1,16 @@
 const Challanges = require("../models/challanges");
+
 const Users = require("../models/users/users");
 
 const Invitation = require("../models/invitation");
+
 
 const Notifications = require("../models/notifications");
 
 const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 
-const { imageComproser } = require("../config/image-compr")
-
+const compressImages = require("compress-images")
 const { UPLOAD_DIR } = require("../../settings");
 
 const Refeers = require("../models/users/refeers");
