@@ -577,7 +577,7 @@ controller.accepteLeagueInvitation = async (req, res) => {
 
 controller.accepteRefreeInvitation = async (req, res) => {
 
-    const { refree_id, invitation_id, leauge_id } = req.body;
+    const { refree_id, invitation_id, leauge_id , game_id} = req.body;
 
     try {
 
