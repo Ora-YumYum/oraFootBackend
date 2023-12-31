@@ -560,7 +560,7 @@ controller.viewGames = async (req, res,) => {
                 "path": "challenge_id",
                 "populate": {
                     "path": "staduim team opponent_team refree game",
-                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img location"
+                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img location main_color secondary_color"
                 }
             }).exec();
     } else if (status == 2) {
@@ -584,7 +584,7 @@ controller.viewGames = async (req, res,) => {
                 "path": "challenge_id",
                 "populate": {
                     "path": "staduim team opponent_team refree game",
-                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img location"
+                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img location main_color secondary_color"
                 }
             }).exec();
     }
