@@ -538,7 +538,7 @@ controller.viewGames = async (req, res,) => {
 
     const status = Number.parseInt(req.query.status);
 
-    console.log(status)
+    console.log(status);
 
     let games;
 
@@ -560,7 +560,7 @@ controller.viewGames = async (req, res,) => {
                 "path": "challenge_id",
                 "populate": {
                     "path": "staduim team opponent_team refree game",
-                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img"
+                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img location"
                 }
             }).exec();
     } else if (status == 2) {
@@ -584,14 +584,14 @@ controller.viewGames = async (req, res,) => {
                 "path": "challenge_id",
                 "populate": {
                     "path": "staduim team opponent_team refree game",
-                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img"
+                    "select": "staduim_name user_id team_name _id wilaya profile_img cover_img location"
                 }
             }).exec();
     }
     try {
         return res.status(200).send({
             "success": true,
-            "games": games
+            "games": games,
         });
 
     } catch (error) {

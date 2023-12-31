@@ -13,7 +13,7 @@ const Photographerschema = new Schema({
 
     application_status: {
         type: Number,
-        default : 2,
+        default: 2,
         required: false,
     },
 
@@ -21,7 +21,7 @@ const Photographerschema = new Schema({
         type: Number,
         required: false,
     },
-    
+
     games: [
         {
             type: Schema.Types.ObjectId,
@@ -43,24 +43,24 @@ const Photographerschema = new Schema({
 
     followers: [
         {
-          type: Schema.Types.ObjectId,
-          ref: "User",
+            type: Schema.Types.ObjectId,
+            ref: "User",
         },
-      ],
-    
-      following: [
+    ],
+
+    following: [
         {
-          type: Schema.Types.ObjectId,
-          ref: "User",
+            type: Schema.Types.ObjectId,
+            ref: "User",
         },
-      ],
-    
-      posts: [
+    ],
+
+    posts: [
         {
-          type: Schema.Types.ObjectId,
-          ref: "Posts",
+            type: Schema.Types.ObjectId,
+            ref: "Posts",
         },
-      ],
+    ],
 });
 
 module.exports = mongoose.model("Photographers", Photographerschema);
