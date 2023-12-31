@@ -522,11 +522,11 @@ controller.viewGames = async (req, res,) => {
             "select": "staduim_name wilaya user_id _id location cover_img"
         }).populate({
             "path": "first_team",
-            "select": "team_name wilaya user_id _id profile_img"
+            "select": "team_name wilaya user_id _id profile_img main_color secondary_color players"
         }).populate("refree")
             .populate({
                 "path": "second_team",
-                "select": "team_name wilaya user_id _id profile_img"
+                "select": "team_name wilaya user_id _id profile_img main_color secondary_color players"
             }).populate("challenge_id").exec();
 
         return res.status(200).send({
