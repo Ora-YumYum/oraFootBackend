@@ -538,9 +538,12 @@ controller.viewGames = async (req, res,) => {
 
     const status = Number.parseInt(req.query.status);
 
-    console.log(id)
-    try {
-        let games = await Games.find({
+    console.log(status)
+
+    let games;
+
+    if (status == 0) {
+        games = await Games.find({
             'refree': id,
             "games_status": status,
         }).populate({
@@ -554,6 +557,27 @@ controller.viewGames = async (req, res,) => {
                 "path": "second_team",
                 "select": "team_name wilaya user_id _id profile_img main_color secondary_color players"
             }).populate("challenge_id").exec();
+    } else if (status == 2) {
+        games = await Games.find({}).populate({
+            "path": "staduim",
+             "match" :{
+                'refree': id,
+                "games_status": {
+                    "$in": [1, 2],
+                }
+             },
+            "select": "staduim_name wilaya user_id _id location cover_img"
+        }).populate({
+            "path": "first_team",
+            "select": "team_name wilaya user_id _id profile_img main_color secondary_color players"
+        }).populate("refree")
+            .populate({
+                "path": "second_team",
+                "select": "team_name wilaya user_id _id profile_img main_color secondary_color players"
+            }).populate("challenge_id").exec();
+    }
+    try {
+
 
         return res.status(200).send({
             "success": true,
