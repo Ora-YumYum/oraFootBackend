@@ -355,7 +355,7 @@ controller.onSignup = async (req, res,) => {
 
         case 5:
           const player = players({
-            wilaya: user.wilaya,
+            wilaya: wilaya,
             user_id: user._id
           });
           if (req.files != undefined) {
