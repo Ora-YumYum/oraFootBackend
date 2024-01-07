@@ -18,7 +18,6 @@ router.post("/follow", middleware, followersController.follow);
 
 router.post("/get_followers", middleware, followersController.getFollowers);
 
-
 router.post("/get_profile", middleware, followersController.getProfile);
 
 

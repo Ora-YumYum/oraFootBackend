@@ -113,7 +113,7 @@ const userSchema = new Schema({
     ref: "Photographers",
   },
 
-  
+
   refree: {
     type: Schema.Types.ObjectId,
     ref: "Refeers",
@@ -144,6 +144,7 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Posts",
     },
+    
   ],
 });
 

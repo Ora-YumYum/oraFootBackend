@@ -13,24 +13,24 @@ var controller = {}
 controller.postComment = async (req, res) => {
 
     try {
-        const { id, comment, restaurant_id, video_id } = req.body;
+        const { id, comment, user_id, video_id } = req.body;
 
         let video_exists = await Feeds.findOne({ _id: id });
 
         let comments = Comments({
             comment: comment,
-            published_by: restaurant_id,
+            user_id: user_id,
             video_id: video_id,
         })
 
-        await comments.save();
-
         if (video_exists) {
+            await comments.save();
             await Feeds.updateOne({ _id: video_id }, {
                 "$push": {
                     "comments": comments
                 }
-            })
+            });
+
         } else {
             res.status(200).json({
                 success: false,
@@ -59,6 +59,7 @@ controller.getComments = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             "success": false,
             "error": error,
@@ -70,10 +71,10 @@ controller.getComments = async (req, res) => {
 controller.replyComments = async (req, res) => {
 
     const { comment_id, comment, } = req.body;
-   
+
     try {
 
-        
+
         let comments = Comments({
             comment: comment,
             published_by: restaurant_id,

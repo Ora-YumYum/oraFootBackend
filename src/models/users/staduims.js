@@ -55,6 +55,8 @@ const StaduimsSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
+
+
     followers: [
         {
           type: Schema.Types.ObjectId,
@@ -86,6 +88,13 @@ const StaduimsSchema = new Schema({
         {
             type: Schema.Types.ObjectId,
             ref: "Leagues",
+        },
+    ],
+
+    rents: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Rents",
         },
     ],
 

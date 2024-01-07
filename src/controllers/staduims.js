@@ -7,6 +7,9 @@ const AppError = require("./errorController");
 const Staduims = require("../models/users/staduims");
 const Notifications = require("../models/notifications");
 const Invitation = require("../models/invitation");
+
+const Rents = require("../models/rents");
+
 const Users = require("../models/users/users");
 var controller = {}
 
@@ -160,6 +163,146 @@ controller.accepteLeagueInvitation = async (req, res) => {
     }
 }
 
+
+controller.rent_staduim = async (req, res,) => {
+
+    const id = req.userId;
+    const { user_id, rent_date, staduim_id } = req.body;
+
+
+    try {
+        console.log(staduim_id)
+        let staduimExits = await Users.findOne({ _id: staduim_id }).populate("staduim");
+
+
+        let notification = Notifications({
+            type: "request_rent_staduim",
+            user_id: user_id,
+            title: "",
+            img: "",
+        });
+
+
+        let rent = Rents({
+            user_id: user_id,
+            rent_date: rent_date,
+            staduim_id: staduimExits.staduim._id,
+        });
+        await Staduims.updateOne({
+            _id: staduimExits.staduim._id,
+        }, {
+            "$push": {
+                "rents": rent,
+                "notifications": notification,
+            },
+        });
+
+
+        await notification.save();
+
+        await rent.save();
+
+        return res.status(200).send({
+            "success": true,
+            "message": "rent saved successfully",
+            "rent": rent,
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            "success": false,
+            "message": error
+        });
+    }
+};
+
+
+
+controller.getRentRequests = async (req, res,) => {
+
+    let id = req.userId;
+
+    console.log(id);
+
+    if (id != undefined || id != "" || id != null) {
+
+        try {
+
+            let rent_requests = await Users.findOne({ _id: id }).populate({
+                "path": "staduim",
+                "select": "staduim",
+                "select": "rents",
+                "populate": {
+                    "path": "rents"
+                }
+            }).select("staduim _id")
+
+
+            res.status(200).json({
+                "success": true,
+                "message": "ok",
+                "requests": rent_requests,
+            });
+
+        } catch (error) {
+            return AppError.onError(error, "hade some error" + error);
+        }
+    } else {
+        res.status(404).json({
+            "success": false,
+            "message": "invalid id ",
+        });
+    }
+};
+
+
+controller.accepteRentRequest = async (req, res) => {
+
+    const { staduim_user_id, reservation_id, user_id } = req.body;
+
+    try {
+
+        console.log(staduim_user_id)
+
+        let staduimExits = await Users.findOne({ _id: staduim_user_id }).populate("staduim");
+
+        let notification = Notifications({
+            type: "staduim_accepted_rent_request",
+            user_id: staduim_user_id,
+            title: staduimExits.staduim.staduim_name,
+            img: staduimExits.staduim.cover_img ?? "",
+        });
+
+        await notification.save();
+
+        await Rents.updateOne({
+            _id: reservation_id,
+        }, {
+            "$set": {
+                "status": 0
+            },
+        },);
+
+        await Users.updateOne({ _id: user_id, }, {
+            "$push": {
+                "notifications": notification
+            },
+        },)
+
+        return res.status(200).json({
+            "success": true,
+            "msg": "Invitation was accepted successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            "success": false,
+            "msg": error,
+        });
+    }
+}
 
 
 module.exports = controller;

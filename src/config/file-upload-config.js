@@ -28,7 +28,7 @@ function fileNameConvention(req, file, callback) {
 }
 
 const limits = {
-  fileSize: parseInt(process.env.FILE_SIZE) * 1024 * 1024 // 200MB
+  fileSize: parseInt(process.env.FILE_SIZE) * 1024 * 1024,
 }
 
 
@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
 const fileUploadConfig = {
   fileFilter: fileFilter,
   storage: storage,
-  limits: limits
+  limits: limits,
 };
 
 module.exports.fileUploadConfig = fileUploadConfig;

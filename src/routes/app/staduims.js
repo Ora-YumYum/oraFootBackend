@@ -18,6 +18,12 @@ router.post("/accepte_league_invitation", staduimController.accepteInvitation);
 
 router.get("/get_staduims", staduimController.getStaduims);
 
+router.get("/rent_requests", middleware, staduimController.getRentRequests);
+
+router.post("/rent", staduimController.rent_staduim);
+
+router.post("/accepte_rent_request", staduimController.accepteRentRequest);
+
 
 ////viewMyGames
 

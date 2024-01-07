@@ -29,7 +29,7 @@ controller.activeGames = async (req, res,) => {
     const id = req.userId;
     let games;
 
-
+    
     games = await Games.find({
         "games_status": 1,
     }).populate({

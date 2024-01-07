@@ -49,9 +49,6 @@ controller.viewMyGames = async (req, res,) => {
     }
 };
 
-
-
-
 controller.startGame = async (req, res,) => {
 
     const { type, game_id, challenge_id, first_team, second_team, } = req.body;
