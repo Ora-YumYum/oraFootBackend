@@ -271,9 +271,9 @@ controller.validateRentRequest = async (req, res) => {
 
 
         if (status == 0) {
-            notification_type = "staduim_refused_rent_request";
-        } else {
             notification_type = "staduim_accepted_rent_request";
+        } else {
+            notification_type = "staduim_refused_rent_request";
         }
 
         let notification = Notifications({
@@ -289,7 +289,7 @@ controller.validateRentRequest = async (req, res) => {
             _id: reservation_id,
         }, {
             "$set": {
-                "status": status
+                "status": status == 0 ? 0 : 1,
             },
         },);
 
