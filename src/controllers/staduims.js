@@ -174,39 +174,51 @@ controller.rent_staduim = async (req, res,) => {
         console.log(staduim_id)
         let staduimExits = await Users.findOne({ _id: staduim_id }).populate("staduim");
 
-
-        let notification = Notifications({
-            type: "request_rent_staduim",
-            user_id: user_id,
-            title: "",
-            img: "",
-        });
+        const userExits = await Users.findOne({ _id: user_id });
 
 
-        let rent = Rents({
-            user_id: user_id,
-            rent_date: rent_date,
-            staduim_id: staduimExits.staduim._id,
-        });
-        await Staduims.updateOne({
-            _id: staduimExits.staduim._id,
-        }, {
-            "$push": {
-                "rents": rent,
-                "notifications": notification,
-            },
-        });
+        if (userExits && staduimExits) {
+            let notification = Notifications({
+                type: "request_rent_staduim",
+                user_id: user_id,
+                title: "",
+                img: "",
+            });
 
 
-        await notification.save();
+            let rent = Rents({
+                user_id: user_id,
+                rent_date: rent_date,
+                staduim_id: staduimExits.staduim._id,
+                data: {
+                    "client_phone_number": userExits.phone_number,
+                }
+            });
+            await Staduims.updateOne({
+                _id: staduimExits.staduim._id,
+            }, {
+                "$push": {
+                    "rents": rent,
+                    "notifications": notification,
+                },
+            });
 
-        await rent.save();
 
-        return res.status(200).send({
-            "success": true,
-            "message": "rent saved successfully",
-            "rent": rent,
-        });
+            await notification.save();
+
+            await rent.save();
+
+            return res.status(200).send({
+                "success": true,
+                "message": "rent saved successfully",
+                "rent": rent,
+            });
+        } else {
+            return res.status(400).send({
+                "success": false,
+                "message": "invalid data"
+            });
+        }
 
     } catch (error) {
         console.log(error);
