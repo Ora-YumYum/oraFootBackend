@@ -354,6 +354,7 @@ controller.onSignup = async (req, res,) => {
           break;
 
         case 5:
+          wilaya = Number.parseInt(staduim_data.wilaya);
           const player = players({
             wilaya: wilaya,
             user_id: user._id
