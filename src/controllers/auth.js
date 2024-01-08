@@ -356,7 +356,7 @@ controller.onSignup = async (req, res,) => {
         case 5:
           wilaya = Number.parseInt(staduim_data.wilaya);
           const player = players({
-            wilaya: wilaya,
+            wilaya: user.wilaya,
             user_id: user._id
           });
           if (req.files != undefined) {
