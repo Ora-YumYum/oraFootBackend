@@ -222,6 +222,8 @@ controller.onSignup = async (req, res,) => {
         case 2:
           const photographer = Photographers(req.body.photographer);
 
+          photographer.user_id = user._id;
+
           if (req.files != undefined) {
 
             try {
@@ -267,8 +269,8 @@ controller.onSignup = async (req, res,) => {
                     }
                   }
                 )
-              })
-
+              });
+              
             } catch (error) {
               console.log(error);
             }
@@ -357,7 +359,8 @@ controller.onSignup = async (req, res,) => {
       
           const player = players({
             wilaya: user.wilaya,
-            user_id: user._id
+            user_id: user._id,
+
           });
           if (req.files != undefined) {
 

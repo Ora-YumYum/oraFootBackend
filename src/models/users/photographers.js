@@ -22,6 +22,13 @@ const Photographerschema = new Schema({
         required: false,
     },
 
+
+    user_id: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+
+
     games: [
         {
             type: Schema.Types.ObjectId,
