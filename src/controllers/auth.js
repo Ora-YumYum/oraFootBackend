@@ -270,7 +270,7 @@ controller.onSignup = async (req, res,) => {
                   }
                 )
               });
-              
+
             } catch (error) {
               console.log(error);
             }
@@ -356,7 +356,7 @@ controller.onSignup = async (req, res,) => {
           break;
 
         case 5:
-      
+
           const player = players({
             wilaya: user.wilaya,
             user_id: user._id,

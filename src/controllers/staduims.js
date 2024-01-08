@@ -257,18 +257,27 @@ controller.getRentRequests = async (req, res,) => {
 };
 
 
-controller.accepteRentRequest = async (req, res) => {
+controller.validateRentRequest = async (req, res) => {
 
-    const { staduim_user_id, reservation_id, user_id } = req.body;
+    const { status, staduim_user_id, reservation_id, user_id } = req.body;
 
     try {
 
         console.log(staduim_user_id)
 
-        let staduimExits = await Users.findOne({ _id: staduim_user_id }).populate("staduim");
+        const staduimExits = await Users.findOne({ _id: staduim_user_id }).populate("staduim");
+
+        let notification_type = "";
+
+
+        if (status == 0) {
+            notification_type = "staduim_refused_rent_request";
+        } else {
+            notification_type = "staduim_accepted_rent_request";
+        }
 
         let notification = Notifications({
-            type: "staduim_accepted_rent_request",
+            type: notification_type,
             user_id: staduim_user_id,
             title: staduimExits.staduim.staduim_name,
             img: staduimExits.staduim.cover_img ?? "",
@@ -280,7 +289,7 @@ controller.accepteRentRequest = async (req, res) => {
             _id: reservation_id,
         }, {
             "$set": {
-                "status": 0
+                "status": status
             },
         },);
 

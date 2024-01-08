@@ -22,7 +22,7 @@ router.get("/rent_requests", middleware, staduimController.getRentRequests);
 
 router.post("/rent", staduimController.rent_staduim);
 
-router.post("/accepte_rent_request", staduimController.accepteRentRequest);
+router.post("/validate_rent_request", staduimController.validateRentRequest);
 
 
 ////viewMyGames
