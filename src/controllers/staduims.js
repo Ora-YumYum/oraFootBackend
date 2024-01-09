@@ -177,23 +177,26 @@ controller.rent_staduim = async (req, res,) => {
         const userExits = await Users.findOne({ _id: user_id });
 
 
+        let rent = Rents({
+            user_id: user_id,
+            rent_date: rent_date,
+            staduim_id: staduimExits.staduim._id,
+            data: {
+                "client_phone_number": userExits.phone_number,
+            }
+        });
+
         if (userExits && staduimExits) {
             let notification = Notifications({
                 type: "request_rent_staduim",
                 user_id: user_id,
                 title: "",
                 img: "",
+                data : rent,
             });
 
+            await notification.save();
 
-            let rent = Rents({
-                user_id: user_id,
-                rent_date: rent_date,
-                staduim_id: staduimExits.staduim._id,
-                data: {
-                    "client_phone_number": userExits.phone_number,
-                }
-            });
             await Staduims.updateOne({
                 _id: staduimExits.staduim._id,
             }, {
@@ -202,9 +205,6 @@ controller.rent_staduim = async (req, res,) => {
                     "notifications": notification,
                 },
             });
-
-
-            await notification.save();
 
             await rent.save();
 
