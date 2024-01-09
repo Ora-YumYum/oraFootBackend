@@ -18,6 +18,12 @@ const RentsSchema = new Schema({
         required: false,
     },
 
+    notification_id: {
+        type: Schema.Types.ObjectId,
+        ref: "Notifications",
+        required: false,
+    },
+
     status: {
         type: Number,
         required: false,

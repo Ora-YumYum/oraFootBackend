@@ -192,21 +192,35 @@ controller.rent_staduim = async (req, res,) => {
                 user_id: user_id,
                 title: "",
                 img: "",
-                data : rent,
+                data: rent,
             });
 
             await notification.save();
+
+            rent.notification_id = notification._id;
+
+            await rent.save();
 
             await Staduims.updateOne({
                 _id: staduimExits.staduim._id,
             }, {
                 "$push": {
                     "rents": rent,
+
+                },
+            });
+
+            await Users.updateOne({
+                _id: staduimExits._id,
+            }, {
+                "$push": {
                     "notifications": notification,
                 },
             });
 
-            await rent.save();
+            //
+
+
 
             return res.status(200).send({
                 "success": true,
